@@ -1,16 +1,14 @@
 <?php
-
-
 namespace App\Http\Controllers;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-require('../../../vendor/autoload.php');
+
 use PHPMailer\PHPMailer\Exception;
 use Dotenv\Dotenv;
 use Illuminate\Support\Facades\DB;
 
 
-class C_MailService extends Controller
+class C_MailController extends Controller
 {
     private $mail;
 
@@ -37,7 +35,7 @@ class C_MailService extends Controller
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     }
 
-    public function sendEmail($to, $subject, $body, $altBody = '', $fromName = 'nom', $fromEmail = 'contact@dimitribeziau.fr')
+    public function generateMail($to, $subject, $body, $altBody = '', $fromName = 'nom', $fromEmail = 'contact@dimitribeziau.fr')
     {
         try {
             $this->mail->setFrom($fromEmail, $fromName);
@@ -54,7 +52,7 @@ class C_MailService extends Controller
             return false;
         }
     }
-
+    
     public function addAttachment($filePath, $fileName)
     {
         $this->mail->addAttachment($filePath, $fileName);
