@@ -3,7 +3,6 @@
 namespace App\Services;
 
 require('../../../vendor/autoload.php');
-require('../../../fpdf/fpdf.php');
 
 use FPDF;
 
