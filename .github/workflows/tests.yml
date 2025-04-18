@@ -21,7 +21,7 @@ jobs:
           extensions: mbstring, xml, ctype, json
 
       - name: Installation des dépendances PHP
-        working-directory: ./backend # Assure-toi que tu as un dossier backend
+        working-directory: ./ # Assure-toi que tu as un dossier backend
         run: composer install --no-dev --optimize-autoloader
 
       - name: Configuration de Node.js
