@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+require('../../../vendor/autoload.php');
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\FacturePDF;
