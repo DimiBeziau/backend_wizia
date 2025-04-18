@@ -5,6 +5,7 @@ use PHPMailer\PHPMailer\SMTP;
 
 use PHPMailer\PHPMailer\Exception;
 use Dotenv\Dotenv;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\DB;
 
 
@@ -35,7 +36,7 @@ class C_MailController extends Controller
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     }
 
-    public function generateMail($to, $subject, $body, $altBody = '', $fromName = 'nom', $fromEmail = 'contact@dimitribeziau.fr')
+    public function generateMail(Request $to, $subject, $body, $altBody = '', $fromName = 'nom', $fromEmail = 'contact@dimitribeziau.fr')
     {
         try {
             $this->mail->setFrom($fromEmail, $fromName);
