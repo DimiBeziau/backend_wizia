@@ -54,7 +54,7 @@ return(
                 <label>
                 <a>créé mon compte</a>
                 </label>
-                {error='' && <Text style={styles.errorText}>{error}</Text>}
+                {error=='' && <Text style={styles.errorText}>{error}</Text>}
                 <button onClick={Connections}>Connexion</button>
             </form>
         </div>
