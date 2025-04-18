@@ -37,7 +37,8 @@ jobs:
         run: npm run build
 
       - name: Déploiement vers le FTP Backend
-        uses: actions/ftp-deploy@v3
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
@@ -46,7 +47,8 @@ jobs:
           remote-dir: ./backend
 
       - name: Déploiement vers le FTP Frontend
-        uses: actions/ftp-deploy@v3
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
