@@ -15,22 +15,21 @@ jobs:
 
       - name: Configuration de PHP
         uses: shivammathur/setup-php@v2
-
         with:
-          php-version: '8.3' # Tu peux ajuster la version de PHP ici
+          php-version: '8.3'
           extensions: mbstring, xml, ctype, json
 
       - name: Installation des dépendances PHP
-        working-directory: ./ # Assure-toi que tu as un dossier backend
+        working-directory: ./
         run: composer install --no-dev --optimize-autoloader
 
       - name: Configuration de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Tu peux ajuster la version de Node.js ici
+          node-version: '18'
 
       - name: Installation des dépendances React
-        working-directory: ./react # Assure-toi que tu as un dossier react
+        working-directory: ./react
         run: npm install
 
       - name: Build de l'application React
@@ -44,17 +43,16 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: ./backend/  
+          server-dir: ./backend/
           exclude: |
             **/react/**
 
       - name: Déploiement vers le FTP Frontend
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-
-
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./react/dist
-          remote-dir: ./public_html/
+          local-dir: ./react/dist/
+          server-dir: ./public_html/
+
