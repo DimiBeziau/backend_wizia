@@ -46,6 +46,9 @@ jobs:
           server-dir: ./backend/
           exclude: |
             **/react/**
+            **/.git/**
+            **/.github/**
+            **/.gitignore
 
       - name: Déploiement vers le FTP Frontend
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4

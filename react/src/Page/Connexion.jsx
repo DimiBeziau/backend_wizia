@@ -16,7 +16,8 @@ const Connexion =()=>{
       }
     const Connections = async ()=>{
         try{
-          if(Email !="" & PassWord !=''){
+          if (Email != "" & PassWord != '') {
+          //  elseif
             regexConformation(Email);
             
           }
