@@ -42,8 +42,8 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: /
-          server-dir: /backend/
+          local-dir: ./
+          server-dir: ./backend/
           exclude: |
             **/react/**
             **/assets/**
