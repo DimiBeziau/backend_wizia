@@ -45,7 +45,6 @@ jobs:
           local-dir: ./
           server-dir: ./backend/
           exclude: |
-            **/react/**
             **/.git/**
             **/.github/**
             **/.gitignore
