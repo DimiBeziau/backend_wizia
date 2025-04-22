@@ -18,7 +18,7 @@ return(
           nom="Newsletters" 
           description="Envoyez des newsletters de votre activité à vos clients" 
           prix = "17,99"
-          icon="https://cdn-icons-png.flaticon.com/512/561/561127.png" 
+          icon="https://cdn-icons-png.flaticon.com/512/561/561127.png"  
           buttonText="Payé" 
           destination="Abonnement/UpdateAbonnement" 
         />
