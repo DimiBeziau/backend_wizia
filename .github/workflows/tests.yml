@@ -46,6 +46,7 @@ jobs:
           server-dir: backend/
           exclude: |
             **/react/**
+            **/assets/**
             **/.git/**
             **/.github/**
             **/.gitignore
