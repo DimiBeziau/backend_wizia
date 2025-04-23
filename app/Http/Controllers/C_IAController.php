@@ -68,9 +68,10 @@ class C_IAController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $reponse = curl_exec($ch);
         curl_close($ch);
-
+        dd($reponse);
+        dd($this->prompt);
         $decodeJson = json_decode($reponse,true);
-        return $decodeJson['candidates'][0]['content']['parts'][0]['text'] ?? "Erreur de la génération du prompte gemini";
+        return $decodeJson['candidates'][0]['content']['parts'][0]['text'] ?? "Erreur de la génération du prompte gemini ";
 
             
     }
