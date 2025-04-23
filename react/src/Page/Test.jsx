@@ -1,42 +1,27 @@
-import React, { useState } from "react";
-import { DateRange } from 'react-date-range';
-import 'react-date-range/dist/styles.css'; // Import des styles
-import 'react-date-range/dist/theme/default.css';
-//make
+import React, { useEffect, useState } from 'react';
 
-const Test = () => {
-    const [state, setState] = useState([
-        {
-            startDate: new Date(),
-            endDate: new Date(),
-            key: 'selection'
-        }
-    ]);
-    const handleSelect = (ranges) => {
-        //console.log(ranges);
-        setState([ranges.selection]);
-        console.log( ranges.selection);
-        
+const GoogleReviews = () => {
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?placeid=YOUR_PLACE_ID&key=YOUR_API_KEY`);
+      const data = await response.json();
+      setReviews(data.result.reviews);
     };
-    return (
-        <div>
-            <DateRange
-                onChange={handleSelect}
-                showSelectionPreview={false}
-                moveRangeOnFirstSelection={false}
-                months={2}
-                ranges={state}
-                direction="horizontal"
-            />
-            
-            {state.map((range) => (
-                <div key={range.key}>
-                    <p>Date de début : {range.startDate.toDateString()}</p>
-                    <p>Date de fin : {range.endDate.toDateString()}</p>
-                </div>
-            ))}
-        </div>
-    );
-};
 
-export default Test;
+    fetchReviews();
+  }, []);
+
+  return (
+    <div>
+      {reviews.map((review, index) => (
+        <div key={index}>
+          <h3>{review.author_name}</h3>
+          <p>{review.text}</p>
+          <p>Rating: {review.rating}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
