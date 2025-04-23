@@ -10,7 +10,7 @@ $generation = new C_IAController();
 // Appeler ta méthode avec un prompt
 // $response = $generation->generatprompt("salut mon ia préférée");
 // echo $response;
- //$response = $generation->generatpromptgemini("qu'elle destination en europe est la moins cher");
+//$response = $generation->generatpromptgemini("qu'elle destination en europe est la moins cher");
 
 // Afficher la réponse
 echo $response;
