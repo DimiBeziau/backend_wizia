@@ -36,7 +36,7 @@ const Root = () => {
         <Route path="/Dashboard/Google_Analytics" element={<Google_Analytics />} />
         <Route path="/Dashboard/Google_Analytics/AddGoogle_Analytics" element={<AddGoogle_Analytics />} />
         <Route path="/Dashboard/Abonnement" element={<Abonnement />} />
-        <Route path="/Dashboard/Abonnement/UpdateAbonnement" element={<UpdateAbonnement />} />
+        <Route path="/Dashboard/Abonnement/UpdateAbonnement/:prix" element={<UpdateAbonnement />} />
         <Route path="/Dashboard/History" element={<History />} />
         <Route path="/Dashboard/UpdateProfil" element={<UpdateProfil />} />
         <Route path="/Test" element={<Test />} />

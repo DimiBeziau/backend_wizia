@@ -44,7 +44,10 @@ class C_IAController extends Controller
         return $decodeJson['response'] ?? "Erreur : reponse introuvable";
     }
     public function generatpromptgemini( Request $promptClient){ //Request
-            $this ->prompt = $promptClient;
+        $promptClient->validate([
+            'prompt' => 'required',
+        ]);
+            $this ->prompt = $promptClient ->prompt;
             $data = json_encode([
                 "contents" => [
                     [

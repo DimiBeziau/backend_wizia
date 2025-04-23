@@ -7,28 +7,28 @@ const CardIA = ({ prompt , Titre ,onPromptGenerated }) => {
 
   const GenererMailType = async () => {
       try {
-          setPrompt("mon prompte bfuvyqvysduysdguygfsydfytsg"); // test
-          onPromptGenerated("mon prompte bfuvyqvysduysdguygfsydfytsg");//test
-    //   const Option = {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json; charset=utf-8',
-    //     },
-    //     body: JSON.stringify({
-    //       message: prompt,
-    //     }),
-    //   };
+          // setPrompt("mon prompte bfuvyqvysduysdguygfsydfytsg"); // test
+          // onPromptGenerated("mon prompte bfuvyqvysduysdguygfsydfytsg");//test
+      const Option = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        body: JSON.stringify({
+          message: prompt,
+        }),
+      };
 
-    //   const reponse = await fetch('https://api.wizia.dimitribeziau.fr/ia/generateIA', Option);
+      const reponse = await fetch('https://api.wizia.dimitribeziau.fr/ia/generateIA', Option);
 
-    //   if (reponse.ok) {
-    //     const reponseData = await reponse.json();
-          //       setPrompt(reponseData.resultat); 
-          //onPromptGenerated(reponseData.resultat);
+      if (reponse.ok) {
+        const reponseData = await reponse.json();
+                setPrompt(reponseData.resultat); 
+          onPromptGenerated(reponseData.resultat);
           
-    //   } else {
-    //     throw new Error("Réponse non OK");
-    //   }
+      } else {
+        throw new Error("Réponse non OK");
+      }
     } catch (e) {
       setError("Impossible de générer le prompt");
       console.error(e);
