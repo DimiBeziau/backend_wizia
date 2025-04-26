@@ -13,7 +13,7 @@ class C_NetwoorkController extends Controller
 {
   public function createAndPublishPost(Request $request)
   {
-    $post = $request->input('post');
+    $postData = $request->input('post');
 
     $today = new DateTime();
     $today = $today->format('Y-m-d');
@@ -21,28 +21,23 @@ class C_NetwoorkController extends Controller
     $userId = Auth::id() ?? 1;
 
 
-
     Posts::create([
       "datePost" => $today,
       "idUser" => $userId,
       "idPieceJointe" => 0,
-      "post" => $post
+      "post" => $postData
     ]);
 
+    // Envoyer ces données directement à Make.com
     $url = 'https://hook.eu2.make.com/umhsf8kaax437qklfxrf7oechd4hp3qk';
-    $data = [
-      'post' => $post
-    ];
-
     $response = Http::withHeaders([
-      'Content-Type' => 'application/json',
+      'Content-Type' => 'application/json', // Utiliser JSON pourrait être plus simple
       'Accept' => 'application/json',
-    ])->post($url, $data);
+    ])->post($url, $postData); // Envoyer directement les données, sans les imbriquer
 
     return response()->json([
       'status' => $response->status(),
       'body' => $response->body(),
-      'json' => $response->json(),
     ]);
   }
 }

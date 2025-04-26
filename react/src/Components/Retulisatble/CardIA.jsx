@@ -44,7 +44,7 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
         "Accept": "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ post: prompt })
+      body: JSON.stringify({ post: Prompt })
     })
 
     const json = response.json();
@@ -64,7 +64,7 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
     <div className="CardIA">
       <h2>{Titre}</h2>
       <button onClick={GenererMailType}>Générer</button>
-      {Prompt !== "" && <button onClick={publishPost}>Publier</button>}
+      {Prompt !== "" && <button onClick={publishPost}>Publier maintenant</button>}
       <p>{Prompt}</p>
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
