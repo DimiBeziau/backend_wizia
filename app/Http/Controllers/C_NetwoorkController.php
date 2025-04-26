@@ -37,7 +37,7 @@ class C_NetwoorkController extends Controller
     $response = Http::withHeaders([
       'Content-Type' => 'application/json', // Utiliser JSON pourrait être plus simple
       'Accept' => 'application/json',
-    ])->post($url, $postData); // Envoyer directement les données, sans les imbriquer
+    ])->post($url, $data); // Envoyer directement les données, sans les imbriquer
 
     return response()->json([
       'status' => $response->status(),
