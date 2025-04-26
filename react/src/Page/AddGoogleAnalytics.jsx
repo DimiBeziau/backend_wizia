@@ -5,13 +5,12 @@ import "./Style/AddGoogleAnalytics.css";
 const AddGoogleAnalytics = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    nomClient: "",
-    siret: "",
-    email: "",
-    objectif: "",
+    identifiantsAPI: "",
+    PlacesAPI: "",
+    
   });
 const onClosed = () => {
-    navigate("/Google_Analytics");
+    navigate("/Dashboard/Google_Analytics");
   };
   const handleChange = (e) => {
       const { name, value } = e.target
@@ -26,25 +25,34 @@ const onClosed = () => {
   };
 
   return (
-    <div className="AddGoogleAnalytics">
-  <div className="CadreAddGoogleAnalytics">
-    <h2>Configurer Google Analytics pour un client</h2>
-    <button className="closeButton" onClick={onClosed}>❌</button>
-    <form onSubmit={handleSubmit}>
-        <label>Nom du client :</label>
-        <input type="text" name="nomClient" value={formData.nomClient} onChange={handleChange} required />
+  <div className="AddGoogleAnalytics">
+    <button className="closeButtonGlobal" onClick={onClosed}>❌</button>
+    <div className="CadreAddGoogleAnalytics">
+      <h2>Configurer Google Analytics pour un client</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Clé API identifiants :</label>
+        <input
+          type="text"
+          name="identifiantsAPI"
+          value={formData.identifiantsAPI}
+          onChange={handleChange}
+          required
+        />
 
-        <label>Numéro de SIRET :</label>
-        <input type="text" name="siret" value={formData.siret} onChange={handleChange} required />
-
-        <label>Email de contact :</label>
-        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-
+        <label>Clé API Places:</label>
+        <input
+          type="text"
+          name="PlacesAPI"
+          value={formData.PlacesAPI}
+          onChange={handleChange}
+          required
+        />
         <button type="submit">Enregistrer</button>
       </form>
     </div>
-    </div>
-  );
+  </div>
+);
+
 };
 
 export default AddGoogleAnalytics;
