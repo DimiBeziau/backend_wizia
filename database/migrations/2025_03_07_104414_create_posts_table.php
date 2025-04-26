@@ -16,7 +16,7 @@ return new class extends Migration
       $table->date('datePost');
       $table->integer('idUser');
       $table->integer('idPieceJointe');
-      $table->string('post');
+      $table->string('post', 5000);
       $table->timestamps();
     });
   }
