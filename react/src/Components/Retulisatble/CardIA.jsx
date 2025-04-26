@@ -1,14 +1,14 @@
 import { useState } from "react";
 import './Style/CardIA.css';
 
-const CardIA = ({ prompt , Titre ,onPromptGenerated }) => {
+const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
   const [Prompt, setPrompt] = useState("");
   const [error, setError] = useState("");
-//https://api.wizia.dimitribeziau.fr/ia/generateIA
+  //https://api.wizia.dimitribeziau.fr/ia/generateIA
   const GenererMailType = async () => {
-      try {
-          // setPrompt(prompt); // test
-          
+    try {
+      // setPrompt(prompt); // test
+
       const Option = {
         method: 'POST',
         headers: {
@@ -19,14 +19,14 @@ const CardIA = ({ prompt , Titre ,onPromptGenerated }) => {
         }),
       };
 
-      const reponse = await fetch('https://api.wizia.dimitribeziau.fr/ia/generateIA', Option); 
+      const reponse = await fetch('https://api.wizia.dimitribeziau.fr/ia/generateIA', Option);
 
       if (reponse.ok) {
         const reponseData = await reponse.json();
-       
-                setPrompt(reponseData.text); 
-          onPromptGenerated(reponseData.text);
-          
+
+        setPrompt(reponseData.text);
+        onPromptGenerated(reponseData.text);
+
       } else {
         throw new Error("Réponse non OK");
       }
@@ -36,10 +36,30 @@ const CardIA = ({ prompt , Titre ,onPromptGenerated }) => {
     }
   };
 
+  const publishPost = async () => {
+    const response = await fetch("https://api.wizia.dimitribeziau.fr/post", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ post: prompt })
+    })
+
+    const json = response.json();
+
+    if (response.status === 200) {
+      console.log(response);
+    } else {
+      console.error(response)
+    }
+  }
+
   return (
     <div className="CardIA">
-          <h2>{Titre}</h2>
+      <h2>{Titre}</h2>
       <button onClick={GenererMailType}>Générer</button>
+      {Prompt !== "" && <button onClick={publishPost}>Publier</button>}
       <p>{Prompt}</p>
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
