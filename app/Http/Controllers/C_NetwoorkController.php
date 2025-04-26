@@ -28,6 +28,10 @@ class C_NetwoorkController extends Controller
       "post" => $postData
     ]);
 
+    $data = [
+      "post" => $postData
+    ];
+
     // Envoyer ces données directement à Make.com
     $url = 'https://hook.eu2.make.com/umhsf8kaax437qklfxrf7oechd4hp3qk';
     $response = Http::withHeaders([
