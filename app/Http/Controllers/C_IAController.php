@@ -86,10 +86,9 @@ class C_IAController extends Controller
 
     $decoded = json_decode($response, true);
 
-    dd($decoded);
-    // if (!isset($decoded['candidates'])) {
-    //     return response()->json(['error' => 'Erreur de la génération du prompt Gemini'], 500);
-    // }
+    if (!isset($decoded['candidates'])) {
+      return response()->json(['error' => 'Erreur de la génération du prompt Gemini'], 500);
+    }
 
     $text = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? 'Réponse vide';
 
