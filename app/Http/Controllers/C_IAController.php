@@ -45,7 +45,7 @@ class C_IAController extends Controller
     }
    public function generatpromptgemini(Request $request)
 {
-    // Validation de la requête
+    
     $request->validate([
         'prompt' => 'required|string',
     ]);
@@ -91,7 +91,6 @@ class C_IAController extends Controller
     $text = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? 'Réponse vide';
 
     return response()->json(['text' => $text]);
-}
-
+    }
 
 }

@@ -33,10 +33,23 @@ const ReseauxSociaux = () => {
     const ValiderReseauxSociaux = async () => {
         
         
-      if (generatedPrompt !== "" && selectedDates !== "") {
-      // Logique à ajouter si aujourdui la date on envoie sinon on stock et batch qui envoie a la date 
+      if (generatedPrompt !== "" && selectedDates.startDate !== null) {
       
-    }
+        const today = new Date(); // Manquait ici
+        const formatDate = (date) => {
+          const years = date.getFullYear();
+          const months = (date.getMonth() + 1).toString().padStart(2, '0');
+          const day = date.getDate().toString().padStart(2, '0');
+          return `${years}${months}${day}`;
+        };
+      
+        const formattedToday = formatDate(today);
+        const formattedSelect = formatDate(new Date(selectedDates.startDate));
+
+        if (formattedSelect === formattedToday) {
+        }
+
+      }
   };
 
 return(

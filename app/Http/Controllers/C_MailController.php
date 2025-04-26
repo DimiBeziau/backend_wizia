@@ -5,7 +5,9 @@ use PHPMailer\PHPMailer\SMTP;
 
 use PHPMailer\PHPMailer\Exception;
 use Dotenv\Dotenv;
-use GuzzleHttp\Psr7\Request;
+///use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -36,23 +38,42 @@ class C_MailController extends Controller
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     }
 
-    public function generateMail(Request $to, $subject, $body, $altBody = '', $fromName = 'nom', $fromEmail = 'contact@dimitribeziau.fr')
-    {
-        try {
-            $this->mail->setFrom($fromEmail, $fromName);
-            $this->mail->addAddress($to);
-            $this->mail->CharSet = 'UTF-8';
-            $this->mail->Encoding = 'base64';
-            $this->mail->isHTML(true);
-            $this->mail->Subject = $subject;
-            $this->mail->Body = $body;
-            $this->mail->AltBody = $altBody;
-            return $this->mail->send();
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: " . $this->mail->ErrorInfo;
-            return false;
-        }
+    public function generateMail(Request $request)
+{
+    $request->validate([
+        'to' => 'required|email',
+        'subject' => 'required|string',
+        'body' => 'required|string',
+        'altBody' => 'nullable|string',
+        'fromName' => 'nullable|string',
+        'fromEmail' => 'nullable|email',
+    ]);
+
+    try {
+        $to = $request->input('to');
+        $subject = $request->input('subject');
+        $body = $request->input('body');
+        $altBody = $request->input('altBody', '');
+        $fromName = $request->input('fromName', 'nom');
+        $fromEmail = $request->input('fromEmail', 'contact@dimitribeziau.fr');
+        
+        $this->mail->setFrom($fromEmail, $fromName);
+        $this->mail->addAddress($to);
+        $this->mail->CharSet = 'UTF-8';
+        $this->mail->Encoding = 'base64';
+        $this->mail->isHTML(true);
+        $this->mail->Subject = $subject;
+        $this->mail->Body = $body;
+        $this->mail->AltBody = $altBody;
+
+        $this->mail->send();
+
+        return response()->json(['message' => 'Email envoyé avec succès'],200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
     
     public function addAttachment($filePath, $fileName)
     {

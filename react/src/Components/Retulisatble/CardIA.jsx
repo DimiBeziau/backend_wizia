@@ -4,27 +4,28 @@ import './Style/CardIA.css';
 const CardIA = ({ prompt , Titre ,onPromptGenerated }) => {
   const [Prompt, setPrompt] = useState("");
   const [error, setError] = useState("");
-
+//https://api.wizia.dimitribeziau.fr/ia/generateIA
   const GenererMailType = async () => {
       try {
-          // setPrompt("mon prompte bfuvyqvysduysdguygfsydfytsg"); // test
-          // onPromptGenerated("mon prompte bfuvyqvysduysdguygfsydfytsg");//test
+          // setPrompt(prompt); // test
+          
       const Option = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify({
-          message: prompt,
+          prompt: prompt,
         }),
       };
 
-      const reponse = await fetch('https://api.wizia.dimitribeziau.fr/ia/generateIA', Option);
+      const reponse = await fetch('https://api.wizia.dimitribeziau.fr/ia/generateIA', Option); 
 
       if (reponse.ok) {
         const reponseData = await reponse.json();
-                setPrompt(reponseData.resultat); 
-          onPromptGenerated(reponseData.resultat);
+       
+                setPrompt(reponseData.text); 
+          onPromptGenerated(reponseData.text);
           
       } else {
         throw new Error("Réponse non OK");
