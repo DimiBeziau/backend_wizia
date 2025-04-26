@@ -1,5 +1,6 @@
 import { useState } from "react";
 import './Style/CardIA.css';
+import { toast } from 'react-toastify';
 
 const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
   const [Prompt, setPrompt] = useState("");
@@ -49,9 +50,13 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
     const json = response.json();
 
     if (response.status === 200) {
-      console.log(response);
+      toast('Post correctement publié', {
+        type: "success"
+      })
     } else {
-      console.error(response)
+      toast('Erreur lors de la publication', {
+        type: "error"
+      })
     }
   }
 

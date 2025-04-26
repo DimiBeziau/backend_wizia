@@ -39,6 +39,10 @@ class C_NetwoorkController extends Controller
       'Accept' => 'application/json',
     ])->post($url, $data);
 
-    return response()->json($response);
+    return response()->json([
+      'status' => $response->status(),
+      'body' => $response->body(),
+      'json' => $response->json(),
+    ]);
   }
 }
