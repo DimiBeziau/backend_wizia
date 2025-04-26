@@ -14,8 +14,8 @@ return new class extends Migration
     Schema::create('posts', function (Blueprint $table) {
       $table->id();
       $table->date('datePost');
-      $table->integer('idUser')->unique();
-      $table->integer('idPieceJointe')->unique();
+      $table->integer('idUser');
+      $table->integer('idPieceJointe');
       $table->string('post');
       $table->timestamps();
     });

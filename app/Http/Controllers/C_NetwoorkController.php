@@ -34,7 +34,10 @@ class C_NetwoorkController extends Controller
       'post' => $post
     ];
 
-    $response = Http::post($url, $data);
+    $response = Http::withHeaders([
+      'Content-Type' => 'application/json',
+      'Accept' => 'application/json',
+    ])->post($url, $data);
 
     return response()->json($response);
   }
