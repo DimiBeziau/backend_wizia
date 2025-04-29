@@ -9,7 +9,7 @@ const ReseauxSociaux = () => {
 
   const [error, setError] = useState("");
   const [generatedPrompt, setGeneratedPrompt] = useState("");
-  const [selectedDates, setSelectedDates] = useState({ startDate: null, endDate: null });
+  const [selectedDates, setSelectedDates] = useState({ startDate: null });
   const navigate = useNavigate();
   const [user, setUser] = useState({
     userAbonnement: '',
@@ -49,10 +49,10 @@ const ReseauxSociaux = () => {
 
       if (new Date(formattedSelect) >= new Date(formattedToday)) {
         const post = {
-          Network: 'Facebook',
+          network: 'Facebook',
           post: generatedPrompt,
-          Date: formattedSelect,
-          Now: false
+          date: formattedSelect,
+          now: false
         }
 
         const response = await fetch('https://api.wizia.dimitribeziau.fr/post', {
