@@ -69,9 +69,10 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
   return (
     <div className="CardIA">
       <h2>{Titre}</h2>
+      {Prompt !== "" && <textarea style={{ width: "100%", height: "150px", borderRadius: "6px", backgroundColor: "#ffffff" }} onChange={(event) => { setPrompt(event.target.value) }}>{Prompt}</textarea>}
       <button onClick={GenererMailType}>Générer</button>
       {Prompt !== "" && <button onClick={publishPost}>Publier maintenant</button>}
-      <p>{Prompt}</p>
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );

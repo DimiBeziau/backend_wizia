@@ -32,10 +32,11 @@ const ReseauxSociaux = () => {
 
 
   const ValiderReseauxSociaux = async () => {
+    console.log('test');
 
 
     if (generatedPrompt !== "" && selectedDates.startDate !== null) {
-
+      console.log('test2');
       const today = new Date(); // Manquait ici
       const formatDate = (date) => {
         const years = date.getFullYear();
@@ -48,6 +49,7 @@ const ReseauxSociaux = () => {
       const formattedSelect = formatDate(new Date(selectedDates.startDate));
 
       if (new Date(formattedSelect) >= new Date(formattedToday)) {
+        console.log('test3');
         const post = {
           network: 'Facebook',
           post: generatedPrompt,
@@ -76,6 +78,10 @@ const ReseauxSociaux = () => {
         })
       }
 
+    } else {
+      toast("Veuillez générer un prompt et sélectionner une date", {
+        type: "warning"
+      })
     }
   };
 

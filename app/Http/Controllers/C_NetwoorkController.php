@@ -32,7 +32,7 @@ class C_NetwoorkController extends Controller
     ]);
 
 
-    if ($request->input('date') !== null && $request->input('now') === true) {
+    if ($request->input('date') === null && $request->input('now') === true) {
 
       $data = [
         "post" => $postData
