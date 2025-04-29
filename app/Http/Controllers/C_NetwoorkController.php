@@ -17,7 +17,7 @@ class C_NetwoorkController extends Controller
 
     $userId = Auth::id() ?? 1;
 
-    if ($request->input('date') !== null && $request->input('now') === true) {
+    if ($request->input('date') === null && $request->input('now') === true) {
       $date = new DateTime();
       $date = $date->format('Y-m-d');
     } else {
