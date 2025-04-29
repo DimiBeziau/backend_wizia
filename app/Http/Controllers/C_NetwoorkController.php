@@ -13,6 +13,7 @@ class C_NetwoorkController extends Controller
 {
   public function createAndPublishPost(Request $request)
   {
+    return response()->json($request->all());
     $postData = $request->input('post');
 
     $today = new DateTime();
@@ -37,7 +38,7 @@ class C_NetwoorkController extends Controller
     $response = Http::withHeaders([
       'Content-Type' => 'application/json', // Utiliser JSON pourrait être plus simple
       'Accept' => 'application/json',
-    ])->post($url, $data); // Envoyer directement les données, sans les imbriquer
+    ])->post($url, $data);
 
     return response()->json([
       'status' => $response->status(),

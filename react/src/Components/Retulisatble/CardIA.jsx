@@ -38,13 +38,19 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
   };
 
   const publishPost = async () => {
+    const post = {
+      network: 'Facebook',
+      post: Prompt,
+      date: null,
+      now: true
+    }
     const response = await fetch("https://api.wizia.dimitribeziau.fr/post", {
       method: "POST",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ post: Prompt })
+      body: JSON.stringify(post)
     })
 
     const json = response.json();
