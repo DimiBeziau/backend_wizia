@@ -5,11 +5,9 @@ import { toast } from 'react-toastify';
 const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
   const [Prompt, setPrompt] = useState("");
   const [error, setError] = useState("");
-  
+
   const Genererprompt = async () => {
     try {
-      // setPrompt(prompt); // test
-
       const Option = {
         method: 'POST',
         headers: {
@@ -20,17 +18,12 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
         }),
       };
 
-
-
       const reponse = await fetch('https://api.wizia.dimitribeziau.fr/ia/generateIA', Option);
 
       if (reponse.ok) {
         const reponseData = await reponse.json();
-
         setPrompt(reponseData.text);
         onPromptGenerated(reponseData.text);
-
-
       } else {
         throw new Error("Réponse non OK");
       }
@@ -40,35 +33,22 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
     }
   };
 
-  // const publishPost = async () => {
-  //   const response = await fetch("https://api.wizia.dimitribeziau.fr/post", {
-  //     method: "POST",
-  //     headers: {
-  //       "Accept": "application/json",
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({ post: Prompt })
-  //   })
-
-  //   const json = response.json();
-
-  //   if (response.status === 200) {
-  //     toast('Post correctement publié', {
-  //       type: "success"
-  //     })
-  //   } else {
-  //     toast('Erreur lors de la publication', {
-  //       type: "error"
-  //     })
-  //   }
-  // }
+  
 
   return (
     <div className="CardIA">
       <h2>{Titre}</h2>
+
+      {Prompt !== "" && 
+        <textarea 
+          style={{ width: "100%", height: "150px", borderRadius: "6px", backgroundColor: "#ffffff" }} 
+          onChange={(event) => { setPrompt(event.target.value) }}
+        >
+          {Prompt}
+        </textarea>
+      }
       <button onClick={Genererprompt}>Générer</button>
-      {/* {Prompt !== "" && <button onClick={publishPost}>Publier maintenant</button>} */}
-      <p>{Prompt}</p>
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );

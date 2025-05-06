@@ -1,48 +1,38 @@
 import React, { useState } from "react";
-import { DateRange } from 'react-date-range';
-import 'react-date-range/dist/styles.css'; 
+import { Calendar } from 'react-date-range';
+import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 
 const Marronniers = ({ onDateChange }) => {
-  const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: 'selection'
-    }
-  ]);
+  const [date, setDate] = useState(new Date());
 
-  const handleSelect = (ranges) => {
-    const selection = ranges.selection;
-    setState([{
-      startDate: selection.startDate,
-      endDate: selection.startDate,
-      key: 'selection'
-    }]);
+  const handleSelect = (_date) => {
+    const selection = _date;
+    setDate(selection);
 
     onDateChange({
-      startDate: selection.startDate,
+      startDate: selection,
     });
   };
 
   return (
     <div>
-      <DateRange
+      <Calendar
         onChange={handleSelect}
         showSelectionPreview={false}
         moveRangeOnFirstSelection={false}
         months={2}
-        ranges={state}
+        date={date}
         direction="horizontal"
         rangeColors={['#3d91ff']}
         editableDateInputs={true}
         minDate={new Date()}
       />
-      {state.map((range) => (
-        <div key={range.key}>
-          <p>Date sélectionnée : {range.startDate.toLocaleDateString()}</p> 
+      {date &&
+        <div>
+          <p>Date sélectionnée : {date.toLocaleDateString()}</p>
         </div>
-      ))}
+      }
     </div>
   );
 };
