@@ -9,13 +9,10 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-     public function up(): void
+    public function up(): void
     {
-         Schema::create('clients_mailings', function (Blueprint $table) {
-            $table->id();
-            $table->integer('idClient');
-            $table->integer('idMailing'); 
-            $table->timestamps();
+        Schema::table('mailings', function (Blueprint $table) {
+            //
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients_mailings');
+        Schema::table('mailings', function (Blueprint $table) {
+            //
+        });
     }
 };

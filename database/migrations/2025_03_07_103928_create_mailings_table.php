@@ -9,15 +9,29 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    // public function up(): void
+    // {
+    //     Schema::create('mailings', function (Blueprint $table) {
+    //         $table->id();
+    //         $table->integer('idUser')->unique();
+    //         $table->integer('idListeClient')->unique();
+    //         $table->timestamps();
+    //     });
+    // }
+     public function up(): void
     {
         Schema::create('mailings', function (Blueprint $table) {
             $table->id();
-            $table->integer('idUser')->unique();
-            $table->integer('idListeClient')->unique();
+            $table->integer('idUser');
+            $table->string('subject');
+            $table->text('body');
+            $table->text('altBody')->nullable();
+            $table->string('fromName')->nullable();
+            $table->string('fromEmail')->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

@@ -32,11 +32,11 @@ const ReseauxSociaux = () => {
 
 
   const ValiderReseauxSociaux = async () => {
-    console.log('test');
+ 
 
 
     if (generatedPrompt !== "" && selectedDates.startDate !== null) {
-      console.log('test2');
+     
       const today = new Date(); // Manquait ici
       const formatDate = (date) => {
         const years = date.getFullYear();

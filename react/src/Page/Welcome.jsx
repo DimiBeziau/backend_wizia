@@ -26,7 +26,7 @@ const Welcome = () => {
           destination="Réseaux_Sociaux" 
         />
         <CardWelcome 
-          nom="Google Analytics" 
+          nom="Google my business" 
           description="Analysez le comportement de vos visiteurs et optimisez votre site web grâce aux données collectées par Google Analytics." 
           prix=""
           icon="https://www.gstatic.com/analytics-suite/header/suite/v2/ic_analytics.svg" 

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
   const [Prompt, setPrompt] = useState("");
   const [error, setError] = useState("");
-  //https://api.wizia.dimitribeziau.fr/ia/generateIA
+  
   const GenererMailType = async () => {
     try {
       // setPrompt(prompt); // test
@@ -37,42 +37,19 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
     }
   };
 
-  const publishPost = async () => {
-    const post = {
-      network: 'Facebook',
-      post: Prompt,
-      date: null,
-      now: true
-    }
-    const response = await fetch("https://api.wizia.dimitribeziau.fr/post", {
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(post)
-    })
-
-    const json = response.json();
-
-    if (response.status === 200) {
-      toast('Post correctement publié', {
-        type: "success"
-      })
-    } else {
-      toast('Erreur lors de la publication', {
-        type: "error"
-      })
-    }
-  }
-
+ 
   return (
     <div className="CardIA">
       <h2>{Titre}</h2>
-      {Prompt !== "" && <textarea style={{ width: "100%", height: "150px", borderRadius: "6px", backgroundColor: "#ffffff" }} onChange={(event) => { setPrompt(event.target.value) }}>{Prompt}</textarea>}
+       {Prompt !== "" && (
+  <textarea
+    style={{ width: "100%", height: "150px", borderRadius: "6px", backgroundColor: "#ffffff" }}
+    value={Prompt}
+          onChange={(event) => { setPrompt(event.target.value); onPromptGenerated(event.target.value) }}
+  />
+      )}
       <button onClick={GenererMailType}>Générer</button>
-      {Prompt !== "" && <button onClick={publishPost}>Publier maintenant</button>}
-
+      
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );

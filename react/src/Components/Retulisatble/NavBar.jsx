@@ -26,11 +26,6 @@ const NavBar = () => {
                     Newsletters
                     </NavLink>   
                 </li>
-                <li>
-                    <NavLink to="/contact" className="nav-link" activeClassName="active-link">
-                    contact
-                    </NavLink>   
-                </li>
                  <li className="dropdown">
                  <a href="#" className="nav-link dropbtn">
                  <img src="/icons/anchor.png"  style={{ width: "16px", marginRight: "8px" }} />
@@ -38,7 +33,7 @@ const NavBar = () => {
                      </a>
                 <div className="dropdown-content">
             <NavLink to="/Dashboard/Abonnement" className="nav-link">Abonnement</NavLink>
-            <NavLink to="/Dashboard/Profil" className="nav-link">Profil</NavLink>
+            <NavLink to="/Dashboard/UpdateProfil" className="nav-link">Profil</NavLink>
             <NavLink to="/Dashboard/History" className="nav-link">Historique</NavLink>
           </div>
         </li>

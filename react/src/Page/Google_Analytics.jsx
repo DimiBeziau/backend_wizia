@@ -3,7 +3,8 @@ import React, { useState } from "react";
 
 
 const Google_Analytics = () => {
- const [error,setError] = useState('')
+    const [error, setError] = useState('');
+  const [rating, setRating] = useState(null);
   const navigate = useNavigate();
     const AjouterGoogleAnalytics = () => {
         try {
@@ -12,7 +13,11 @@ const Google_Analytics = () => {
             setError("imposible de changé de page")
         }
   }
-  
+//   useEffect(() => {
+//   const placeId = 'ChIJra6o8IHuBUgRMO0NHlI3DQQ';
+//   const apiKey = 'VOTRE_CLE_API';
+//   fetchRating(placeId, apiKey);
+// }, []);
   const fetchRating = async (placeId,apiKey) => {
     // const placeId = 'ChIJra6o8IHuBUgRMO0NHlI3DQQ'; // Place ID pour Nantes
     // const apiKey = 'AIzaSyCESK0F4bT8ShujpjV9t1IE1xOBRyoRer8';  // Remplace par ta clé API Google
@@ -34,11 +39,11 @@ const Google_Analytics = () => {
     <div className="Google_Analytics">
       <h2>Google Analytics</h2>
       <button onClick={AjouterGoogleAnalytics}>ajouter un Google Analytics</button>
-      {rating !== null && (
+      {/* {rating !== null && (
         <div>
           <p>⭐ {rating} / 5</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

@@ -10,7 +10,7 @@ import Newsletters from "../Page/Newsletters.jsx";
 import ListeDestinataireNewsletters from "../Page/ListeDestinataireNewsletters.jsx";
 import FormulaireDestinataire from "../Page/FormulaireDestinataire.jsx";
 import Google_Analytics from "../Page/Google_Analytics.jsx";
-import AddGoogle_Analytics from "../Page/AddGoogleAnalytics.jsx";
+import AddGoogleAnalytics from "../Page/AddGoogleAnalytics.jsx";
 import Abonnement from "../Page/Abonnement.jsx";
 import UpdateAbonnement from "../Page/UpdateAbonnement.jsx";
 import History from "../Page/History.jsx";
@@ -34,9 +34,9 @@ const Root = () => {
         <Route path="/Dashboard/Newsletters/ListeDestinataireNewsletters" element={<ListeDestinataireNewsletters />} />
         <Route path="/Dashboard/Newsletters/ListeDestinataireNewsletters/FormulaireDestinataire" element={<FormulaireDestinataire />} />
         <Route path="/Dashboard/Google_Analytics" element={<Google_Analytics />} />
-        <Route path="/Dashboard/Google_Analytics/AddGoogle_Analytics" element={<AddGoogle_Analytics />} />
+        <Route path="/Dashboard/Google_Analytics/AddGoogle_Analytics" element={<AddGoogleAnalytics />} />
         <Route path="/Dashboard/Abonnement" element={<Abonnement />} />
-        <Route path="/Dashboard/Abonnement/UpdateAbonnement/:prix" element={<UpdateAbonnement />} />
+        <Route path="/Dashboard/Abonnement/UpdateAbonnement" element={<UpdateAbonnement />} />
         <Route path="/Dashboard/History" element={<History />} />
         <Route path="/Dashboard/UpdateProfil" element={<UpdateProfil />} />
         <Route path="/Test" element={<Test />} />

@@ -1,20 +1,55 @@
-import React, { useState } from "react";
-import "./Style/ListeDestinataireNewsletters.css";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "./Style/ListeDestinataireNewsletters.css";
 
 const ListeDestinataireNewsletters = () => {
   const navigate = useNavigate();
-  const [destinataires, setDestinataires] = useState([
-    { id: 1, nom: "Dupont", prenom: "Jean", email: "jean.dupont@email.com" },
-    { id: 2, nom: "Durand", prenom: "Claire", email: "claire.durand@email.com" },
-  ]);
+  const [destinataires, setDestinataires] = useState([]);
+  const idUser = 1; 
 
-  const handleDelete = (id) => {
-    setDestinataires(prev => prev.filter(d => d.id !== id));
+
+  useEffect(() => {
+    const fetchDestinataires = async () => {
+      try {
+        const response = await fetch(`https://api.wizia.dimitribeziau.fr/mail/ListDestinataireClient/${idUser}`);
+        const data = await response.json();
+        if (data.success) {
+          setDestinataires(data.data);
+        } else {
+          toast.error("Erreur de récupération des destinataires");
+        }
+      } catch (error) {
+        toast.error("Erreur lors du chargement");
+        console.error("Erreur fetch :", error);
+      }
+    };
+
+    fetchDestinataires();
+  }, [idUser]);
+
+ 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Confirmer la suppression ?")) return;
+
+    try {
+      const response = await fetch(`https://api.wizia.dimitribeziau.fr/mail/ListDestinataireClient/${id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      if (data.success) {
+        setDestinataires((prev) => prev.filter((d) => d.id !== id));
+        toast.success("Destinataire supprimé");
+      } else {
+        toast.error("Erreur de suppression : " + data.message);
+      }
+    } catch (error) {
+      toast.error("Erreur serveur lors de la suppression");
+      console.error("Erreur DELETE :", error);
+    }
   };
 
   const handleEditAdd = (destinataire = null) => {
-    // Si destinataire est null => ajout, sinon modification
     navigate("/Dashboard/Newsletters/ListeDestinataireNewsletters/FormulaireDestinataire", {
       state: destinataire,
     });
@@ -46,19 +81,25 @@ const ListeDestinataireNewsletters = () => {
           </tr>
         </thead>
         <tbody>
-          {destinataires.map((dest) => (
-            <tr key={dest.id}>
-              <td>{dest.nom}</td>
-              <td>{dest.prenom}</td>
-              <td>{dest.email}</td>
-              <td>
-                <button onClick={() => handleEditAdd(dest)}>✏️</button>
-              </td>
-              <td>
-                <button onClick={() => handleDelete(dest.id)}>🗑️</button>
-              </td>
+          {destinataires.length === 0 ? (
+            <tr>
+              <td colSpan="5">Aucun destinataire trouvé.</td>
             </tr>
-          ))}
+          ) : (
+            destinataires.map((dest) => (
+              <tr key={dest.id}>
+                <td>{dest.nom}</td>
+                <td>{dest.prenom}</td>
+                <td>{dest.mail}</td>
+                <td>
+                  <button onClick={() => handleEditAdd(dest)}>✏️</button>
+                </td>
+                <td>
+                  <button onClick={() => handleDelete(dest.id)}>🗑️</button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

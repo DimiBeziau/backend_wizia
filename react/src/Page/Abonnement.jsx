@@ -12,7 +12,7 @@ return(
           prix = "Free"
           icon="https://cdn-icons-png.flaticon.com/512/561/561127.png" 
           buttonText="Payé" 
-          destination="Abonnement/UpdateAbonnement/Free" 
+          destination="Abonnement/UpdateAbonnement" 
         />
          <CardWelcome 
           nom="Newsletters" 
@@ -20,7 +20,7 @@ return(
           prix = "17,99"
           icon="https://cdn-icons-png.flaticon.com/512/561/561127.png"  
           buttonText="Payé" 
-          destination="Abonnement/UpdateAbonnement/17,99" 
+          destination="Abonnement/UpdateAbonnement" 
         />
          <CardWelcome 
           nom="Newsletters" 
@@ -28,7 +28,7 @@ return(
           icon="https://cdn-icons-png.flaticon.com/512/561/561127.png" 
           prix = "29,99"
           buttonText="Payé" 
-          destination="Abonnement/UpdateAbonnement/29,99" 
+          destination="Abonnement/UpdateAbonnement" 
             />
      </div>
 </div>
