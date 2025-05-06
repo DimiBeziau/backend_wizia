@@ -6,6 +6,7 @@ use App\Http\Controllers\C_IAController;
 use App\Http\Controllers\C_BillController;
 use App\Http\Controllers\C_MailController;
 use App\Http\Controllers\C_NetwoorkController;
+use App\Http\Controllers\C_StripeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -35,6 +36,13 @@ Route::group(['prefix' => '/ia'], function () {
     Route::post('/generateIA', [C_IAController::class, 'generatpromptgemini'])->name('generatpromptgemini');
   });
 });
+Route::group(['prefix' => '/stripe'], function () {
+  Route::name('stripe.')->controller(C_IAController::class)->group(function () {
+    // Route::post('/generateIA', 'generatprompt')->name('generatprompt');
+    Route::post('/create-payment-intent', [C_StripeController::class, 'createPaymentIntent']);
+
+  });
+});
 
 Route::group(['prefix' => '/auth'], function () {
   Route::name('auth.')->group(function () {
@@ -51,9 +59,11 @@ Route::group(['prefix' => '/auth'], function () {
 Route::group(['prefix' => '/mail'], function () {
   route::name('api.')->controller(C_MailController::class)->group(function () {
     Route::post('/generateMail', 'generateMail')->name('generateMail');
-    Route::get('/ListDestinataireClient/{id}', 'getListDestinatair')->name('getListDestinatair');
-    Route::post('/ListDestinataireClient/{id}', 'UpdateListDestinatair')->name('UpdateListDestinatair');
-    Route::delete('/ListDestinataireClient/{id}', 'deleteListDestinatair')->name('deleteListDestinatair');
+    Route::post('/AddMail/{id}', 'AddMail')->name('AddMail');
+    Route::get('/ListDestinataireClient/{id}', 'getListDestinataire')->name('getListDestinataire');
+    Route::post('/AddDestinataireClient/{id}', 'AddListDestinataire')->name('AddListDestinataire');
+    Route::put('/UpdateDestinataireClient/{id}', 'UpdateListDestinataire')->name('UpdateListDestinataire');
+    Route::delete('/ListDestinataireClient/{id}', 'deleteListDestinataire')->name('deleteListDestinataire');
   });
 });
 

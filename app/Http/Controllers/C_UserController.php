@@ -77,10 +77,14 @@ class C_UserController extends Controller
                 return response()->json(['message' => 'Utilisateur non trouvé'], 404);
             }
 
-            $user->surname = $request->surname;
             $user->name = $request->name;
             $user->email = $request->email;
             $user->number = $request->number;
+            $user->firstName = $request->firstName;
+            if($user->password !==null && $request->has('password')){
+                $user->password = Hash::make($request->password);
+            }
+           
             $user->save();
 
             return response()->json(['message' => 'Utilisateur mis à jour avec succès']);

@@ -4,6 +4,8 @@ import CardIA from "../Components/Retulisatble/CardIA";
 import CardListDestinataire from "../Components/CardListDestinataire";
 import { useState } from 'react';
 import "./Style/Newletters.css"; 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 
 const Newsletters = () => {
@@ -20,12 +22,13 @@ const Newsletters = () => {
   });
 
   const [Mail, setMail] = useState({
-    fromEmail: user.userEmail,
-    fromName: '',
-    to: [''],
+    fromEmail: "wiz.ia@dimitribeziau.fr",
+    fromName: "WIZIA@gmail.com",
+    to: [],
+    toListId: [],
     body: '',
-    subject: '',
-    altBody: '',
+    subject: "Ma newsletter",
+    altBody: "Texte brut de la newsletter",
     image: '',
     Date: '',
     Batch: false,
@@ -53,46 +56,89 @@ const Newsletters = () => {
 
   const ValiderNewsletters = async () => {
     try {
-      if (generatedPrompt !== "" && selectedDates.startDate !== null) {
+      if (generatedPrompt !== "" && selectedDates.startDate !== null && Mail.to.length > 0) {
+        
         const today = new Date();
         const formattedToday = formatDateAmerican(today);
         const formattedSelectedDate = formatDateAmerican(new Date(selectedDates.startDate));
-
+        
         if (formattedSelectedDate === formattedToday) {
+          
           const options = {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
             },
+            
             body: JSON.stringify({
-              to: "querelmatthieu@gmail.com",
-              subject: "Ma newsletter",
+              to: Mail.to,
+              subject: Mail.subject,
               body: generatedPrompt,
-              altBody: "Texte brut de la newsletter",
-              fromName: "Mon entreprise",
-              fromEmail: "contact@dimitribeziau.fr",
+              altBody: Mail.altBody,
+              fromName: Mail.fromName,
+              fromEmail: Mail.fromEmail,
             }),
           };
-
-          const response = await fetch('https://api.wizia.dimitribeziau.fr/mail/generateMail', options);
+      
+           const response = await fetch('https://api.wizia.dimitribeziau.fr/mail/generateMail', options);
+         // const response = await fetch('https://api.wizia.dimitribeziau.fr/mail/generateMail', options);
           const data = await response.json();
+          AddNewsletters();
 
           if (response.ok) {
-            console.log("Mail envoyé :", data);
+            toast('Mail envoyé ', {
+              type: "success"
+              })         
           } else {
-            console.error("Erreur lors de l’envoi :", data);
+            toast('Erreur lors de l’envoi', {
+        type: "error"
+            })    
           }
         } else {
-          console.log("La date sélectionnée n'est pas aujourd'hui !");
+          toast('La date sélectionnée n est pas aujourd hui !', {
+        type: "error"
+            })     
         }
       } else {
-        setError("Veuillez générer du contenu et choisir une date !");
+        toast('Veuillez générer du contenu et choisir une date !', {
+        type: "error"
+            })
       }
     } catch (e) {
       console.error("Erreur réseau :", e);
       setError("Erreur réseau, impossible d'envoyer pour le moment.");
+      toast('Erreur réseau, impossible d envoyer pour le moment.', {
+        type: "error"
+            })
     }
   };
+  const AddNewsletters = async () => {
+    const options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+            
+            body: JSON.stringify({
+              to: Mail.to,
+              toListId: Mail.toListId,
+              subject: Mail.subject,
+              body: generatedPrompt,
+              altBody: Mail.altBody,
+              fromName: Mail.fromName,
+              fromEmail: Mail.fromEmail,
+            }),
+          };
+      
+    const response = await fetch('https://api.wizia.dimitribeziau.fr/mail/AddMail/1', options);
+    const data = await response.json();
+    if (data) {
+      return true
+    } else {
+      return false
+    }
+     
+  }
 
   return (
     <div className="Newsletters">
@@ -114,12 +160,16 @@ const Newsletters = () => {
           <Marronniers onDateChange={setSelectedDates} />
         </div>
         <div className="NewslettersListDestinataire">
-          <CardListDestinataire />
+          <CardListDestinataire setMail={setMail} />
         </div>
 
       </div>
       <div>
-        <button onClick={ValiderNewsletters}>Valider la Newsletters</button>
+      
+      {generatedPrompt !== "" && selectedDates.startDate !== null && (
+       <button onClick={ValiderNewsletters}>Valider la Newsletters</button>
+        )}
+
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>

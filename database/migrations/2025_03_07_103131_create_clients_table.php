@@ -16,6 +16,7 @@ return new class extends Migration
       $table->text('mail');
       $table->text('prenom');
       $table->text('nom');
+      $table->text('idUser');
       $table->timestamps();
     });
   }
