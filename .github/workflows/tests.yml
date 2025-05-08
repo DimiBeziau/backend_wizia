@@ -62,6 +62,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./react/dist/
           server-dir: ./public_html/ 
-          clean: true
           
 
