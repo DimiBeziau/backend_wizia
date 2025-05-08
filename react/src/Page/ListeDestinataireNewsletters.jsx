@@ -6,13 +6,13 @@ import "./Style/ListeDestinataireNewsletters.css";
 const ListeDestinataireNewsletters = () => {
   const navigate = useNavigate();
   const [destinataires, setDestinataires] = useState([]);
-  const idUser = 1; 
+  const idUser = 1;
 
 
   useEffect(() => {
     const fetchDestinataires = async () => {
       try {
-        const response = await fetch(`https://api.wizia.dimitribeziau.fr/mail/ListDestinataireClient/${idUser}`);
+        const response = await fetch(`process.env.VITE_API_BASE_URLmail/ListDestinataireClient/${idUser}`);
         const data = await response.json();
         if (data.success) {
           setDestinataires(data.data);
@@ -28,12 +28,12 @@ const ListeDestinataireNewsletters = () => {
     fetchDestinataires();
   }, [idUser]);
 
- 
+
   const handleDelete = async (id) => {
     if (!window.confirm("Confirmer la suppression ?")) return;
 
     try {
-      const response = await fetch(`https://api.wizia.dimitribeziau.fr/mail/ListDestinataireClient/${id}`, {
+      const response = await fetch(`process.env.VITE_API_BASE_URLmail/ListDestinataireClient/${id}`, {
         method: "DELETE",
       });
       const data = await response.json();

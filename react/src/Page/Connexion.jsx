@@ -1,6 +1,6 @@
 import './Style/Connexion.css';
 import { useState } from 'react';
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./Style/Error.css"
 const Connexion = () => {
   const [authState, setAuthState] = useState({
@@ -25,13 +25,13 @@ const Connexion = () => {
   };
 
   const Connections = async (e) => {
-  
+
     e.preventDefault();
     const { Email, PassWord } = authState;
 
     try {
       console.log(PassWord.length)
-      if (Email === '' || PassWord === '' || PassWord.length < 12 ) {
+      if (Email === '' || PassWord === '' || PassWord.length < 12) {
         setError('Veuillez remplir les champs de connexion.');
       } else if (!regexConformation(Email)) {
         setError('Adresse e-mail invalide.');
@@ -49,7 +49,7 @@ const Connexion = () => {
         //   }),
         // };
 
-        // const response = await fetch('https://api.wizia.dimitribeziau.fr/auth/login', option);
+        // const response = await fetch('process.env.VITE_API_BASE_URLauth/login', option);
 
         // if (response.ok) {
         //   const data = await response.json();
@@ -96,13 +96,13 @@ const Connexion = () => {
           </label>
           <div className="links">
             <Link to="/CreateCompte" style={{ color: 'violet', textDecoration: 'none' }}>
-       Créer mon compte
-        </Link>
-        <br />
-          <Link to="/PasswordForget" style={{ color: 'blue', textDecoration: 'none' }}>
-          Mot de passe oublié
-       </Link>
-        
+              Créer mon compte
+            </Link>
+            <br />
+            <Link to="/PasswordForget" style={{ color: 'blue', textDecoration: 'none' }}>
+              Mot de passe oublié
+            </Link>
+
           </div>
           {error && <p className="errorText">{error}</p>}
           <button type="submit">Connexion</button>

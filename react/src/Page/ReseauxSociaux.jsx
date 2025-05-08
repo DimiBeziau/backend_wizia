@@ -32,11 +32,11 @@ const ReseauxSociaux = () => {
 
 
   const ValiderReseauxSociaux = async () => {
- 
+
 
 
     if (generatedPrompt !== "" && selectedDates.startDate !== null) {
-     
+
       const today = new Date(); // Manquait ici
       const formatDate = (date) => {
         const years = date.getFullYear();
@@ -57,7 +57,7 @@ const ReseauxSociaux = () => {
           now: false
         }
 
-        const response = await fetch('https://api.wizia.dimitribeziau.fr/post', {
+        const response = await fetch('process.env.VITE_API_BASE_URLpost', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

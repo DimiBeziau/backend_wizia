@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Style/FormulaireDestinataire.css";
 
@@ -26,11 +26,11 @@ const FormulaireDestinataire = () => {
 
     try {
       let response;
-      const idUser =  1; 
+      const idUser = 1;
 
       if (destinataire?.id) {
         // Mise à jour
-        response = await fetch(`https://api.wizia.dimitribeziau.fr/mail/UpdateDestinataireClient/${idUser}`, {
+        response = await fetch(`process.env.VITE_API_BASE_URLmail/UpdateDestinataireClient/${idUser}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const FormulaireDestinataire = () => {
         });
       } else {
         // Ajout
-        response = await fetch(`https://api.wizia.dimitribeziau.fr/mail/AddDestinataireClient/${idUser}`, {
+        response = await fetch(`process.env.VITE_API_BASE_URLmail/AddDestinataireClient/${idUser}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
