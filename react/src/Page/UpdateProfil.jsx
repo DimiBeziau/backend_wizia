@@ -5,21 +5,21 @@ import './Style/UpdateProfil.css';
 
 const UpdateProfil = () => {
   const [user, setUser] = useState({
-      firstName: "",
-      surname: "",
-  name: "",
-  email: "",
-  number: ""
+    firstName: "",
+    surname: "",
+    name: "",
+    email: "",
+    number: ""
   });
 
   const userId = 1;
 
   useEffect(() => {
     const fetchUser = async () => {
-          const response = await fetch(`https://api.wizia.dimitribeziau.fr/users/${userId}`);
-         
+      const response = await fetch(`process.env.VITE_API_BASE_URLusers/${userId}`);
+
       if (response.ok) {
-            const data = await response.json();
+        const data = await response.json();
         setUser({
           firstName: data.firstName,
           name: data.name,
@@ -41,9 +41,9 @@ const UpdateProfil = () => {
     });
   };
 
-      const handleUpdate = async () => {
-      
-    const response = await fetch(`https://api.wizia.dimitribeziau.fr/users/${userId}`, {
+  const handleUpdate = async () => {
+
+    const response = await fetch(`process.env.VITE_API_BASE_URLusers/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -60,58 +60,58 @@ const UpdateProfil = () => {
 
   return (
     <>
-    <NavBar />
-    <div className="UpdateProfil">
-      
-    <div className="card">
-      
-      <h1>Modifier le Profil</h1>
+      <NavBar />
+      <div className="UpdateProfil">
 
-      <div className="profil-form">
-        <label htmlFor="firstName">Prénom</label>
-        <input
-          id="firstName"
-          type="text"
-          name="firstName"
-          value={user.firstName}
-          onChange={handleChange}
-        />
+        <div className="card">
 
-        <label htmlFor="name">Nom</label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value={user.name}
-          onChange={handleChange}
-        />
+          <h1>Modifier le Profil</h1>
 
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          value={user.email}
-          onChange={handleChange}
-        />
+          <div className="profil-form">
+            <label htmlFor="firstName">Prénom</label>
+            <input
+              id="firstName"
+              type="text"
+              name="firstName"
+              value={user.firstName}
+              onChange={handleChange}
+            />
 
-        <label htmlFor="number">Téléphone</label>
-        <input
-          id="number"
-          type="text"
-          name="number"
-          value={user.number}
-          onChange={handleChange}
-        />
+            <label htmlFor="name">Nom</label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              value={user.name}
+              onChange={handleChange}
+            />
 
-        <button onClick={handleUpdate}>Mettre à jour</button>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={user.email}
+              onChange={handleChange}
+            />
+
+            <label htmlFor="number">Téléphone</label>
+            <input
+              id="number"
+              type="text"
+              name="number"
+              value={user.number}
+              onChange={handleChange}
+            />
+
+            <button onClick={handleUpdate}>Mettre à jour</button>
+          </div>
+
+          <ToastContainer position="top-right" />
+        </div>
       </div>
-
-      <ToastContainer position="top-right" />
-    </div>
-      </div>
-      </>
-);
+    </>
+  );
 
 };
 

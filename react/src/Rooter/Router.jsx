@@ -31,6 +31,9 @@ const router = createBrowserRouter([
           path: '/',
           element: <Connexion />
         }, {
+          path: '/login',
+          element: <Connexion />
+        }, {
           path: "/CreateCompte",
           element: <CreateCompte />
         }, {
@@ -73,7 +76,7 @@ const router = createBrowserRouter([
         path: "/Dashboard/Abonnement",
         element: <Abonnement />
       }, {
-        path: "/Dashboard/Abonnement/UpdateAbonnement/:prix",
+        path: "/Dashboard/Abonnement/UpdateAbonnement",
         element: <UpdateAbonnement />
       }, {
         path: "/Dashboard/History",

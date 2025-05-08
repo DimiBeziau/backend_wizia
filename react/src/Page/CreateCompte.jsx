@@ -17,7 +17,7 @@ const CreateCompte = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
- const onClosed = () => {
+  const onClosed = () => {
     navigate("/");
   };
 
@@ -25,7 +25,7 @@ const CreateCompte = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://api.wizia.dimitribeziau.fr/auth/register", {
+      const response = await fetch("process.env.VITE_API_BASE_URLauth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,11 +35,11 @@ const CreateCompte = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Compte créé avec succès :", data);
-      
+
       } else {
         setError("Erreur lors de la création du compte");
       }
-      
+
     } catch (error) {
       console.error("Erreur lors de la création du compte :", error);
       setError("Erreur lors de la création du compte");
@@ -48,7 +48,7 @@ const CreateCompte = () => {
 
   return (
     <div className="CreateCompte">
-       <button className="closeButton" onClick={onClosed}>❌</button>
+      <button className="closeButton" onClick={onClosed}>❌</button>
       <form onSubmit={handleSubmit}>
         <h2>Créer un compte</h2>
 

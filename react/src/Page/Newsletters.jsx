@@ -3,7 +3,7 @@ import Marronniers from "../Components/Retulisatble/Marronniers";
 import CardIA from "../Components/Retulisatble/CardIA";
 import CardListDestinataire from "../Components/CardListDestinataire";
 import { useState } from 'react';
-import "./Style/Newletters.css"; 
+import "./Style/Newletters.css";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
@@ -51,25 +51,25 @@ const Newsletters = () => {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-    return `${year}${month}${day}`; 
+    return `${year}${month}${day}`;
   };
 
   const ValiderNewsletters = async () => {
     try {
       if (generatedPrompt !== "" && selectedDates.startDate !== null && Mail.to.length > 0) {
-        
+
         const today = new Date();
         const formattedToday = formatDateAmerican(today);
         const formattedSelectedDate = formatDateAmerican(new Date(selectedDates.startDate));
-        
+
         if (formattedSelectedDate === formattedToday) {
-          
+
           const options = {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
             },
-            
+
             body: JSON.stringify({
               to: Mail.to,
               subject: Mail.subject,
@@ -79,65 +79,65 @@ const Newsletters = () => {
               fromEmail: Mail.fromEmail,
             }),
           };
-      
-           const response = await fetch('https://api.wizia.dimitribeziau.fr/mail/generateMail', options);
-         // const response = await fetch('https://api.wizia.dimitribeziau.fr/mail/generateMail', options);
+
+          const response = await fetch('process.env.VITE_API_BASE_URLmail/generateMail', options);
+          // const response = await fetch('process.env.VITE_API_BASE_URLmail/generateMail', options);
           const data = await response.json();
           AddNewsletters();
 
           if (response.ok) {
             toast('Mail envoyé ', {
               type: "success"
-              })         
+            })
           } else {
             toast('Erreur lors de l’envoi', {
-        type: "error"
-            })    
+              type: "error"
+            })
           }
         } else {
           toast('La date sélectionnée n est pas aujourd hui !', {
-        type: "error"
-            })     
+            type: "error"
+          })
         }
       } else {
         toast('Veuillez générer du contenu et choisir une date !', {
-        type: "error"
-            })
+          type: "error"
+        })
       }
     } catch (e) {
       console.error("Erreur réseau :", e);
       setError("Erreur réseau, impossible d'envoyer pour le moment.");
       toast('Erreur réseau, impossible d envoyer pour le moment.', {
         type: "error"
-            })
+      })
     }
   };
   const AddNewsletters = async () => {
     const options = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json; charset=utf-8',
-            },
-            
-            body: JSON.stringify({
-              to: Mail.to,
-              toListId: Mail.toListId,
-              subject: Mail.subject,
-              body: generatedPrompt,
-              altBody: Mail.altBody,
-              fromName: Mail.fromName,
-              fromEmail: Mail.fromEmail,
-            }),
-          };
-      
-    const response = await fetch('https://api.wizia.dimitribeziau.fr/mail/AddMail/1', options);
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+
+      body: JSON.stringify({
+        to: Mail.to,
+        toListId: Mail.toListId,
+        subject: Mail.subject,
+        body: generatedPrompt,
+        altBody: Mail.altBody,
+        fromName: Mail.fromName,
+        fromEmail: Mail.fromEmail,
+      }),
+    };
+
+    const response = await fetch('process.env.VITE_API_BASE_URLmail/AddMail/1', options);
     const data = await response.json();
     if (data) {
       return true
     } else {
       return false
     }
-     
+
   }
 
   return (
@@ -165,9 +165,9 @@ const Newsletters = () => {
 
       </div>
       <div>
-      
-      {generatedPrompt !== "" && selectedDates.startDate !== null && (
-       <button onClick={ValiderNewsletters}>Valider la Newsletters</button>
+
+        {generatedPrompt !== "" && selectedDates.startDate !== null && (
+          <button onClick={ValiderNewsletters}>Valider la Newsletters</button>
         )}
 
       </div>

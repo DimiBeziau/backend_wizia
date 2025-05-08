@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
   const [Prompt, setPrompt] = useState("");
   const [error, setError] = useState("");
-  
+
   const GenererMailType = async () => {
     try {
       // setPrompt(prompt); // test
@@ -20,7 +20,7 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
         }),
       };
 
-      const reponse = await fetch('https://api.wizia.dimitribeziau.fr/ia/generateIA', Option);
+      const reponse = await fetch('process.env.VITE_API_BASE_URLia/generateIA', Option);
 
       if (reponse.ok) {
         const reponseData = await reponse.json();
@@ -37,19 +37,19 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
     }
   };
 
- 
+
   return (
     <div className="CardIA">
       <h2>{Titre}</h2>
-       {Prompt !== "" && (
-  <textarea
-    style={{ width: "100%", height: "150px", borderRadius: "6px", backgroundColor: "#ffffff" }}
-    value={Prompt}
+      {Prompt !== "" && (
+        <textarea
+          style={{ width: "100%", height: "150px", borderRadius: "6px", backgroundColor: "#ffffff" }}
+          value={Prompt}
           onChange={(event) => { setPrompt(event.target.value); onPromptGenerated(event.target.value) }}
-  />
+        />
       )}
       <button onClick={GenererMailType}>Générer</button>
-      
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
