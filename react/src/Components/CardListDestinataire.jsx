@@ -21,7 +21,6 @@ const CardListDestinataire = ({ setMail }) => {
         setError("Une erreur s'est produite. Veuillez réessayer.");
       }
     };
-
     ListDestinataire();
   }, []);
 
@@ -47,7 +46,7 @@ const CardListDestinataire = ({ setMail }) => {
                       setMail((prev) => ({
                         ...prev,
                         to: [...prev.to, dest.mail],
-                         toListId: [...(prev.toListId || []), dest.id],
+                        toListId: [...(prev.toListId || []), dest.id],
                       }));
                     } else {
                       setMail((prev) => ({
