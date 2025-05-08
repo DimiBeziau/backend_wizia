@@ -57,7 +57,7 @@ const ReseauxSociaux = () => {
           now: false
         }
 
-        const response = await fetch('process.env.VITE_API_BASE_URLpost', {
+        const response = await fetch(`${process.env.VITE_API_BASE_URL}post`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

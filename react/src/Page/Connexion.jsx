@@ -49,7 +49,7 @@ const Connexion = () => {
         //   }),
         // };
 
-        // const response = await fetch('process.env.VITE_API_BASE_URLauth/login', option);
+        // const response = await fetch(`${process.env.VITE_API_BASE_URL}auth/login`, option);
 
         // if (response.ok) {
         //   const data = await response.json();

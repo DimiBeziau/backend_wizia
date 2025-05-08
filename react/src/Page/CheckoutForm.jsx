@@ -28,7 +28,7 @@ const CheckoutForm = ({ price }) => {
     setProcessing(true);
 
     try {
-      const response = await fetch("process.env.VITE_API_BASE_URLstripe/create-payment-intent", {
+      const response = await fetch(`${process.env.VITE_API_BASE_URL}stripe/create-payment-intent`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

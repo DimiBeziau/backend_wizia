@@ -80,8 +80,8 @@ const Newsletters = () => {
             }),
           };
 
-          const response = await fetch('process.env.VITE_API_BASE_URLmail/generateMail', options);
-          // const response = await fetch('process.env.VITE_API_BASE_URLmail/generateMail', options);
+          const response = await fetch(`${process.env.VITE_API_BASE_URL}mail/generateMail`, options);
+          // const response = await fetch(`${process.env.VITE_API_BASE_URL}mail/generateMail`, options);
           const data = await response.json();
           AddNewsletters();
 
@@ -90,7 +90,7 @@ const Newsletters = () => {
               type: "success"
             })
           } else {
-            toast('Erreur lors de l’envoi', {
+            toast('Erreur lors de l\’envoi', {
               type: "error"
             })
           }
@@ -130,7 +130,7 @@ const Newsletters = () => {
       }),
     };
 
-    const response = await fetch('process.env.VITE_API_BASE_URLmail/AddMail/1', options);
+    const response = await fetch(`${process.env.VITE_API_BASE_URL}mail/AddMail/1`, options);
     const data = await response.json();
     if (data) {
       return true

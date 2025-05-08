@@ -20,7 +20,7 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
         }),
       };
 
-      const reponse = await fetch('process.env.VITE_API_BASE_URLia/generateIA', Option);
+      const reponse = await fetch(`${process.env.VITE_API_BASE_URL}ia/generateIA`, Option);
 
       if (reponse.ok) {
         const reponseData = await reponse.json();

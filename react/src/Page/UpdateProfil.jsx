@@ -16,7 +16,7 @@ const UpdateProfil = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await fetch(`process.env.VITE_API_BASE_URLusers/${userId}`);
+      const response = await fetch(`${process.env.VITE_API_BASE_URL}users/${userId}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -43,7 +43,7 @@ const UpdateProfil = () => {
 
   const handleUpdate = async () => {
 
-    const response = await fetch(`process.env.VITE_API_BASE_URLusers/${userId}`, {
+    const response = await fetch(`${process.env.VITE_API_BASE_URL}users/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

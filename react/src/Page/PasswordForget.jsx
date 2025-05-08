@@ -12,7 +12,7 @@ const PasswordForget = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("process.env.VITE_API_BASE_URLauth/password/forget", {
+      const response = await fetch(`${process.env.VITE_API_BASE_URL}auth/password/forget`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
