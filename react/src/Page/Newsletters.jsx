@@ -80,8 +80,8 @@ const Newsletters = () => {
             }),
           };
 
-          const response = await fetch(`${process.env.VITE_API_BASE_URL}mail/generateMail`, options);
-          // const response = await fetch(`${process.env.VITE_API_BASE_URL}mail/generateMail`, options);
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/generateMail`, options);
+          // const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/generateMail`, options);
           const data = await response.json();
           AddNewsletters();
 
@@ -130,7 +130,7 @@ const Newsletters = () => {
       }),
     };
 
-    const response = await fetch(`${process.env.VITE_API_BASE_URL}mail/AddMail/1`, options);
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/AddMail/1`, options);
     const data = await response.json();
     if (data) {
       return true
