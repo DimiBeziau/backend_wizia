@@ -12,7 +12,7 @@ const ListeDestinataireNewsletters = () => {
   useEffect(() => {
     const fetchDestinataires = async () => {
       try {
-        const response = await fetch(`${process.env.VITE_API_BASE_URL}mail/ListDestinataireClient/${idUser}`);
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/ListDestinataireClient/${idUser}`);
         const data = await response.json();
         if (data.success) {
           setDestinataires(data.data);
@@ -33,7 +33,7 @@ const ListeDestinataireNewsletters = () => {
     if (!window.confirm("Confirmer la suppression ?")) return;
 
     try {
-      const response = await fetch(`${process.env.VITE_API_BASE_URL}mail/ListDestinataireClient/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/ListDestinataireClient/${id}`, {
         method: "DELETE",
       });
       const data = await response.json();

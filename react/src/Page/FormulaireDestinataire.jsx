@@ -30,7 +30,7 @@ const FormulaireDestinataire = () => {
 
       if (destinataire?.id) {
         // Mise à jour
-        response = await fetch(`${process.env.VITE_API_BASE_URL}mail/UpdateDestinataireClient/${idUser}`, {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/UpdateDestinataireClient/${idUser}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const FormulaireDestinataire = () => {
         });
       } else {
         // Ajout
-        response = await fetch(`${process.env.VITE_API_BASE_URL}mail/AddDestinataireClient/${idUser}`, {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/AddDestinataireClient/${idUser}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
