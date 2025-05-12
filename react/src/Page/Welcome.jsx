@@ -16,6 +16,7 @@ const Welcome = () => {
           prix=""
           buttonText="Lire" 
           destination="Newsletters" 
+          gray= {false}
         />
         <CardWelcome 
           nom="Réseaux Sociaux" 
@@ -24,6 +25,7 @@ const Welcome = () => {
           icon="https://cdn-icons-png.flaticon.com/512/2111/2111398.png" 
           buttonText="Lire" 
           destination="Réseaux_Sociaux" 
+          gray= {false}
         />
         <CardWelcome 
           nom="Google my business" 
@@ -31,7 +33,8 @@ const Welcome = () => {
           prix=""
           icon="https://www.gstatic.com/analytics-suite/header/suite/v2/ic_analytics.svg" 
           buttonText="Découvrir" 
-          destination="Google_Analytics" 
+          destination="Google_Analytics"
+          gray= {false}
 />
       </div>
     </div>

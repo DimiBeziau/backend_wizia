@@ -7,6 +7,7 @@ use App\Http\Controllers\C_BillController;
 use App\Http\Controllers\C_MailController;
 use App\Http\Controllers\C_NetwoorkController;
 use App\Http\Controllers\C_StripeController;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Route;
 
 
@@ -41,13 +42,13 @@ Route::group(['prefix' => '/stripe'], function () {
     // Route::post('/generateIA', 'generatprompt')->name('generatprompt');
     Route::post('/create-payment-intent', [C_StripeController::class, 'createPaymentIntent']);
    Route::get('/abonnement/{id}', [C_StripeController::class, 'getAbonnement']);
-
   });
 });
 
 Route::group(['prefix' => '/auth'], function () {
   Route::name('auth.')->group(function () {
     Route::post('/register', [C_UserController::class, 'register'])->name('register');
+    Route::post('/login', [C_UserController::class, 'login'])->name('login');
     // Route::group(['prefix' => '/facebook'],function (){
     //     Route::name('facebook.')->controller(FacebookController::class)->group(function(){
     //         Route::get('/', 'index')->name('facebook');

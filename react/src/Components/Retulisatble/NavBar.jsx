@@ -2,7 +2,10 @@ import "./Style/NavBar.css"
 import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
+  function logout(event) {
+    event.preventDefault();
 
+  }
   return (
     <nav className="navbar">
       <NavLink to="/" className="nav-link" >
@@ -35,6 +38,7 @@ const NavBar = () => {
             <NavLink to="/Dashboard/Abonnement" className="nav-link">Abonnement</NavLink>
             <NavLink to="/Dashboard/UpdateProfil" className="nav-link">Profil</NavLink>
             <NavLink to="/Dashboard/History" className="nav-link">Historique</NavLink>
+            <NavLink to="#" onClick={logout} className="nav-link">Déconnexion</NavLink>
           </div>
         </li>
       </ul>

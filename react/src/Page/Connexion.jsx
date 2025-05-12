@@ -2,11 +2,13 @@ import './Style/Connexion.css';
 import { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import "./Style/Error.css"
+import { useStateContext } from '../Context/ContextProvider';
 const Connexion = () => {
   const [authState, setAuthState] = useState({
     Email: '',
     PassWord: '',
   });
+  const { setToken, setUser } = useStateContext();
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -30,34 +32,34 @@ const Connexion = () => {
     const { Email, PassWord } = authState;
 
     try {
-      console.log(PassWord.length)
       if (Email === '' || PassWord === '' || PassWord.length < 12) {
         setError('Veuillez remplir les champs de connexion.');
       } else if (!regexConformation(Email)) {
         setError('Adresse e-mail invalide.');
       } else {
         setError('');
-        navigate('/Dashboard');// pour les test  et ajouter un GUid 
-        // const option = {
-        //   method: 'POST',
-        //   headers: { // 
-        //     'Content-Type': 'application/json; charset=utf-8',
-        //   },
-        //   body: JSON.stringify({
-        //     email: Email,
-        //     password: PassWord,
-        //   }),
-        // };
+        const option = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            email: Email,
+            password: PassWord,
+          }),
+        };
 
-        // const response = await fetch(`${process.env.VITE_API_BASE_URL}auth/login`, option);
+        const response = await fetch(`${process.env.VITE_API_BASE_URL}auth/login`, option);
 
-        // if (response.ok) {
-        //   const data = await response.json();
-        //   console.log('Connexion réussie :', data);
-        //   navigate('/'); 
-        // } else {
-        //   setError("Identifiants incorrects.");
-        // }
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Connexion réussie :', data);
+          setToken(data.token)
+          setUser(data.user);
+        } else {
+          setError("Identifiants incorrects.");
+        }
       }
     } catch (e) {
       console.error('Erreur lors de la requête :', e);

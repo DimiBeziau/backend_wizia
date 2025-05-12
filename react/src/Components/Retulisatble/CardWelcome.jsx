@@ -3,7 +3,7 @@ import "./Style/cardWelcome.css";
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-const CardWelcome = ({ nom, description,prix, icon, buttonText, destination }) => {
+const CardWelcome = ({ nom, description,prix, icon, buttonText, destination,gray }) => {
   const navigate = useNavigate();
   const [error, setError] = useState(""); 
 
@@ -19,7 +19,11 @@ const CardWelcome = ({ nom, description,prix, icon, buttonText, destination }) =
   };
 
   return (
-    <div className="CardWelcome">
+    <div className="CardWelcome" style={{ opacity: gray ? 0.5 : 1,
+        pointerEvents: gray ? "none" : "auto",
+      userSelect: gray ? "none" : "auto",
+    }}>
+      
       {icon && <img src={icon} alt="icon" className="CardIcon" />}
       <h2>{nom}</h2>
       <a>{prix}</a>

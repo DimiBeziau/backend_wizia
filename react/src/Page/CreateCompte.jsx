@@ -1,14 +1,14 @@
 
 import React, { useState } from "react";
 import "./Style/CreateCompte.css";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const CreateCompte = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    nom: "",
-    prenom: "",
+    name: "",
+    firstName: "",
     email: "",
     password: "",
   });
@@ -25,23 +25,24 @@ const CreateCompte = () => {
     e.preventDefault();
 
     try {
+      console.log(`${process.env.VITE_API_BASE_URL}auth/register`)
       const response = await fetch(`${process.env.VITE_API_BASE_URL}auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json"
         },
         body: JSON.stringify(formData),
       });
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
-        console.log("Compte créé avec succès :", data);
-
+        window.location.href = "/";
       } else {
-        setError("Erreur lors de la création du compte");
+        setError(data.message || "Erreur lors de la création du compte");
       }
 
     } catch (error) {
-      console.error("Erreur lors de la création du compte :", error);
+      console.error(error);
       setError("Erreur lors de la création du compte");
     }
   };
@@ -53,16 +54,16 @@ const CreateCompte = () => {
         <h2>Créer un compte</h2>
 
         <label>Nom :</label>
-        <input type="text" name="nom" value={formData.nom} onChange={handleChange} required />
+        <input type="text" name="name" onChange={handleChange} required />
 
         <label>Prénom :</label>
-        <input type="text" name="prenom" value={formData.prenom} onChange={handleChange} required />
+        <input type="text" name="firstName" onChange={handleChange} required />
 
         <label>Email :</label>
-        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+        <input type="email" name="email" onChange={handleChange} required />
 
         <label>Mot de passe :</label>
-        <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+        <input type="password" name="password" onChange={handleChange} required />
 
         <button type="submit">Créer le compte</button>
         {error && <p className="errorText">{error}</p>}
