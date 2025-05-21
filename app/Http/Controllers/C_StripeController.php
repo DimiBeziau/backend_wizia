@@ -34,7 +34,7 @@ class C_StripeController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function getAbonnement(Request $id)
+    public function getAbonnement($id)
 {
     try {
         $user = User::find($id);
@@ -42,7 +42,7 @@ class C_StripeController extends Controller
             return response()->json(['message' => 'Utilisateur non trouvé'], 404);
         }
 
-        $idAbonnement = $user->Abonnements;
+        $idAbonnement = $user->idAbonnement; 
         
         $abonnement = Abonnements::find($idAbonnement);
 
@@ -51,21 +51,19 @@ class C_StripeController extends Controller
         }
 
         if ($abonnement->isFree == 1) {
-
             return response()->json("isFree", 200);
         } elseif ($abonnement->isPremium == 1) {
-
             return response()->json("isPremium", 200);
         } elseif ($abonnement->isProfessionnel == 1) {
-
             return response()->json("isProfessionnel", 200);
         }
 
         return response()->json(['message' => 'Aucun type d’abonnement valide'], 400);
 
     } catch (\Exception $e) {
-        return response()->json(['message' => 'Erreur lors de la récupération de l\'abonnement'], 500);
+        return response()->json(['message' => 'Erreur lors de la récupération de l\'abonnement', 'error' => $e->getMessage()], 500);
     }
 }
+
 
 }

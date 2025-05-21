@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./Style/ListeDestinataireNewsletters.css";
+import { useStateContext } from "../Context/ContextProvider";
 
 const ListeDestinataireNewsletters = () => {
   const navigate = useNavigate();
   const [destinataires, setDestinataires] = useState([]);
-  const idUser = 1;
-
+  
+  const { user } = useStateContext();
 
   useEffect(() => {
     const fetchDestinataires = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/ListDestinataireClient/${idUser}`);
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/ListDestinataireClient/${user.id}`);
         const data = await response.json();
         if (data.success) {
           setDestinataires(data.data);
@@ -26,7 +27,7 @@ const ListeDestinataireNewsletters = () => {
     };
 
     fetchDestinataires();
-  }, [idUser]);
+  }, [user.id]);
 
 
   const handleDelete = async (id) => {

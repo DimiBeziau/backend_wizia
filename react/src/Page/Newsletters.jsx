@@ -7,14 +7,18 @@ import "./Style/Newletters.css";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
+import { useStateContext } from "../Context/ContextProvider";
+
+
 
 const Newsletters = () => {
   const [error, setError] = useState("");
   const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [selectedDates, setSelectedDates] = useState({ startDate: null });
   const navigate = useNavigate();
-
-  const [user] = useState({
+  const { user } = useStateContext();
+  console.log(user);
+  const [users] = useState({
     userEmail: '',
     userPassWord: '',
     userAbonnement: '',
@@ -130,7 +134,7 @@ const Newsletters = () => {
       }),
     };
 
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/AddMail/1`, options);
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/AddMail/${user.id}`, options);
     const data = await response.json();
     if (data) {
       return true
