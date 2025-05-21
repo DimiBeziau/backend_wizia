@@ -3,12 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Style/FormulaireDestinataire.css";
+import { useStateContext } from "../Context/ContextProvider";
 
 const FormulaireDestinataire = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const destinataire = location.state || { nom: "", prenom: "", mail: "", idUser: null };
-
+  const { user } = useStateContext();
   const [formData, setFormData] = useState({
     id: destinataire.id || null,
     nom: destinataire.nom,
@@ -26,11 +27,11 @@ const FormulaireDestinataire = () => {
 
     try {
       let response;
-      const idUser = 1;
+     
 
       if (destinataire?.id) {
         // Mise à jour
-        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/UpdateDestinataireClient/${idUser}`, {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/UpdateDestinataireClient/${user.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +40,7 @@ const FormulaireDestinataire = () => {
         });
       } else {
         // Ajout
-        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/AddDestinataireClient/${idUser}`, {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/AddDestinataireClient/${user.id}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

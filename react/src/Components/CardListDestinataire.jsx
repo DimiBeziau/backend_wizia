@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
 import "./Style/CardListDestinataire.css";
-
+import  {useStateContext}  from "../Context/ContextProvider";
 const CardListDestinataire = ({ setMail }) => {
   const [destinataires, setDestinataires] = useState([]);
   const [error, setError] = useState("");
-
+    const { user } = useStateContext();
   useEffect(() => {
+    if (!user.id) return;  
+  
     const ListDestinataire = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/mail/ListDestinataireClient/1");
+      try { 
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}mail/ListDestinataireClient/${user.id}`);
         const data = await response.json();
-
+  
         if (response.ok && data.success) {
           setDestinataires(data.data);
         } else {
@@ -22,8 +24,7 @@ const CardListDestinataire = ({ setMail }) => {
       }
     };
     ListDestinataire();
-  }, []);
-
+  }, [user.id]);
   return (
     <div className="card-list-container">
       {error && <p style={{ color: "red" }}>{error}</p>}

@@ -96,7 +96,6 @@ const ReseauxSociaux = () => {
             Titre="Contenu du post sur les Réseaux Sociaux"
             onPromptGenerated={setGeneratedPrompt}
           />
-
         </div>
 
         <div className="ReseauxSociauxBord">
