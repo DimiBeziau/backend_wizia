@@ -10,17 +10,9 @@ const CardIA = ({ prompt, Titre, onPromptGenerated }) => {
     try {
       // setPrompt(prompt); // test
 
-      const Option = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-        body: JSON.stringify({
-          prompt: prompt,
-        }),
-      };
+      
 
-      const reponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}ia/generateIA`, Option);
+      const reponse = await axiosClient.post(`ia/generateIA`, {prompt: prompt});
 
       if (reponse.ok) {
         const reponseData = await reponse.json();

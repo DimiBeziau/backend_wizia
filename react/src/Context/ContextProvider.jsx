@@ -23,8 +23,7 @@ export const ContextProvider = ({ children }) => {
     }
   }
 
-  console.log(user)
-  console.log(user.id )
+
 
   return (
     <StateContext.Provider value={{

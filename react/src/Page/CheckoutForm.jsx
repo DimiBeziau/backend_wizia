@@ -3,8 +3,7 @@ import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { toast } from "react-toastify";
 import { useStateContext } from "../Context/ContextProvider";
 import "./Style/StripeCard.css";
-import { use } from "react";
-
+import axiosClient from "../axios-client";
 const CheckoutForm = ({ price ,nom}) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -36,12 +35,8 @@ const CheckoutForm = ({ price ,nom}) => {
 
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}stripe/create-payment-intent`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount, email ,nom ,IdUser}),
+      const response = await axiosClient.post(`stripe/create-payment-intent`, {
+        amount, email ,nom ,IdUser
       });
 
       const data = await response.json();

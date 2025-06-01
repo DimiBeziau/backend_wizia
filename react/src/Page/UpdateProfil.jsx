@@ -20,7 +20,7 @@ const UpdateProfil = () => {
     console.log(user.id)
     const fetchUser = async () => {
       try {
-        const { data } = await axiosClient.get(`/users/${user.id}`);
+        const { data } = await axiosClient.get(`users/${user.id}`);
         setUsers({
           firstName: data.firstName || "",
           name: data.name || "",
