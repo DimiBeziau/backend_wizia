@@ -58,7 +58,7 @@ const Newsletters = () => {
   };
 
   const ValiderNewsletters = async () => {
-    // try {
+    try {
     if (generatedPrompt !== "" && selectedDates.startDate !== null && Mail.to.length > 0) {
       const today = new Date();
       const formattedToday = formatDateAmerican(today);
@@ -94,17 +94,17 @@ const Newsletters = () => {
         type: "error"
       });
     }
-    // } catch (e) {
-    //   console.error("Erreur réseau :", e);
-    //   setError("Erreur réseau, impossible d'envoyer pour le moment.");
-    //   toast('Erreur réseau, impossible d envoyer pour le moment.', {
-    //     type: "error"
-    //   });
-    // }
+    } catch (e) {
+      console.error("Erreur réseau :", e);
+      setError("Erreur réseau, impossible d'envoyer pour le moment.");
+      toast('Erreur réseau, impossible d envoyer pour le moment.', {
+        type: "error"
+      });
+    }
   };
 
   const AddNewsletters = async () => {
-    // try {
+    try {
       const { data } = await axiosClient.post(`mail/AddMail/${user.id}`, {
         to: Mail.to,
         toListId: Mail.toListId,
@@ -115,10 +115,10 @@ const Newsletters = () => {
         fromEmail: Mail.fromEmail,
       });
       return data.success;
-    // } catch (error) {
-    //   console.error("Erreur lors de l'ajout de la newsletter :", error);
-    //   return false;
-    // }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la newsletter :", error);
+      return false;
+    }
   };
 
   return (
