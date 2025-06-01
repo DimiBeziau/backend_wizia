@@ -59,7 +59,7 @@ public function generateMail(Request $request)
         $body = $request->input('body');
         $altBody = $request->input('altBody', '');
         $fromName = $request->input('fromName', 'WIZIA');
-        $fromEmail = $request->input('fromEmail', 'contact@dimitribeziau.fr');
+        $fromEmail = $request->input('fromEmail', 'wiz.ia@dimitribeziau.fr');
 
         foreach ($to as $destinataire) {
            
@@ -78,9 +78,9 @@ public function generateMail(Request $request)
             }
         }
 
-        return response()->json(['message' => 'Email(s) envoyé(s) avec succès'], 200);
+        return response()->json(['message' => 'Email(s) envoyé(s) avec succès','success' =>true], 200,);
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+        return response()->json(['error' => $e->getMessage(),'success' =>false], 500);
     }
 }
 

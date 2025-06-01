@@ -27,22 +27,13 @@ const CheckoutForm = ({ price, nom }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!stripe || !elements || !amount) return;
-    // if (user.id === null) {
-    //   toast.error("Veuillez vous connecter pour effectuer un paiement.");
-    //   return;
-    // }
+    
     const IdUser = user.id;
     setProcessing(true);
 
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}stripe/create-payment-intent`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount, email }),
-      });
+     try {
+      const response = await axiosClient.post(`stripe/create-payment-intent`, { amount, email ,nom , IdUser });
+      const data = response.data;
 
       if (data.error) {
         toast.error(`Erreur backend : ${data.error}`);
@@ -69,7 +60,6 @@ const CheckoutForm = ({ price, nom }) => {
       } else {
         toast.warning("Paiement non complété.");
       }
-
     } catch (err) {
       console.error("Erreur lors du traitement :", err);
       toast.error("Une erreur est survenue.");

@@ -12,7 +12,8 @@ const CardListDestinataire = ({ setMail }) => {
     if (!user.id) return;  
   
     const ListDestinataire = async () => {
-      try { 
+      // try { 
+
         const { data } = await axiosClient.get(`mail/ListDestinataireClient/${user.id}`);
   
         if (data.success) {
@@ -20,10 +21,10 @@ const CardListDestinataire = ({ setMail }) => {
         } else {
           throw new Error("Erreur lors de la récupération");
         }
-      } catch (e) {
-        console.error("Erreur lors de la récupération des destinataires :", e);
-        setError("Une erreur s'est produite. Veuillez réessayer.");
-      }
+      // } catch (e) {
+      //   console.error("Erreur lors de la récupération des destinataires :", e);
+      //   setError("Une erreur s'est produite. Veuillez réessayer.");
+      // }
     };
     ListDestinataire();
   }, [user.id]);

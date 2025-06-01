@@ -65,6 +65,7 @@ const Newsletters = () => {
         const formattedSelectedDate = formatDateAmerican(new Date(selectedDates.startDate));
 
         if (formattedSelectedDate === formattedToday) {
+         
           const response = await axiosClient.post('mail/generateMail', {
             to: Mail.to,
             subject: Mail.subject,
@@ -104,7 +105,7 @@ const Newsletters = () => {
   };
 
   const AddNewsletters = async () => {
-    try {
+    // try {
       const { data } = await axiosClient.post(`mail/AddMail/${user.id}`, {
         to: Mail.to,
         toListId: Mail.toListId,
@@ -115,10 +116,10 @@ const Newsletters = () => {
         fromEmail: Mail.fromEmail,
       });
       return data.success;
-    } catch (error) {
-      console.error("Erreur lors de l'ajout de la newsletter :", error);
-      return false;
-    }
+    // } catch (error) {
+    //   console.error("Erreur lors de l'ajout de la newsletter :", error);
+    //   return false;
+    // }
   };
 
   return (
