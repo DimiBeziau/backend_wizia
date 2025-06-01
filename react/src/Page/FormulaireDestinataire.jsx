@@ -26,7 +26,7 @@ const FormulaireDestinataire = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
+   // try {
       if (destinataire?.id) {
         // Mise à jour
         await axiosClient.put(`mail/UpdateDestinataireClient/${user.id}`, formData);
@@ -36,10 +36,10 @@ const FormulaireDestinataire = () => {
       }
       toast.success(destinataire?.id ? "Modification réussie" : "Ajout réussi");
       navigate("/Dashboard/Newsletters/ListeDestinataireNewsletters");
-    } catch (error) {
-      console.error("Erreur requête :", error);
-      toast.error("Une erreur est survenue.");
-    }
+    // } catch (error) {
+    //   console.error("Erreur requête :", error);
+    //   toast.error("Une erreur est survenue.");
+    // }
   };
 
   return (
