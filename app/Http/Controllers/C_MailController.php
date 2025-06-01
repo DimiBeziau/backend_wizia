@@ -80,9 +80,9 @@ class C_MailController extends Controller
         }
       }
 
-        return response()->json(['message' => 'Email(s) envoyé(s) avec succès'], 200);
+        return response()->json(['message' => 'Email(s) envoyé(s) avec succès','success' => true], 200);
     } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
+        return response()->json(['error' => $e->getMessage(),'success' => false], 500);
     }
   }
 
