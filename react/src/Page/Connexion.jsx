@@ -49,9 +49,7 @@ const Connexion = () => {
             password: PassWord,
           }),
         };
-
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}auth/login`, option);
-
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);

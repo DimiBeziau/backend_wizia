@@ -60,11 +60,15 @@ class C_UserController extends Controller
       $user->name = $request->name;
       $user->email = $request->email;
       $user->password = password_hash($request->password, PASSWORD_DEFAULT);
+      $user->idAbonnement = '1';
       $user->save();
 
       return response()->json($user, 200);
     } catch (\Exception $e) {
-      return response()->json(['message' => $e->getMessage()], 400);
+      return response()->json([
+        'message' => 'Erreur lors de l\'ajout de l\'utilisateur',
+        'error' => $e->getMessage()
+      ], 500);
     }
   }
 
