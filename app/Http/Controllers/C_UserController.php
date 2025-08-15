@@ -46,7 +46,7 @@ class C_UserController extends Controller
     }
   }
 
-  // Ajouter un utilisateur
+  // Ajouter un utilisateur notre client
   public function register(Request $request)
   {
     try {
@@ -54,13 +54,17 @@ class C_UserController extends Controller
         'firstName' => 'required',
         'name' => 'required',
         'email' => 'required|email|unique:users',
-        'password' => 'required'
+        'password' => 'required',
+        'pasword_confirmation' => 'required|same:password',
+        'Number' => 'nullable|numeric'
       ]);
+      
       $user = new User();
       $user->firstName = $request->firstName;
       $user->name = $request->name;
       $user->email = $request->email;
       $user->password = password_hash($request->password, PASSWORD_DEFAULT);
+      $user->number = $request->Number;
       $user->idAbonnement ='1'; 
       $user->save();
 
@@ -72,6 +76,14 @@ class C_UserController extends Controller
       ], 500);
     }
     
+  }
+  public function GetAuthenticatedUser(Request $request)
+  {
+    $user = Auth::user();
+    if (!$user) {
+      return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+    }
+    return response()->json(["User"=>$user], 200);
   }
 
   public function login(Request $request)

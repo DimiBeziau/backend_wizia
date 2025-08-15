@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use App\Models\clients;
+use App\Models\Clients;
 use App\Models\Mailings;
 use App\Models\ClientsMailings;
 use PHPMailer\PHPMailer\Exception;
@@ -42,7 +42,10 @@ class C_MailController extends Controller
     $this->mail->Password = env('MAIL_PASSWORD');
     $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
   }
-
+  public function addAttachment($mail,$filePath, $fileName)
+  {
+    $this->mail->addAttachment($filePath, $fileName);
+  }
   public function generateMail(Request $request)
   {
 
@@ -54,6 +57,7 @@ class C_MailController extends Controller
       'altBody' => 'nullable|string',
       'fromName' => 'nullable|string',
       'fromEmail' => 'nullable|email',
+      
     ]);
     try {
          $to = $request->input('to');
@@ -74,6 +78,8 @@ class C_MailController extends Controller
         $mail->Subject = $subject;
         $mail->Body = $body;
         $mail->AltBody = $altBody;
+        // $mail->addCC('cc1@exemple.com', 'Elena'); // CC et BCC
+        // $mail->addBCC('bcc1@exemple.com', 'Alex');// CC et BCC
 
         if (!$mail->send()) {
           throw new \Exception("Échec de l'envoi à $destinataire : " . $mail->ErrorInfo);
@@ -85,17 +91,8 @@ class C_MailController extends Controller
         return response()->json(['error' => $e->getMessage(),'success' => false], 500);
     }
   }
-
-
-
-  public function addAttachment($filePath, $fileName)
-  {
-    $this->mail->addAttachment($filePath, $fileName);
-  }
-
-
-
-  public function AddMail(Request $request, $idUser)
+  
+  public function AddMail(Request $request, $idUser) // enregistre un mail dans la base de données
   {
     try {
       if (!is_numeric($idUser)) {
@@ -281,4 +278,194 @@ class C_MailController extends Controller
       ], 500);
     }
   }
+  public function getListMailingUser($idUser)
+  {
+    try {
+      if (!is_numeric($idUser)) {
+        return response()->json([
+          'success' => false,
+          'message' => 'ID utilisateur invalide'
+        ], 400);
+      }
+
+      $mailings = Mailings::where('idUser', $idUser)->get();
+
+      return response()->json([
+        'success' => true,
+        'data' => $mailings
+      ], 200);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => 'Erreur lors de la récupération des mailings',
+        'error' => $e->getMessage()
+      ], 500);
+    }
+  }
+
+  public function getListMailingWhithSendClients($idMail) // liste mail avec les client 
+  {
+      try {
+          // Vérification que l'ID est bien numérique
+          if (!ctype_digit((string)$idMail)) {
+              return response()->json([
+                  'success' => false,
+                  'message' => 'ID invalide'
+              ], 400);
+          }
+  
+          // Récupération du mailing
+          $mailing = Mailings::find($idMail);
+          if (!$mailing) {
+              return response()->json([
+                  'success' => false,
+                  'message' => 'Mailing non trouvé'
+              ], 404);
+          }
+  
+          // Récupération optimisée des clients liés
+          $clients = Clients::whereIn('id', function($query) use ($idMail) {
+              $query->select('idClient')
+                    ->from('clients_mailings')
+                    ->where('idMailing', $idMail);
+          })->get(['id', 'mail', 'nom', 'prenom']);
+  
+          return response()->json([
+              'success' => true,
+              'data' => [
+                  'mailing' => $mailing,
+                  'clients' => $clients
+              ]
+          ], 200);
+  
+      } catch (\Exception $e) {
+          return response()->json([
+              'success' => false,
+              'message' => 'Erreur lors de la récupération du mailing',
+              'error' => $e->getMessage()
+          ], 500);
+      }
+  }
+ public function getMailingById($idMailing)
+{
+    try {
+        if (!ctype_digit((string)$idMailing)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID invalide'
+            ], 400);
+        }
+
+        $mailing = Mailings::find($idMailing);
+        if (!$mailing) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mailing non trouvé'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $mailing
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la récupération du mailing',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
+// Mettre à jour un mailing
+public function updateMailing(Request $request, $idMailing)
+{
+  // ex : tu peux modif subject , body , altbody
+    try {
+        // Vérification que l'ID est bien un entier positif
+        if (!ctype_digit((string)$idMailing)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID invalide'
+            ], 400);
+        }
+
+        // Récupération du mailing
+        $mailing = Mailings::find($idMailing);
+        if (!$mailing) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mailing non trouvé'
+            ], 404);
+        }
+
+        // Validation des champs reçus
+        $validated = $request->validate([
+            'subject' => 'required|string|max:255',
+            'body' => 'required|string',
+            'altBody' => 'nullable|string',
+            'fromName' => 'nullable|string',
+            'fromEmail' => 'nullable|email'
+        ]);
+
+        // Mise à jour des données
+        $mailing->subject = $validated['subject'];
+        $mailing->body = $validated['body'];
+        $mailing->altBody = $validated['altBody'] ?? $mailing->altBody;
+        $mailing->fromName = $validated['fromName'] ?? $mailing->fromName;
+        $mailing->fromEmail = $validated['fromEmail'] ?? $mailing->fromEmail;
+        $mailing->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Mailing mis à jour avec succès',
+            'data' => $mailing
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la mise à jour du mailing',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
+// Supprimer un mailing
+public function deleteMailing($idMailing)
+{
+    try {
+        if (!ctype_digit((string)$idMailing)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID invalide'
+            ], 400);
+        }
+
+        $mailing = Mailings::find($idMailing);
+        if (!$mailing) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mailing non trouvé'
+            ], 404);
+        }
+
+        $mailing->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Mailing supprimé avec succès'
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la suppression du mailing',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 }

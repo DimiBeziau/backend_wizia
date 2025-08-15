@@ -35,6 +35,7 @@ Route::group(['prefix' => '/ia'], function () {
   Route::name('api.')->controller(C_IAController::class)->group(function () {
     // Route::post('/generateIA', 'generatprompt')->name('generatprompt');
     Route::post('/generateIA', [C_IAController::class, 'generatpromptgemini'])->name('generatpromptgemini');
+    Route::post('/generateIApicture', [C_IAController::class, 'generatPictureGPT'])->name('generatPictureGPT');
   });
 });
 Route::group(['prefix' => '/stripe'], function () {
@@ -61,6 +62,14 @@ Route::group(['prefix' => '/mail'], function () {
   route::name('api.')->controller(C_MailController::class)->group(function () {
     Route::post('/generateMail', 'generateMail')->name('generateMail');
     Route::post('/AddMail/{id}', 'AddMail')->name('AddMail');
+
+    Route::get('/ListMailingUser/{id}', 'getListMailingUser')->name('getListMailingUser');// lister mail d un utilisateur 
+
+    Route::get('/ListMailingsendClient/{id}', 'getListMailingWhithSendClients')->name('getListMailingWhithSendClients');// liste des mail  avec liste clients
+    Route::get('/ListMailing/{id}', 'getMailingById')->name('getMailingById');
+    Route::put('/UpdateMailing/{id}', 'updateMailing')->name('updateMailing');
+    Route::delete('/DeleteMailing/{id}', 'deleteMailing')->name('deleteMailing');
+
     Route::get('/ListDestinataireClient/{id}', 'getListDestinataire')->name('getListDestinataire');
     Route::post('/AddDestinataireClient/{id}', 'AddListDestinataire')->name('AddListDestinataire');
     Route::put('/UpdateDestinataireClient/{id}', 'UpdateListDestinataire')->name('UpdateListDestinataire');
