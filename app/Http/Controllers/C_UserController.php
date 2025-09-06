@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Abonnements;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\PieceJointes;
 use Illuminate\Support\Facades\Auth;
 
 class C_UserController extends Controller
@@ -140,6 +141,34 @@ class C_UserController extends Controller
     } catch (\Exception $e) {
       return response()->json(['message' => 'Erreur lors de la suppression de l\'utilisateur'], 500);
     }
+  }
+  public function uploadImage(Request $request)
+  {
+    try {
+      $request->validate([
+          'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+   
+      ]);
+      $image = $request->file('file'); 
+      $imagePath = $image->store('logo', 'public');
+      
+      // $pieceJointe = new PieceJointes();
+      // $pieceJointe->path = $imagePath;
+      // $pieceJointe->type = $request->type; 
+      // $pieceJointe->idUser = $request->id; 
+      // $pieceJointe->save();
+
+      return response()->json([
+          'message' => 'Image uploadée et enregistrée avec succès',
+          'path' => env("APP_URL").'/storage/'.$imagePath
+      ], 200);
+
+  } catch (\Exception $e) {
+      return response()->json([
+          'message' => 'Erreur lors de l\'ajout de l\'image',
+          'error' => $e->getMessage()
+      ], 500);   
+  }
   }
   // public function index(){
   //             $users = User::all();

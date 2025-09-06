@@ -44,6 +44,7 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+            'serve' => true,
             'report' => false,
         ],
 

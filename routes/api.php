@@ -19,11 +19,15 @@ Route::group(['prefix' => '/users'], function () {
     Route::post('/', 'addUser')->name('addUser');
     Route::put('/{id}', 'updateUser')->name('updateUser');
     Route::delete('/{id}', 'deleteUser')->name('deleteUser');
+    Route::post('/uploadlogo', 'uploadImage')->name('uploadImage');
+    
   });
 });
 Route::group(['prefix' => "/post"], function () {
   Route::name('post.')->controller(C_NetwoorkController::class)->group(function () {
-    Route::post('/', 'createAndPublishPost')->name('creatAndPublish');
+    Route::post('/Facebook', 'createAndPublishPost')->name('creatAndPublish');
+    Route::post('/Linkeding', 'createAndPublishPostLinkeding')->name('createAndPublishPostLinkeding');
+    Route::post('/Instagrame', 'createAndPublishPostInstagrame')->name('createAndPublishPostInstagrame');
   });
 });
 Route::group(['prefix' => '/bill'], function () {
@@ -49,6 +53,7 @@ Route::group(['prefix' => '/auth'], function () {
   Route::name('auth.')->group(function () {
     Route::post('/register', [C_UserController::class, 'register'])->name('register');
     Route::post('/login', [C_UserController::class, 'login'])->name('login');
+    Route::post('/AuthenticatedUser', [C_UserController::class, 'GetAuthenticatedUser'])->name('GetAuthenticatedUser');
     // Route::group(['prefix' => '/facebook'],function (){
     //     Route::name('facebook.')->controller(FacebookController::class)->group(function(){
     //         Route::get('/', 'index')->name('facebook');
