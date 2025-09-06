@@ -19,13 +19,15 @@ Route::group(['prefix' => '/users'], function () {
     Route::post('/', 'addUser')->name('addUser');
     Route::put('/{id}', 'updateUser')->name('updateUser');
     Route::delete('/{id}', 'deleteUser')->name('deleteUser');
-    Route::post('/{id}/uploadImage', 'uploadImage')->name('uploadImage');
+    Route::post('/uploadlogo', 'uploadImage')->name('uploadImage');
     
   });
 });
 Route::group(['prefix' => "/post"], function () {
   Route::name('post.')->controller(C_NetwoorkController::class)->group(function () {
-    Route::post('/', 'createAndPublishPost')->name('creatAndPublish');
+    Route::post('/Facebook', 'createAndPublishPost')->name('creatAndPublish');
+    Route::post('/Linkeding', 'createAndPublishPostLinkeding')->name('createAndPublishPostLinkeding');
+    Route::post('/Instagrame', 'createAndPublishPostInstagrame')->name('createAndPublishPostInstagrame');
   });
 });
 Route::group(['prefix' => '/bill'], function () {

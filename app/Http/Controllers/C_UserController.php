@@ -150,7 +150,7 @@ class C_UserController extends Controller
    
       ]);
       $image = $request->file('file'); 
-      $imagePath = $image->store('logo/'.uniqid(), 'public');
+      $imagePath = $image->store('logo', 'public');
       
       // $pieceJointe = new PieceJointes();
       // $pieceJointe->path = $imagePath;
