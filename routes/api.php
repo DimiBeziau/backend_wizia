@@ -37,7 +37,7 @@ Route::group(['prefix' => '/bill'], function () {
 });
 Route::group(['prefix' => '/ia'], function () {
   Route::name('api.')->controller(C_IAController::class)->group(function () {
-    // Route::post('/generateIA', 'generatprompt')->name('generatprompt');
+     Route::post('/generateIALocal',[C_IAController::class, 'generatprompt'])->name('generatprompt');
     Route::post('/generateIA', [C_IAController::class, 'generatpromptgemini'])->name('generatpromptgemini');
     Route::post('/generateIApicture', [C_IAController::class, 'generatPictureGPT'])->name('generatPictureGPT');
   });

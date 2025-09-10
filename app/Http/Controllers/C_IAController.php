@@ -22,14 +22,14 @@ class C_IAController extends Controller
     $this->apiUrl = "http://localhost:11434/api/generate";
     $this->model = "llama3.2";
     $this->stream = false;
-    $this->keyApigemini = env('KEY_API_GEMINI'); // Pour GEMINI AIzaSyBquuVdy6a4vvu4mUfuuyEP0CoI8P6SyPY
+    $this->keyApigemini = env('KEY_API_GEMINI'); 
     $this->keyApigpt = env('key_API_GPT'); 
     $this->geminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $this->keyApigemini;
     $this->gptApiUrl = "https://api.openai.com/v1/images/generations";
   }
-  public function generatprompt(Request $promptClient)
+  public function generatprompt(Request $request)
   {
-    $this->prompt = $promptClient;
+       $this->prompt = $request->input('prompt');
     $data = json_encode([
       "model" => $this->model,
       "prompt" => $this->prompt,
@@ -47,8 +47,17 @@ class C_IAController extends Controller
     $response = curl_exec($ch);
     curl_close($ch);
 
-    $decodeJson = json_decode($response, true);
-    return $decodeJson['response'] ?? "Erreur : reponse introuvable";
+    //$decodeJson = json_decode($response, true);
+     $decoded = json_decode($response, true);
+
+    // if (!isset($decoded['candidates'])) {
+    //   return response()->json(['error' => 'Erreur de la génération du prompt'], 500);
+    // }
+
+    // $text = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? 'Réponse vide';
+
+    return response()->json(['text' => $decoded['response'] ?? 'Réponse vide']);
+    //return $decodeJson['response'] ?? "Erreur : reponse introuvable";
   }
 
   public function generatPictureGPT(Request $promptClient)

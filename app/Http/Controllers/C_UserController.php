@@ -50,32 +50,41 @@ class C_UserController extends Controller
   // Ajouter un utilisateur notre client
   public function register(Request $request)
   {
-    try {
+    // try {
       $request->validate([
-        'firstName' => 'required',
-        'name' => 'required',
+        'first_name' => 'required',
+        'last_name' => 'required',
         'email' => 'required|email|unique:users',
+        'activity' => 'required',
         'password' => 'required',
-        'pasword_confirmation' => 'required|same:password',
-        'Number' => 'nullable|numeric'
+        'password_confirmation' => 'required|same:password',
+        'phone' => 'nullable|numeric',
+        'logo' => 'nullable|string',
+        'color' => 'required',
+        'description' => 'required',
       ]);
+     
       
       $user = new User();
-      $user->firstName = $request->firstName;
-      $user->name = $request->name;
+      $user->first_name = $request->first_name;
+      $user->last_name = $request->last_name;
       $user->email = $request->email;
       $user->password = password_hash($request->password, PASSWORD_DEFAULT);
-      $user->number = $request->Number;
+      $user->phone = $request->phone;
+      $user->activity = $request->activity;
+      $user->logo = $request->logo;
+      $user->color = $request->color;
+      $user->description = $request->description;
       $user->idAbonnement ='1'; 
       $user->save();
 
       return response()->json($user, 200);
-    } catch (\Exception $e) {
-      return response()->json([
-        'message' => 'Erreur lors de l\'ajout de l\'utilisateur',
-        'error' => $e->getMessage()
-      ], 500);
-    }
+    // } catch (\Exception $e) {
+    //   return response()->json([
+    //     'message' => 'Erreur lors de l\'ajout de l\'utilisateur',
+    //     'error' => $e->getMessage()
+    //   ], 500);
+    // }
     
   }
   public function GetAuthenticatedUser(Request $request)
@@ -111,10 +120,10 @@ class C_UserController extends Controller
         return response()->json(['message' => 'Utilisateur non trouvé'], 404);
       }
 
-      $user->name = $request->name;
+      $user->last_name = $request->last_name;
       $user->email = $request->email;
       $user->number = $request->number;
-      $user->firstName = $request->firstName;
+      $user->first_name = $request->first_name;
       if ($user->password !== null && $request->has('password')) {
         $user->password = Hash::make($request->password);
       }
