@@ -1,17 +1,25 @@
-import { Button, ColorPicker, Upload } from "antd";
+import { Button, ColorPicker, Upload, message } from "antd";
 import { InboxOutlined } from '@ant-design/icons'
 
 function Step4SignUp({ formData, setFormData, onPrevStep, onNextStep }) {
   const { Dragger } = Upload;
+  const [messageApi, contextHolder] = message.useMessage();
+  function notif(type, title, message) {
+    messageApi.open({
+      type: type,
+      title: title,
+      content: message,
+    });
+  }
   const props = {
     maxCount: 1,
     name: 'file',
-    multiple: true,
-    action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+    multiple: false,
+    action: `${import.meta.env.VITE_API_BASE_URL}/users/uploadlogo`,
     beforeUpload: file => {
       const isPNG = file.type === 'image/png';
       if (!isPNG) {
-        message.error(`${file.name} n'est pas un fichier png`);
+        notif('error', 'Erreur', `${file.name} n'est pas un fichier png`);
       }
       return isPNG || Upload.LIST_IGNORE;
     },
@@ -21,9 +29,10 @@ function Step4SignUp({ formData, setFormData, onPrevStep, onNextStep }) {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
-        message.success(`${info.file.name} chargé correctement.`);
+        notif('success', 'Succès', `${info.file.name} chargé correctement.`);
+        setFormData((prev) => ({ ...prev, logo: info.file.response.path }))
       } else if (status === 'error') {
-        message.error(`${info.file.name} mal chargé.`);
+        notif('error', 'Erreur', `${info.file.name} mal chargé.`);
       }
     },
     onDrop(e) {
@@ -43,6 +52,7 @@ function Step4SignUp({ formData, setFormData, onPrevStep, onNextStep }) {
   }
   return (
     <div className="flex flex-col max-w-[410px] px-5 py-5">
+      {contextHolder}
       <p className="pt-5">Raconte-nous ton activité comme si tu l’expliquais à un client sympa. Ce que tu fais, ce que tu aimes, comment tu travailles… On s’occupe du reste.</p>
       <div className="flex flex-col my-3">
         <Dragger {...props}>
@@ -54,7 +64,7 @@ function Step4SignUp({ formData, setFormData, onPrevStep, onNextStep }) {
       </div>
       <div className="flex flex-col my-3 items-start">
         <label>Sélectionnez une couleur pour votre entreprise</label>
-        <ColorPicker defaultValue="#1677ff" showText format='hex' value={formData.color} onChange={(ev) => { console.log(ev); setFormData((prev) => ({ ...prev, color: toHexColor(ev) })) }} />
+        <ColorPicker defaultValue="#1677ff" showText format='hex' value={formData.color} onChange={(ev) => { setFormData((prev) => ({ ...prev, color: toHexColor(ev) })) }} />
       </div>
       <div className="flex flex-row-reverse justify-between my-3">
         <Button onClick={() => { onNextStep() }} className="mb-3">Contiuer</Button>
