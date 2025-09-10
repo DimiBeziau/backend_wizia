@@ -78,7 +78,7 @@ class C_UserController extends Controller
     $user->idAbonnement = '1';
     $user->save();
     $token = $user->createToken('auth_token')->plainTextToken;
-    return response()->json(['user' =>$user,'token' =>$token], 200);
+    return response()->json(['user' => $user, 'token' => $token], 200);
     // } catch (\Exception $e) {
     //   return response()->json([
     //     'message' => 'Erreur lors de l\'ajout de l\'utilisateur',
@@ -101,9 +101,8 @@ class C_UserController extends Controller
     $email = $request->input('email');
     $password = $request->input('password');
 
-    Auth::attempt(['email' => $email, 'password' => $password]);
-    $user = User::where('email', $email)->first();
-    if ($user) {
+    if (Auth::attempt(['email' => $email, 'password' => $password])) {
+      $user = Auth::User();
       $token = $user->createToken('auth_token')->plainTextToken;
       return response()->json(['token' => $token, 'user' => $user], 200);
     } else {
