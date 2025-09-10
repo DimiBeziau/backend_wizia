@@ -102,7 +102,7 @@ class C_UserController extends Controller
     $password = $request->input('password');
 
     if (Auth::attempt(['email' => $email, 'password' => $password])) {
-      $user = Auth::User();
+      $user = User::find(Auth::id());
       $token = $user->createToken('auth_token')->plainTextToken;
       return response()->json(['token' => $token, 'user' => $user], 200);
     } else {
