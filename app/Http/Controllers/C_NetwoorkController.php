@@ -23,7 +23,7 @@ class C_NetwoorkController extends Controller
 
     if ($request->input('date') === null && $request->input('now') === true) {
       $date = new DateTime();
-      $date = $date->format('Y-m-d');
+      $date = $date->format('Y-m-d-H:i:s');
     } else {
       $date = $request->input('date');
     }
@@ -75,7 +75,7 @@ class C_NetwoorkController extends Controller
 
     if ($request->input('date') === null && $request->input('now') == true) {
       $date = new DateTime();
-      $date = $date->format('Y-m-d');
+      $date = $date->format('Y-m-d-H:i:s');
     } else {
       $date = $request->input('date');
     }
@@ -126,7 +126,7 @@ class C_NetwoorkController extends Controller
 
     // Gestion de la date
     if ($request->input('date') === null && $request->input('now') === true) {
-        $date = now()->format('Y-m-d');
+        $date = now()->format('Y-m-d-H:i:s');
     } else {
         $date = $request->input('date');
     }
@@ -181,7 +181,7 @@ public function createAndPublishPostPictureLinkeding(Request $request)
 
     // Gestion de la date
     if ($request->input('date') === null && $request->input('now') == true) {
-        $date = now()->format('Y-m-d');
+        $date = now()->format('Y-m-d-H:i:s');
     } else {
         $date = $request->input('date');
     }
@@ -241,119 +241,119 @@ public function ListerPosts(Request $request)
         ], 200);
     }
 
-    // Vérifie l'abonnement de l'utilisateur
-    $abonnement = \App\Http\Controllers\C_UserController::abonnementUser($userId);
-    if ($abonnement['error']) {
-        return response()->json([
-            'message' => $abonnement['message'],
-            'status' => 404,
-        ], 404);
-    }
+    // // Vérifie l'abonnement de l'utilisateur
+    // $abonnement = \App\Http\Controllers\C_UserController::abonnementUser($userId);
+    // if ($abonnement['error']) {
+    //     return response()->json([
+    //         'message' => $abonnement['message'],
+    //         'status' => 404,
+    //     ], 404);
+    // }
 
-    // Définit les limites selon le type d'abonnement
-    switch ($abonnement['AbonementType']) {
-        case "isFree":
-            $limiteText = 10;
-            $limitevisuel = 2;
-            break;
-        case "isPremium":
-            $limiteText = 15;
-            $limitevisuel = 5;
-            break;
-        case "isProfessionnel":
-            $limiteText = 20;
-            $limitevisuel = 10;
-            break;
-        default:
-            return response()->json([
-                'message' => 'Type d\'abonnement inconnu',
-                'status' => 400,
-            ], 400);
-    }
+    // // Définit les limites selon le type d'abonnement
+    // switch ($abonnement['AbonementType']) {
+    //     case "isFree":
+    //         $limiteText = 10;
+    //         $limitevisuel = 2;
+    //         break;
+    //     case "isPremium":
+    //         $limiteText = 15;
+    //         $limitevisuel = 5;
+    //         break;
+    //     case "isProfessionnel":
+    //         $limiteText = 20;
+    //         $limitevisuel = 10;
+    //         break;
+    //     default:
+    //         return response()->json([
+    //             'message' => 'Type d\'abonnement inconnu',
+    //             'status' => 400,
+    //         ], 400);
+    // }
 
-    $listePosts = [];
-    $iaController = new \App\Http\Controllers\C_IAController();
+    // $listePosts = [];
+    // $iaController = new \App\Http\Controllers\C_IAController();
 
-    $datesNetworks = [];
-    $path = storage_path('app/private/fille/data_date.txt');
+    // $datesNetworks = [];
+    // $path = storage_path('app/private/fille/data_date.txt');
 
-    if (!file_exists($path)) {
-        return response()->json([
-            'message' => "Fichier de dates introuvable: $path",
-            'status' => 500,
-        ], 500);
-    }
-    $lines = explode("\n", file_get_contents($path));
-    foreach ($lines as $line) {
-        $line = trim($line);
-        if (empty($line)) continue;
-        $parts = explode(',', $line);
-        if (count($parts) == 2) {
-            $datesNetworks[] = [
-                'date' => trim($parts[0]),
-                'network' => strtolower(trim($parts[1]))
-            ];
-        }
-    }
-    if (count($datesNetworks) === 0) {
-        return response()->json([
-            'message' => "Pas de dates ou réseaux valides dans le fichier.",
-            'status' => 500,
-        ], 500);
-    }
+    // if (!file_exists($path)) {
+    //     return response()->json([
+    //         'message' => "Fichier de dates introuvable: $path",
+    //         'status' => 500,
+    //     ], 500);
+    // }
+    // $lines = explode("\n", file_get_contents($path));
+    // foreach ($lines as $line) {
+    //     $line = trim($line);
+    //     if (empty($line)) continue;
+    //     $parts = explode(',', $line);
+    //     if (count($parts) == 2) {
+    //         $datesNetworks[] = [
+    //             'date' => trim($parts[0]),
+    //             'network' => strtolower(trim($parts[1]))
+    //         ];
+    //     }
+    // }
+    // if (count($datesNetworks) === 0) {
+    //     return response()->json([
+    //         'message' => "Pas de dates ou réseaux valides dans le fichier.",
+    //         'status' => 500,
+    //     ], 500);
+    // }
 
     
-    $nbPostsAGenerer = $limiteText;
+    // $nbPostsAGenerer = $limiteText;
 
    
-    for ($i = 0; $i < $nbPostsAGenerer; $i++) {
-        $index = $i % count($datesNetworks); 
-        $dayFromData = str_pad($datesNetworks[$index]['date'], 2, '0', STR_PAD_LEFT);
-        $network = $datesNetworks[$index]['network'];
+    // for ($i = 0; $i < $nbPostsAGenerer; $i++) {
+    //     $index = $i % count($datesNetworks); 
+    //     $dayFromData = str_pad($datesNetworks[$index]['date'], 2, '0', STR_PAD_LEFT);
+    //     $network = $datesNetworks[$index]['network'];
         
-        // Date du post
-        $targetDateString = date('Y-m') . '-' . $dayFromData;
-        $targetDateTime = \Carbon\Carbon::parse($targetDateString);
-        if ($targetDateTime->isPast() && $targetDateTime->format('Y-m-d') <= date('Y-m-d')) {
-            $targetDateTime->addMonthNoOverflow();
-        }
-        $datePost = $targetDateTime->format('Y-m-d') . ' 00:00:01';
+    //     // Date du post
+    //     $targetDateString = date('Y-m') . '-' . $dayFromData;
+    //     $targetDateTime = \Carbon\Carbon::parse($targetDateString);
+    //     if ($targetDateTime->isPast() && $targetDateTime->format('Y-m-d') <= date('Y-m-d')) {
+    //         $targetDateTime->addMonthNoOverflow();
+    //     }
+    //     $datePost = $targetDateTime->format('Y-m-d') . ' 00:00:01';
 
        
-        $urlpicture = null;
-        if ($i < $limitevisuel) {
-            $prompt = "Créer une image professionnelle pour un post $network sur le thème de l'intelligence artificielle dans le domaine de la finance, avec des couleurs vertes et blanches, style moderne et épuré, format carré";
-            $request->merge(['prompt' => $prompt]);
-            $imageResponse = $iaController->generatPictureGPT($request)->getData(true);
-            $urlpicture = $imageResponse['image_url'] ?? null;
-        }
+    //     $urlpicture = null;
+    //     if ($i < $limitevisuel) {
+    //         $prompt = "Créer une image professionnelle pour un post $network sur le thème de l'intelligence artificielle dans le domaine de la finance, avec des couleurs vertes et blanches, style moderne et épuré, format carré";
+    //         $request->merge(['prompt' => $prompt]);
+    //         $imageResponse = $iaController->generatPictureGPT($request)->getData(true);
+    //         $urlpicture = $imageResponse['image_url'] ?? null;
+    //     }
 
-        $prompt = "Rédige un texte professionnel pour un post $network sur l'IA et la finance (style moderne, accrocheur).";
-        $request->merge(['prompt' => $prompt]);
-        $textResponse = $iaController->generatpromptgemini($request)->getData(true);
-        $postData = $textResponse['text'] ?? "Texte non généré";
+    //     $prompt = "Rédige un texte professionnel pour un post $network sur l'IA et la finance (style moderne, accrocheur).";
+    //     $request->merge(['prompt' => $prompt]);
+    //     $textResponse = $iaController->generatpromptgemini($request)->getData(true);
+    //     $postData = $textResponse['text'] ?? "Texte non généré";
  
-        // Création du post
-        $post = Posts::create([
-            "datePost" => $datePost,
-            "idUser" => $userId,
-            "isValidated" => false,
-            "network" => $network,
-            "url" => $urlpicture,
-            "titrePost" => "Post " . ($i + 1) . " - " . ucfirst($network),
-            "post" => $postData
-        ]);
+    //     // Création du post
+    //     $post = Posts::create([
+    //         "datePost" => $datePost,
+    //         "idUser" => $userId,
+    //         "isValidated" => false,
+    //         "network" => $network,
+    //         "url" => $urlpicture,
+    //         "titrePost" => "Post " . ($i + 1) . " - " . ucfirst($network),
+    //         "post" => $postData
+    //     ]);
 
-        $listePosts[] = $post;
+    //     $listePosts[] = $post;
         
-    }
+    // }
 
-    return response()->json([
-        'message' => 'Posts générés automatiquement',
-        'user' => $userId,
-        'tabListe' => $listePosts,
-        'status' => 200,
-    ], 200);
+    // return response()->json([
+    //     'message' => 'Posts générés automatiquement',
+    //     'user' => $userId,
+    //     'tabListe' => $listePosts,
+    //     'status' => 200,
+    // ], 200);
 }
 
 

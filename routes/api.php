@@ -20,6 +20,7 @@ Route::group(['prefix' => '/users'], function () {
     Route::put('/{id}', 'updateUser')->name('updateUser');
     Route::delete('/{id}', 'deleteUser')->name('deleteUser');
     Route::post('/uploadlogo', 'uploadImage')->name('uploadImage');
+    Route::post('/abonnementUser', 'abonnementUser')->name('abonnementUser');
     
   });
 });

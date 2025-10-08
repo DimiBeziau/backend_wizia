@@ -189,8 +189,13 @@ class C_UserController extends Controller
       ], 500);
     }
   }
-  public static function abonnementUser($id)
+  public static function abonnementUser( Request $request )
 {
+  $request->validate([
+      'id' => 'required'
+  ]);
+
+  $id = $request->input('id');
     try {
         $user = User::find($id);
         if (!$user) {
@@ -221,6 +226,7 @@ class C_UserController extends Controller
         } else {
             $nomAbonement = "unknown";
         }
+        
 
         return [
             'error' => false,
@@ -237,8 +243,5 @@ class C_UserController extends Controller
         ];
     }
 }
-
-
-
 }
 

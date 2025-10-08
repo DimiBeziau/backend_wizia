@@ -29,6 +29,7 @@ return new class extends Migration
             $table->text('altBody')->nullable();
             $table->string('fromName')->nullable();
             $table->string('fromEmail')->nullable();
+            $table->datetime('date')->nullable();
             $table->timestamps();
         });
     }

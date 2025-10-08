@@ -7,6 +7,8 @@ use PHPMailer\PHPMailer\SMTP;
 use App\Models\Clients;
 use App\Models\Mailings;
 use App\Models\ClientsMailings;
+use App\Models\PieceJointes;
+use App\Models\PieceJointeMailings;
 use PHPMailer\PHPMailer\Exception;
 use Dotenv\Dotenv;
 
@@ -42,10 +44,12 @@ class C_MailController extends Controller
     $this->mail->Password = env('MAIL_PASSWORD');
     $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
   }
-  public function addAttachment($mail,$filePath, $fileName)
-  {
-    $this->mail->addAttachment($filePath, $fileName);
-  }
+ public function addAttachment($mail, $filePath, $fileName)
+{
+    if (file_exists($filePath)) {
+        $mail->addAttachment($filePath, $fileName);
+    }
+}
   public function generateMail(Request $request)
   {
 
@@ -57,7 +61,8 @@ class C_MailController extends Controller
       'altBody' => 'nullable|string',
       'fromName' => 'nullable|string',
       'fromEmail' => 'nullable|email',
-      
+      'file' => 'nullable|array',
+      'file.*' => 'file|max:10240'
     ]);
     try {
       $to = $request->input('to');
@@ -66,6 +71,7 @@ class C_MailController extends Controller
       $altBody = $request->input('altBody', '');
       $fromName = $request->input('fromName', 'WIZIA');
       $fromEmail = $request->input('fromEmail', 'contact@dimitribeziau.fr');
+      $file = $request->file('file');
 
       foreach ($to as $destinataire) {
 
@@ -80,7 +86,15 @@ class C_MailController extends Controller
         $mail->AltBody = $altBody;
         // $mail->addCC('cc1@exemple.com', 'Elena'); // CC et BCC
         // $mail->addBCC('bcc1@exemple.com', 'Alex');// CC et BCC
-
+        if ($file) {
+    if (is_array($file)) {
+        foreach ($file as $file) {
+            $this->addAttachment($mail, $file->getRealPath(), $file->getClientOriginalName());
+        }
+    } else {
+        $this->addAttachment($mail, $file->getRealPath(), $file->getClientOriginalName());
+    }
+}
         if (!$mail->send()) {
           throw new \Exception("Échec de l'envoi à $destinataire : " . $mail->ErrorInfo);
         }
@@ -92,7 +106,7 @@ class C_MailController extends Controller
     }
   }
   
-  public function AddMail(Request $request, $idUser) // enregistre un mail dans la base de données
+  public function AddMail(Request $request, $idUser) 
   {
     try {
       if (!is_numeric($idUser)) {
@@ -112,6 +126,8 @@ class C_MailController extends Controller
         'altBody' => 'nullable|string',
         'fromName' => 'nullable|string',
         'fromEmail' => 'nullable|email',
+        'file' => 'nullable|array',
+        'file.*' => 'file|max:10240'
       ]);
 
       $mail = new Mailings();
@@ -121,8 +137,9 @@ class C_MailController extends Controller
       $mail->altBody = $validated['altBody'] ?? null;
       $mail->fromName = $validated['fromName'] ?? null;
       $mail->fromEmail = $validated['fromEmail'] ?? null;
+      $mail->date = date('Y-m-d H:i:s'); 
       $mail->save();
-
+      
       foreach ($validated['toListId'] as $destId) {
         $ClientsMailings = new ClientsMailings();
         $ClientsMailings->idMailing = $mail->id;
@@ -130,6 +147,22 @@ class C_MailController extends Controller
         $ClientsMailings->save();
       }
 
+
+       foreach ($validated['file'] as $file) {
+      $pieceJointes = new PieceJointes();
+      $pieceJointes->type = $file ? $file->getRealPath() : null;
+      $pieceJointes->idUser = $idUser;
+      $pieceJointes->path = null;
+
+      $pieceJointes = new PieceJointeMailings();
+      $pieceJointes-> idPieceJointe = $pieceJointes->id;
+      $pieceJointes-> idMailing = $mail->id;
+      $pieceJointes->save();  
+
+      $pieceJointes->save();
+       }
+       
+    
       return response()->json([
         'success' => true,
         'message' => 'Mail ajouté avec succès',
@@ -303,7 +336,7 @@ class C_MailController extends Controller
     }
   }
 
-  public function getListMailingWhithSendClients($idMail) // liste mail avec les client 
+  public function getListMailingWhithSendClients($idMail) 
   {
       try {
           // Vérification que l'ID est bien numérique
@@ -416,6 +449,7 @@ public function updateMailing(Request $request, $idMailing)
         $mailing->altBody = $validated['altBody'] ?? $mailing->altBody;
         $mailing->fromName = $validated['fromName'] ?? $mailing->fromName;
         $mailing->fromEmail = $validated['fromEmail'] ?? $mailing->fromEmail;
+        $mailing->date = date('Y-m-d H:i:s'); 
         $mailing->save();
 
         return response()->json([
