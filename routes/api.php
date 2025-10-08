@@ -30,6 +30,7 @@ Route::group(['prefix' => "/post"], function () {
     Route::post('/Linkeding', 'createAndPublishPostLinkeding')->name('createAndPublishPostLinkeding');
     Route::post('/InstagramePicture', 'createAndPublishPostInstagramePicture')->name('createAndPublishPostInstagramePicture');
     Route::post('/LinkedingPicture', 'createAndPublishPostPictureLinkeding')->name('createAndPublishPostPictureLinkeding');
+    Route::post('/addPosts/{id}', 'addPosts')->name('addPosts');
     Route::get('/ListePosts/{id}', 'ListerPosts')->name('ListerPosts');
     
     

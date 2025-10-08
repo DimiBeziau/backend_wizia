@@ -127,7 +127,8 @@ class C_MailController extends Controller
         'fromName' => 'nullable|string',
         'fromEmail' => 'nullable|email',
         'file' => 'nullable|array',
-        'file.*' => 'file|max:10240'
+        'file.*' => 'file|max:10240',
+        'date' => 'nullable|dateteime',
       ]);
 
       $mail = new Mailings();
@@ -137,7 +138,7 @@ class C_MailController extends Controller
       $mail->altBody = $validated['altBody'] ?? null;
       $mail->fromName = $validated['fromName'] ?? null;
       $mail->fromEmail = $validated['fromEmail'] ?? null;
-      $mail->date = date('Y-m-d H:i:s'); 
+      $mail->date = $validated['date'] ?? date('Y-m-d H:i:s'); 
       $mail->save();
       
       foreach ($validated['toListId'] as $destId) {

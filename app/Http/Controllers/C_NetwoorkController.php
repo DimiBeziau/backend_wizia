@@ -226,10 +226,8 @@ public function createAndPublishPostPictureLinkeding(Request $request)
 
  public function ListerPosts($id)
     {
-    
         $userId = Auth::id() ?? $id;
-
-       
+    
         $posts = Posts::where('idUser', $userId)->get();
        
         if ($posts->count() > 0) {
@@ -239,12 +237,68 @@ public function createAndPublishPostPictureLinkeding(Request $request)
             ], 200);
         }
 
-        // Si aucun post trouvé
         return response()->json([
             'message' => 'Aucun post trouvé pour cet utilisateur.',
             'status' => 404,
         ], 404);
     }
+public function addPosts(Request $request, $idUser)
+{
+    try {
+        
+        if (!is_numeric($idUser)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID utilisateur invalide'
+            ], 400);
+        }
+
+        $validated = $request->validate([
+            'post' => 'required|string',
+            'url' => 'required|url',
+            'titre_post' => 'required|string',
+            'date' => 'required|date', 
+            'network' => 'required|in:facebook,linkeding,instagrame',
+        ]);
+
+      
+        $url = $validated['url'];
+        $titrePost = $validated['titre_post'];
+        $postData = $validated['post'];
+        $network = $validated['network'];
+        $datePost = $validated['date'] ?? date('Y-m-d H:i:s');
+
+        $userId = Auth::id() ?? $idUser;
+
+     
+        $post = Posts::create([
+            'datePost' => $datePost,
+            'idUser' => $userId,
+            'isValidated' => false,
+            'network' => $network,
+            'url' => $url,
+            'titrePost' => $titrePost,
+            'post' => $postData,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post ajouté avec succès',
+            'user' => $userId,
+            'tabListe' => [$post],
+            'status' => 200,
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur serveur : ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+
+ 
     // // Vérifie l'abonnement de l'utilisateur
     // $abonnement = \App\Http\Controllers\C_UserController::abonnementUser($userId);
     // if ($abonnement['error']) {
