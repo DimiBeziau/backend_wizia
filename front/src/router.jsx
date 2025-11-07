@@ -5,6 +5,7 @@ import NotFound from "./views/NotFound";
 import DefaultLayout from "./components/DefaultLayout";
 import GuestLayout from "./components/GuestLayout";
 import Dashboard from "./views/Dashboard";
+import CalendarPage from "./views/CalendarPage";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
         element: <Dashboard />
       }, {
         path: '/calendar',
-        element: <Dashboard />
+        element: <CalendarPage />
       }, {
         path: '/create',
         element: <Dashboard />

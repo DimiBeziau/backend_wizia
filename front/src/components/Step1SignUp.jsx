@@ -1,5 +1,6 @@
 import { Button, Input } from 'antd';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function Step1SignUp({ formData, setFormData, onNextStep }) {
   function formValidation() {
@@ -48,6 +49,9 @@ function Step1SignUp({ formData, setFormData, onNextStep }) {
           value={formData.password_confirmation}
           onChange={(ev) => { setFormData((prev) => ({ ...prev, password_confirmation: ev.target.value })) }}
         />
+      </div>
+      <div className="flex flex-row justify-end my-3">
+        <Link to="/login" >J'ai déjà un compte ?</Link>
       </div>
       <div className="flex flex-row justify-end items-center my-3">
         <Button onClick={() => { formValidation() }}>Continuer</Button>

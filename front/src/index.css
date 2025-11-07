@@ -1,3 +1,72 @@
 @layer theme, base, antd, components, utilities;
 
 @import "tailwindcss";
+
+@theme {
+  --color-purple-10: #0A0098FF;
+  --color-purple-95: #1D13A2FF;
+  --color-purple-9: #2F27ADFF;
+  --color-purple-85: #423AB7FF;
+  --color-purple-8: #554DC1FF;
+  --color-purple-7: #7A74D6FF;
+  --color-purple-6: #A09AEAFF;
+  --color-purple-5: #C5C1FFFF;
+  --color-purple-4: #D1CDFFFF;
+  --color-purple-3: #DCDAFFFF;
+  --color-purple-2: #E8E6FFFF;
+  --color-purple-1: #EEECFFFF;
+  --color-pink-10: #910013FF;
+  --color-pink-95: #9C1325FF;
+  --color-pink-9: #A72536FF;
+  --color-pink-85: #B23848FF;
+  --color-pink-8: #BD4A59FF;
+  --color-pink-7: #D3707DFF;
+  --color-pink-6: #E995A0FF;
+  --color-pink-5: #FFBAC3FF;
+  --color-pink-4: #FFC8CFFF;
+  --color-pink-3: #FFD6DBFF;
+  --color-pink-2: #FFE3E7FF;
+  --color-pink-1: #FFEAEDFF;
+  --color-green-10: #041615FF;
+  --color-green-95: #092B2BFF;
+  --color-green-9: #0D4140FF;
+  --color-green-85: #125655FF;
+  --color-green-8: #1A8280FF;
+  --color-green-7: #23ADAAFF;
+  --color-green-6: #2CD8D5FF;
+  --color-green-5: #56E0DDFF;
+  --color-green-4: #80E8E6FF;
+  --color-green-3: #ABEFEEFF;
+  --color-green-2: #C0F3F2FF;
+  --color-green-1: #D5F7F7FF;
+  --color-default-bg-color: #101622FF;
+  --color-default-black: #101010FF;
+  --color-default-white: #FCFCFCFF;
+  --color-default-grey-10: #191919FF;
+  --color-default-grey-9: #252525FF;
+  --color-default-grey-8: #323232FF;
+  --color-default-grey-7: #4A4A4AFF;
+  --color-default-grey-6: #636363FF;
+  --color-default-grey-5: #7C7C7CFF;
+  --color-default-grey-4: #969696FF;
+  --color-default-grey-3: #B0B0B0FF;
+  --color-default-grey-2: #CBCBCBFF;
+  --color-default-grey-1: #D8D8D8FF;
+
+  --spacing-none: 0px;
+  --spacing-xs: 4px;
+  --spacing-s: 8px;
+  --spacing-m: 12px;
+  --spacing-l: 16px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+  --spacing-xxxl: 48px;
+
+  --font-size-h1: 24px;
+  --font-size-h2: 20px;
+  --font-size-h3: 16px;
+  --font-line-height-body: 12px;
+  --font-size-price: 12px;
+  --font-size-body: 8px;
+  --font-size-caption: 4px;
+}
