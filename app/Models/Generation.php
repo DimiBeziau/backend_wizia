@@ -4,16 +4,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Limites extends Model
+class Generation extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
     protected $fillable = [
-            'idAbonnement',
-            'nomModule',
-            'islimitAbonnement',
+            'IdUser',
+            'generation_Prompte',
+            'generation_Picture',
             'isprofessionnelle',
-            'isLimitTexte',
-            'isLimiteImage',
+            'dateDebut',
+            'dateFin',
     ];
 }

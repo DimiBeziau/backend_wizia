@@ -23,11 +23,15 @@ return new class extends Migration
         Schema::create('mailings', function (Blueprint $table) {
             $table->id();
             $table->integer('idUser');
+            $table->integer('idListeClient');
             $table->string('subject');
             $table->text('body');
+            $table->boolean('isValidated')->default(false);
+            $table->boolean('isPublished')->default(false);
             $table->text('altBody')->nullable();
             $table->string('fromName')->nullable();
             $table->string('fromEmail')->nullable();
+            $table->datetime('date')->nullable();
             $table->timestamps();
         });
     }

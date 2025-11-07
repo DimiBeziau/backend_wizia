@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Models\Abonnements;
+use App\Models\Generation;
+use App\Models\Limites;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\PieceJointes;
@@ -78,6 +80,16 @@ class C_UserController extends Controller
     $user->idAbonnement = '1';
     $user->save();
     $token = $user->createToken('auth_token')->plainTextToken;
+
+    $generation = new Generation();
+    $generation->IdUser = $user->id;
+    $generation->generation_Prompte = 0;
+    $generation->generation_Picture = 0;
+    $generation->generation_Newsletter = 0;
+    $generation->nombre_Contact_Newsletter = 0;
+    $generation->dateDebut = date('Y-m-01');
+    $generation->dateFin = date('Y-m-t');
+    $generation->save();
     return response()->json(['user' => $user, 'token' => $token], 200);
     // } catch (\Exception $e) {
     //   return response()->json([
@@ -177,23 +189,59 @@ class C_UserController extends Controller
       ], 500);
     }
   }
-  // public function index(){
-  //             $users = User::all();
-  //             dd($users);
-  //         }
+  public static function abonnementUser( Request $request )
+{
+  $request->validate([
+      'id' => 'required'
+  ]);
 
+  $id = $request->input('id');
+    try {
+        $user = User::find($id);
+        if (!$user) {
+            return [
+                'error' => true,
+                'message' => 'user non trouvé'
+            ];
+        }
+
+        $abonnement = Abonnements::find($user->idAbonnement);
+        if (!$abonnement) {
+            return [
+                'error' => true,
+                'message' => 'Abonnement non trouvé'
+            ];
+        }
+
+        $limit = limites::find($abonnement->id);
+        $generation = Generation::find($id);
+
+        // Déterminer le type d'abonnement
+        if ($abonnement->isFree == 1) {
+            $nomAbonement = "isFree";
+        } elseif ($abonnement->isPremium == 1) {
+            $nomAbonement = "isPremium";
+        } elseif ($abonnement->isProfessionnel == 1) {
+            $nomAbonement = "isProfessionnel";
+        } else {
+            $nomAbonement = "unknown";
+        }
+        
+
+        return [
+            'error' => false,
+            'AbonementType' => $nomAbonement,
+            'PictureLimite' => $limit->isLimiteImage ?? 0,
+            'TexteLimite' => $limit->isLimitTexte ?? 0,
+            'UsedPicture' => $generation->generation_Picture ?? 0,
+            'UsedTexte' => $generation->generation_Prompte ?? 0,
+        ];
+    } catch (\Exception $e) {
+        return [
+            'error' => true,
+            'message' => 'Erreur lors de la récupération de l\'abonnement'
+        ];
+    }
+}
 }
 
-// namespace App\Http\Controllers;
-
-// use App\Http\Controllers\Controller;
-// use Illuminate\Http\Request;
-// use App\Models\User;
-
-// class UserController extends Controller
-// {
-//     public function index(){
-//         // $users = User::all();
-//         // dd($users);
-//     }
-// }

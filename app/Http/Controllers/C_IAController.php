@@ -98,7 +98,7 @@ class C_IAController extends Controller
   }
 
 
-  public function generatpromptgemini(Request $request)
+  public  function generatpromptgemini(Request $request)
   {
 
     $request->validate([

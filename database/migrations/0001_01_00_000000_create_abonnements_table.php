@@ -22,6 +22,10 @@ return new class extends Migration
 
     $abonnement = new Abonnements(['isFree' => 1, 'isPremium' => 0, 'isProfessionnel' => 0]);
     $abonnement->save();
+    $abonnement = new Abonnements(['isFree' => 0, 'isPremium' => 1, 'isProfessionnel' => 0]);
+    $abonnement->save();
+    $abonnement = new Abonnements(['isFree' => 0, 'isPremium' => 0, 'isProfessionnel' => 1]);
+    $abonnement->save();
   }
 
   /**
