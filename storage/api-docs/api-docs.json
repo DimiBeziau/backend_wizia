@@ -10,9 +10,13 @@
     },
     "servers": [
         {
-            "url": "http://localhost",
-            "description": "Serveur local"
-        }
+      "url": "http://localhost",
+      "description": "Serveur local"
+    },
+    {
+      "url": "https://wizia.dimitribeziau.fr",
+      "description": "Serveur de production"
+    }
     ],
     "paths": {
         "/bill/generatebill": {
