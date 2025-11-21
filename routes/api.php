@@ -16,7 +16,7 @@ Route::group(['prefix' => '/users'], function () {
     Route::get('/{id}', 'getUser')->name('getUser');
     //Route::get('/users/{id}', [C_UserController::class, 'getUser']);
     Route::post('/sertchUser', 'sertchgetUser')->name('sertchgetUser'); // a voir
-    Route::post('/', 'addUser')->name('addUser');
+  //  Route::post('/', 'addUser')->name('addUser');
     Route::put('/{id}', 'updateUser')->name('updateUser');
     Route::delete('/{id}', 'deleteUser')->name('deleteUser');
     Route::post('/uploadlogo', 'uploadImage')->name('uploadImage');
@@ -29,14 +29,13 @@ Route::group(['prefix' => "/post"], function () {
     Route::post('/Facebook', 'createAndPublishPostPictureFacebook')->name('createAndPublishPostPictureFacebook');
     Route::post('/Instagrame', 'createAndPublishPostInstagramePicture')->name('createAndPublishPostInstagramePicture');
     Route::post('/Linkeding', 'createAndPublishPostPictureLinkeding')->name('createAndPublishPostPictureLinkeding');
-    Route::post('/addPosts/{id}', 'addPosts')->name('addPosts');
+    Route::post('/addPosts/{idUser}', 'addPosts')->name('addPosts');
+    Route::post('/SearchPost/{idPost}', 'SearchPost')->name('SearchPost');
     Route::post('/listerCommentairesandLike', 'ListeCommentaireAndLikeNetwork')->name('ListeCommentaireAndLikeNetwork');
     Route::post('/listerCommentairesandLikeInstagram', 'listerCommentairesandLikeIstagram')->name('listerCommentairesandLikeIstagram');// supprimer après juste pour test
     Route::post('/listerCommentairesandLikeLinkeding', 'listerCommentairesandLikeLinkeding')->name('listerCommentairesandLikeLinkeding');// supprimer après juste pour test
     Route::post('/listerCommentairesandLikeFacebook', 'listerCommentairesandLikeFacebook')->name('listerCommentairesandLikeFacebook');// supprimer après juste pour test
-    Route::get('/ListePosts/{id}', 'ListerPosts')->name('ListerPosts');
-    //Route::get('/ListePosts/{id}', 'ListerPosts')->name('ListerPosts');
-    
+    Route::get('/ListePosts/{id}', 'ListerPosts')->name('ListerPosts');   
     
   });
 });
@@ -64,12 +63,6 @@ Route::group(['prefix' => '/auth'], function () {
     Route::post('/register', [C_UserController::class, 'register'])->name('register');
     Route::post('/login', [C_UserController::class, 'login'])->name('login');
     Route::post('/AuthenticatedUser', [C_UserController::class, 'GetAuthenticatedUser'])->name('GetAuthenticatedUser');
-    // Route::group(['prefix' => '/facebook'],function (){
-    //     Route::name('facebook.')->controller(FacebookController::class)->group(function(){
-    //         Route::get('/', 'index')->name('facebook');
-    //         Route::get('/callback', 'callback')->name('callback');
-    //     });
-    // });
 
   });
 });
@@ -81,14 +74,14 @@ Route::group(['prefix' => '/mail'], function () {
     Route::get('/ListMailingUser/{id}', 'getListMailingUser')->name('getListMailingUser');// lister mail d un utilisateur 
 
     Route::get('/ListMailingsendClient/{id}', 'getListMailingWhithSendClients')->name('getListMailingWhithSendClients');// liste des mail  avec liste clients
-    Route::get('/ListMailing/{id}', 'getMailingById')->name('getMailingById');
+    Route::get('/SearchMailing/{id}', 'SearchMailingById')->name('SearchMailingById');
     Route::put('/UpdateMailing/{id}', 'updateMailing')->name('updateMailing');
     Route::delete('/DeleteMailing/{id}', 'deleteMailing')->name('deleteMailing');
 
     Route::get('/ListDestinataireClient/{id}', 'getListDestinataire')->name('getListDestinataire');
     Route::post('/AddDestinataireClient/{id}', 'AddListDestinataire')->name('AddListDestinataire');
     Route::put('/UpdateDestinataireClient/{id}', 'UpdateListDestinataire')->name('UpdateListDestinataire');
-    Route::delete('/ListDestinataireClient/{id}', 'deleteListDestinataire')->name('deleteListDestinataire');
+    Route::delete('/DeleteListDestinataire/{id}', 'deleteListDestinataire')->name('deleteListDestinataire');
   });
 });
 

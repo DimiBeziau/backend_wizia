@@ -15,6 +15,29 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class C_NetwoorkController extends Controller
 {
+
+    /**
+ * @OA\Post(
+ *     path="/post/Facebook",
+ *     summary="Publier un post image sur Facebook",
+ *     tags={"Post"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"post", "file"},
+ *             @OA\Property(property="post", type="string", example="Mon texte de post"),
+ *             @OA\Property(property="file", type="string", example="data:image/png;base64,..."),
+ *             @OA\Property(property="id_post", type="integer", example=15)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Publication envoyée à Facebook via Make.com"
+ *     ),
+ *     @OA\Response(response=500, description="Erreur interne serveur")
+ * )
+ */
+
  public function createAndPublishPostPictureFacebook(Request $request)
 {
     $request->validate([
@@ -55,6 +78,24 @@ $id_post = $request->input('id_post');
         ]);
     }
 
+/**
+ * @OA\Post(
+ *     path="/post/Instagrame",
+ *     summary="Publier un post image sur Instagram",
+ *     tags={"Post"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"post", "file"},
+ *             @OA\Property(property="post", type="string", example="Mon post Instagram"),
+ *             @OA\Property(property="file", type="string", example="data:image/jpeg;base64,..."),
+ *             @OA\Property(property="id_post", type="integer", example=12)
+ *         )
+ *     ),
+ *     @OA\Response(response=200, description="Post envoyé à Instagram"),
+ *     @OA\Response(response=500, description="Erreur interne")
+ * )
+ */
 
   public function createAndPublishPostInstagramePicture(Request $request){
     $request->validate([
@@ -91,7 +132,26 @@ $id_post = $request->input('id_post');
       ]);
     
   }
-  
+  /**
+ * @OA\Post(
+ *     path="/post/Linkeding",
+ *     summary="Publier un post image sur LinkedIn",
+ *     tags={"Post"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"post", "file", "titre_post"},
+ *             @OA\Property(property="titre_post", type="string", example="Titre LinkedIn"),
+ *             @OA\Property(property="post", type="string", example="Contenu LinkedIn"),
+ *             @OA\Property(property="file", type="string", example="data:image/jpeg;base64,..."),
+ *             @OA\Property(property="id_post", type="integer", example=34)
+ *         )
+ *     ),
+ *     @OA\Response(response=200, description="Post LinkedIn envoyé"),
+ *     @OA\Response(response=500, description="Erreur interne")
+ * )
+ */
+
 public function createAndPublishPostPictureLinkeding(Request $request)
 {
   $request->validate([
@@ -136,6 +196,22 @@ if($id_post!= null){
         'message' => 'Post correctement plannifié ',
     ]);
 }
+/**
+ * @OA\Get(
+ *     path="/post/ListePosts/{id}",
+ *     summary="Lister toutes les publications d'un utilisateur",
+ *     tags={"Post"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
+ *         example=3
+ *     ),
+ *     @OA\Response(response=200, description="Liste trouvée"),
+ *     @OA\Response(response=404, description="Aucun post trouvé")
+ * )
+ */
 
  public function ListerPosts($id)
     {
@@ -146,6 +222,39 @@ if($id_post!= null){
         if ($posts->count() > 0) {
             return response()->json([
                 'tabListe' => $posts,
+                'status' => 200,
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Aucun post trouvé pour cet utilisateur.',
+            'status' => 404,
+        ], 404);
+    }
+    /**
+ * @OA\Post(
+ *     path="/post/SearchPost/{idPost}",
+ *     summary="Récupérer un post par ID",
+ *     tags={"Post"},
+ *     @OA\Parameter(
+ *         name="idPost",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
+ *         example=10
+ *     ),
+ *     @OA\Response(response=200, description="Post trouvé"),
+ *     @OA\Response(response=404, description="Post non trouvé")
+ * )
+ */
+
+    public function SearchPost($idPost)
+    {
+        $posts = Posts::where('id', $idPost)->get();
+       
+        if ($posts->count() > 0) {
+            return response()->json([
+                'Post' => $posts,
                 'status' => 200,
             ], 200);
         }
@@ -203,6 +312,36 @@ if($id_post!= null){
             ], 404);
         }
     }
+    /**
+ * @OA\Post(
+ *     path="/post/addPosts/{idUser}",
+ *     summary="Ajouter un post à la base",
+ *     tags={"Post"},
+ *     @OA\Parameter(
+ *         name="idUser",
+ *         in="path",
+ *         required=true,
+ *         @OA\Schema(type="integer"),
+ *         example=5
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"post","url","titre_post","date","network","idPostNetwork"},
+ *             @OA\Property(property="post", type="string", example="Super post Facebook"),
+ *             @OA\Property(property="url", type="string", example="https://facebook.com/post/123"),
+ *             @OA\Property(property="titre_post", type="string", example="Mon titre"),
+ *             @OA\Property(property="date", type="string", example="2025-03-10 14:00:00"),
+ *             @OA\Property(property="network", type="string", example="facebook"),
+ *             @OA\Property(property="idPostNetwork", type="string", example="123456789")
+ *         )
+ *     ),
+ *     @OA\Response(response=200, description="Post ajouté"),
+ *     @OA\Response(response=400, description="Erreur validation"),
+ *     @OA\Response(response=500, description="Erreur serveur")
+ * )
+ */
+
 public function addPosts(Request $request, $idUser)
 {
     try {
@@ -263,6 +402,15 @@ public function addPosts(Request $request, $idUser)
         ], 500);
     }
 }
+/**
+ * @OA@Post(
+ *     path="/post/listerCommentairesandLikeFacebook",
+ *     summary="Lister likes & commentaires Facebook",
+ *     tags={"Post"},
+ *     @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=500, description="Erreur interne")
+ * )
+ */
 
 public function listerCommentairesAndLikeFacebook(Request $request)
 {
@@ -342,7 +490,7 @@ public function listerCommentairesAndLikeFacebook(Request $request)
             }
         }
 
-        // 🔹 Mise à jour ou création du post
+      
         $post = Posts::where('IdpostNetwork', $idPost)->first();
 
         if ($post) {
@@ -383,6 +531,15 @@ public function listerCommentairesAndLikeFacebook(Request $request)
     }
 }
 
+/**
+ * @OA\Post(
+ *     path="/post/listerCommentairesandLikeInstagram",
+ *     summary="Lister likes & commentaires Instagram",
+ *     tags={"Post"},
+ *     @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=500, description="Erreur interne")
+ * )
+ */
 
 public function listerCommentairesandLikeIstagram(){
   
@@ -457,6 +614,15 @@ public function listerCommentairesandLikeIstagram(){
     ], 500);
 }
 }
+/**
+ * @OA\Post(
+ *     path="/post/listerCommentairesandLikeLinkeding",
+ *     summary="Lister likes & commentaires LinkedIn",
+ *     tags={"Post"},
+ *     @OA\Response(response=200, description="OK"),
+ *     @OA\Response(response=500, description="Erreur interne")
+ * )
+ */
 
 public function listerCommentairesandLikeLinkeding(Request $request)
 {
@@ -549,6 +715,15 @@ public function listerCommentairesandLikeLinkeding(Request $request)
         ], 500);
     }
 }
+/**
+ * @OA\Post(
+ *     path="/post/listerCommentairesandLike",
+ *     summary="Mettre à jour likes et commentaires sur tous les réseaux",
+ *     tags={"Post"},
+ *     @OA\Response(response=200, description="Données mises à jour"),
+ *     @OA\Response(response=500, description="Erreur interne")
+ * )
+ */
 
 public function ListeCommentaireAndLikeNetwork()
 {

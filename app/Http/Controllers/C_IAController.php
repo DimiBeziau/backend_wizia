@@ -27,6 +27,36 @@ class C_IAController extends Controller
     $this->geminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $this->keyApigemini;
     $this->gptApiUrl = "https://api.openai.com/v1/images/generations";
   }
+
+  /**
+   * @OA\Post(
+   *     path="/ia/generateIALocal",
+   *     summary="Génère une réponse texte avec Llama3.2",
+   *     tags={"Intelligence artificielle"},
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             type="object",
+   *             required={"prompt"},
+   *             @OA\Property(property="prompt", type="string", example="Explique-moi Laravel en quelques mots")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Réponse générée avec succès",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="text", type="string", example="Laravel est un framework PHP...")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Erreur lors de la génération",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="error", type="string", example="Erreur de la génération du prompt")
+   *         )
+   *     )
+   * )
+   */
   public function generatprompt(Request $request)
   {
        $this->prompt = $request->input('prompt');
@@ -59,6 +89,38 @@ class C_IAController extends Controller
     return response()->json(['text' => $decoded['response'] ?? 'Réponse vide']);
     //return $decodeJson['response'] ?? "Erreur : reponse introuvable";
   }
+
+   /**
+   * @OA\Post(
+   *     path="/ia/generateIApicture",
+   *     summary="Génère une image avec DALL-E 3",
+   *     tags={"Intelligence artificielle"},
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             type="object",
+   *             required={"prompt"},
+   *             @OA\Property(property="prompt", type="string", example="Un chat astronaute dans l'espace"),
+   *             @OA\Property(property="size", type="string", example="1024x1024", description="Tailles disponibles: 256x256, 512x512, 1024x1024, 1024x1792")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Image générée avec succès",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="image_url", type="string", example="https://oaidalleapiprodscus.blob.core.windows.net/...")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Erreur lors de la génération de l'image",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="error", type="string", example="Image non générée"),
+   *             @OA\Property(property="details", type="object")
+   *         )
+   *     )
+   * )
+   */
 
   public function generatPictureGPT(Request $promptClient)
   {
@@ -98,7 +160,43 @@ class C_IAController extends Controller
     }
 
   }
-
+  /**
+   * @OA\Post(
+   *     path="/ia/generateIA",
+   *     summary="Génère un post structuré pour les réseaux sociaux avec Gemini",
+   *     tags={"Intelligence artificielle"},
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             type="object",
+   *             required={"prompt"},
+   *             @OA\Property(property="prompt", type="string", example="Crée un post Instagram sur le café artisanal")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Post généré avec succès",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="title", type="string", example="Le café artisanal : un art à découvrir"),
+   *             @OA\Property(property="content", type="string", example="Découvrez les secrets du café de spécialité...")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=422,
+   *         description="Erreur de validation",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="message", type="string", example="The prompt field is required.")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Erreur lors de la génération",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="error", type="string", example="Erreur de la génération du prompt Gemini")
+   *         )
+   *     )
+   * )
+   */
 public function generatpromptgemini(Request $request)
 {
     $request->validate([

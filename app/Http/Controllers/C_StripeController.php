@@ -11,6 +11,28 @@ use App\Models\Abonnements;
 
 class C_StripeController extends Controller
 {
+    /**
+ * @OA\Post(
+ *     path="/stripe/create-payment-intent",
+ *     summary="Créer un PaymentIntent Stripe et mettre à jour l'abonnement utilisateur",
+ *     tags={"Payment"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"amount","IdUser","email","nom"},
+ *             @OA\Property(property="amount", type="number", format="float", example=2000, description="Montant en centimes"),
+ *             @OA\Property(property="IdUser", type="integer", example=1, description="ID de l'utilisateur"),
+ *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="Email pour le reçu"),
+ *             @OA\Property(property="nom", type="string", example="Premium", description="Nom de l'abonnement (Free, Premium, Professionnel)")
+ *         )
+ *     ),
+ *     @OA\Response(response=200, description="PaymentIntent créé avec succès et abonnement mis à jour"),
+ *     @OA\Response(response=400, description="Erreur de validation ou abonnement non valide"),
+ *     @OA\Response(response=404, description="Utilisateur ou abonnement introuvable"),
+ *     @OA\Response(response=500, description="Erreur serveur")
+ * )
+ */
+
     public function createPaymentIntent(Request $request)
     {
         $validated = $request->validate([
@@ -66,6 +88,25 @@ class C_StripeController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    /**
+ * @OA\Get(
+ *     path="/stripe/abonnement/{id}",
+ *     summary="Récupérer le type d'abonnement d'un utilisateur",
+ *     tags={"Payment"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="ID de l'utilisateur",
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\Response(response=200, description="Type d'abonnement retourné (isFree, isPremium, isProfessionnel)"),
+ *     @OA\Response(response=400, description="Aucun type d’abonnement valide"),
+ *     @OA\Response(response=404, description="Utilisateur ou abonnement non trouvé"),
+ *     @OA\Response(response=500, description="Erreur serveur")
+ * )
+ */
+
     public function getAbonnement($id)
 {
     try {

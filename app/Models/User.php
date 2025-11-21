@@ -28,7 +28,10 @@ class User extends Authenticatable
     'activity' ,
     'logo' ,
     'color',
-    'description'
+    'description',
+    'companyName',
+    'tone',
+    'goal',
   ];
 
   /**

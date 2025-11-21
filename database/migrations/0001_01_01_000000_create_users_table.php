@@ -23,6 +23,9 @@ return new class extends Migration
       $table->string('logo',500)->nullable();
       $table->string('color');
       $table->text('description',5000);
+      $table->string('companyName');
+      $table->enum('tone', ['Profesionnel', 'Familier', 'Inspirant', 'Pédagogique']);
+      $table->enum('goal', ['Professionnel', 'Fidéliser le client', 'Vendre mes produits']);
       $table->rememberToken();
       $table->timestamps();
     });

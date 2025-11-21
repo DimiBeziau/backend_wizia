@@ -51,6 +51,48 @@ class C_MailController extends Controller
         $mail->addAttachment($filePath, $fileName);
     }
 }
+
+  /**
+   * @OA\Post(
+   *     path="/mail/generateMail",
+   *     summary="Envoie un email avec PHPMailer",
+   *     tags={"Mailing"},
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\MediaType(
+   *             mediaType="multipart/form-data",
+   *             @OA\Schema(
+   *                 type="object",
+   *                 required={"to", "subject", "body"},
+   *                 @OA\Property(property="to", type="array", @OA\Items(type="string", format="email"), example={"john@example.com", "jane@example.com"}),
+   *                 @OA\Property(property="subject", type="string", example="Votre commande"),
+   *                 @OA\Property(property="body", type="string", example="<h1>Bonjour</h1><p>Merci pour votre commande</p>"),
+   *                 @OA\Property(property="altBody", type="string", example="Version texte de l'email"),
+   *                 @OA\Property(property="fromName", type="string", example="WIZIA"),
+   *                 @OA\Property(property="fromEmail", type="string", format="email", example="contact@wizia.com"),
+   *                 @OA\Property(property="file", type="array", @OA\Items(type="string", format="binary")),
+   *                 @OA\Property(property="idMailing", type="integer", example=1)
+   *             )
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Email envoyé avec succès",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="message", type="string", example="Email(s) envoyé(s) avec succès"),
+   *             @OA\Property(property="success", type="boolean", example=true)
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=500,
+   *         description="Erreur lors de l'envoi",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="error", type="string"),
+   *             @OA\Property(property="success", type="boolean", example=false)
+   *         )
+   *     )
+   * )
+   */
   public function generateMail(Request $request)
   {
 
@@ -112,7 +154,51 @@ class C_MailController extends Controller
       return response()->json(['error' => $e->getMessage(), 'success' => false], 500);
     }
   }
-  
+   /**
+   * @OA\Post(
+   *     path="/mail/AddMail/{idUser}",
+   *     summary="Ajoute un mailing en base de données",
+   *     tags={"Mailing"},
+   *     @OA\Parameter(
+   *         name="idUser",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer"),
+   *         description="ID de l'utilisateur"
+   *     ),
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\MediaType(
+   *             mediaType="multipart/form-data",
+   *             @OA\Schema(
+   *                 type="object",
+   *                 required={"to", "toListId", "subject", "body"},
+   *                 @OA\Property(property="to", type="array", @OA\Items(type="string", format="email")),
+   *                 @OA\Property(property="toListId", type="array", @OA\Items(type="integer")),
+   *                 @OA\Property(property="subject", type="string", example="Newsletter Janvier"),
+   *                 @OA\Property(property="body", type="string", example="<p>Contenu du mail</p>"),
+   *                 @OA\Property(property="altBody", type="string"),
+   *                 @OA\Property(property="fromName", type="string"),
+   *                 @OA\Property(property="fromEmail", type="string", format="email"),
+   *                 @OA\Property(property="file", type="array", @OA\Items(type="string", format="binary")),
+   *                 @OA\Property(property="date", type="string", format="date-time"),
+   *                 @OA\Property(property="isValidated", type="boolean"),
+   *                 @OA\Property(property="isPublished", type="boolean")
+   *             )
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Mail ajouté avec succès",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="message", type="string")
+   *         )
+   *     ),
+   *     @OA\Response(response=400, description="ID invalide"),
+   *     @OA\Response(response=500, description="Erreur serveur")
+   * )
+   */
   public function AddMail(Request $request, $idUser) 
   {
     try {
@@ -187,7 +273,34 @@ class C_MailController extends Controller
       ], 500);
     }
   }
-
+ /**
+   * @OA\Get(
+   *     path="/mail/ListDestinataireClient/{idUser}",
+   *     summary="Récupère la liste des destinataires d'un utilisateur",
+   *     tags={"Destinataires"},
+   *     @OA\Parameter(
+   *         name="idUser",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Liste des destinataires",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="data", type="array", @OA\Items(
+   *                 @OA\Property(property="id", type="integer"),
+   *                 @OA\Property(property="mail", type="string"),
+   *                 @OA\Property(property="nom", type="string"),
+   *                 @OA\Property(property="prenom", type="string")
+   *             ))
+   *         )
+   *     ),
+   *     @OA\Response(response=400, description="ID invalide"),
+   *     @OA\Response(response=500, description="Erreur serveur")
+   * )
+   */
   public function getListDestinataire($idUser)
   {
     try {
@@ -213,7 +326,40 @@ class C_MailController extends Controller
       ], 500);
     }
   }
-
+ /**
+   * @OA\Post(
+   *     path="/mail/AddDestinataireClient/{idUser}",
+   *     summary="Ajoute un destinataire",
+   *     tags={"Destinataires"},
+   *     @OA\Parameter(
+   *         name="idUser",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             type="object",
+   *             required={"mail", "nom", "prenom"},
+   *             @OA\Property(property="mail", type="string", format="email", example="john.doe@example.com"),
+   *             @OA\Property(property="nom", type="string", example="Doe"),
+   *             @OA\Property(property="prenom", type="string", example="John")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=201,
+   *         description="Destinataire ajouté",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="message", type="string"),
+   *             @OA\Property(property="data", type="object")
+   *         )
+   *     ),
+   *     @OA\Response(response=400, description="ID invalide"),
+   *     @OA\Response(response=500, description="Erreur serveur")
+   * )
+   */
 
   public function addListDestinataire(Request $request, $idUser)
   {
@@ -251,7 +397,41 @@ class C_MailController extends Controller
       ], 500);
     }
   }
-
+ /**
+   * @OA\Put(
+   *     path="/mail/UpdateDestinataireClient/{idUser}",
+   *     summary="Met à jour un destinataire",
+   *     tags={"Destinataires"},
+   *     @OA\Parameter(
+   *         name="idUser",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             type="object",
+   *             required={"id"},
+   *             @OA\Property(property="id", type="integer", example=1),
+   *             @OA\Property(property="mail", type="string", format="email"),
+   *             @OA\Property(property="nom", type="string"),
+   *             @OA\Property(property="prenom", type="string")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Destinataire mis à jour",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="message", type="string"),
+   *             @OA\Property(property="data", type="object")
+   *         )
+   *     ),
+   *     @OA\Response(response=404, description="Destinataire non trouvé"),
+   *     @OA\Response(response=500, description="Erreur serveur")
+   * )
+   */
   public function updateListDestinataire(Request $request, $idUser)
   {
     try {
@@ -296,7 +476,29 @@ class C_MailController extends Controller
       ], 500);
     }
   }
-
+ /**
+   * @OA\Delete(
+   *     path="/mail/DeleteListDestinataire/{idDestinataire}",
+   *     summary="Supprime un destinataire",
+   *     tags={"Destinataires"},
+   *     @OA\Parameter(
+   *         name="idDestinataire",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Destinataire supprimé",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="message", type="string")
+   *         )
+   *     ),
+   *     @OA\Response(response=404, description="Destinataire non trouvé"),
+   *     @OA\Response(response=500, description="Erreur serveur")
+   * )
+   */
   public function deleteListDestinataire($idDestinataire)
   {
     try {
@@ -323,6 +525,27 @@ class C_MailController extends Controller
       ], 500);
     }
   }
+  /**
+   * @OA\Get(
+   *     path="/mail/ListMailingUser/{idUser}",
+   *     summary="Récupère tous les mailings d'un utilisateur",
+   *     tags={"Mailing"},
+   *     @OA\Parameter(
+   *         name="idUser",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Liste des mailings",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+   *         )
+   *     )
+   * )
+   */
   public function getListMailingUser($idUser)
   {
     try {
@@ -347,7 +570,31 @@ class C_MailController extends Controller
       ], 500);
     }
   }
-
+/**
+   * @OA\Get(
+   *     path="/mail/ListMailingsendClient/{idMail}",
+   *     summary="Récupère un mailing avec ses destinataires",
+   *     tags={"Mailing"},
+   *     @OA\Parameter(
+   *         name="idMail",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Mailing avec destinataires",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="data", type="object",
+   *                 @OA\Property(property="mailing", type="object"),
+   *                 @OA\Property(property="clients", type="array", @OA\Items(type="object"))
+   *             )
+   *         )
+   *     ),
+   *     @OA\Response(response=404, description="Mailing non trouvé")
+   * )
+   */
   public function getListMailingWhithSendClients($idMail) 
   {
       try {
@@ -391,7 +638,29 @@ class C_MailController extends Controller
           ], 500);
       }
   }
- public function getMailingById($idMailing)
+  /**
+   * @OA\Get(
+   *     path="/mail/SearchMailing/{idMailing}",
+   *     summary="Récupère un mailing par son ID",
+   *     tags={"Mailing"},
+   *     @OA\Parameter(
+   *         name="idMailing",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Détails du mailing",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="data", type="object")
+   *         )
+   *     ),
+   *     @OA\Response(response=404, description="Mailing non trouvé")
+   * )
+   */
+ public function SearchMailingById($idMailing)
 {
     try {
         if (!ctype_digit((string)$idMailing)) {
@@ -423,7 +692,43 @@ class C_MailController extends Controller
     }
 }
 
-
+/**
+   * @OA\Put(
+   *     path="/mail/UpdateMailing/{idMailing}",
+   *     summary="Met à jour un mailing",
+   *     tags={"Mailing"},
+   *     @OA\Parameter(
+   *         name="idMailing",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             type="object",
+   *             required={"subject", "body"},
+   *             @OA\Property(property="subject", type="string"),
+   *             @OA\Property(property="body", type="string"),
+   *             @OA\Property(property="altBody", type="string"),
+   *             @OA\Property(property="fromName", type="string"),
+   *             @OA\Property(property="fromEmail", type="string", format="email"),
+   *             @OA\Property(property="isValidated", type="boolean"),
+   *             @OA\Property(property="isPublished", type="boolean")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Mailing mis à jour",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="message", type="string"),
+   *             @OA\Property(property="data", type="object")
+   *         )
+   *     ),
+   *     @OA\Response(response=404, description="Mailing non trouvé")
+   * )
+   */
 // Mettre à jour un mailing
 public function updateMailing(Request $request, $idMailing)
 {
@@ -483,7 +788,36 @@ public function updateMailing(Request $request, $idMailing)
     }
 }
 
-
+ /**
+   * @OA\Delete(
+   *     path="/mail/DeleteMailing/{idMailing}",
+   *     summary="Supprime un mailing",
+   *     tags={"Mailing"},
+   *     @OA\Parameter(
+   *         name="idMailing",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Mailing supprimé",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="message", type="string", example="Mailing supprimé avec succès")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=404,
+   *         description="Mailing non trouvé",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=false),
+   *             @OA\Property(property="message", type="string")
+   *         )
+   *     ),
+   *     @OA\Response(response=500, description="Erreur serveur")
+   * )
+   */
 // Supprimer un mailing
 public function deleteMailing($idMailing)
 {
@@ -518,6 +852,7 @@ public function deleteMailing($idMailing)
         ], 500);
     }
 }
+
   public function validatedMail(Request $request){
    $validated =  $request->validate([
         'id_mail' => 'required|integer',
@@ -542,6 +877,7 @@ public function deleteMailing($idMailing)
             ], 404);
         }
     }
+  
     public function publishedMail(Request $request){
     $validated =  $request->validate([
         'id_mail' => 'required|integer',
