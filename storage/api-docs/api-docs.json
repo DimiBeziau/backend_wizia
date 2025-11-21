@@ -1,0 +1,93 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "WIZIA API Documentation",
+        "description": "Documentation de l'API WIZIA",
+        "contact": {
+            "email": "contact@wizia.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost",
+            "description": "Serveur local"
+        }
+    ],
+    "paths": {
+        "/bill/generatebill": {
+            "post": {
+                "tags": [
+                    "Factures"
+                ],
+                "summary": "Génère une facture",
+                "operationId": "fd5b0ba46d3ba747bcbc9ff7c7080229",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Jean Dupont"
+                                    },
+                                    "adresse": {
+                                        "type": "string",
+                                        "example": "12 Rue de Paris"
+                                    },
+                                    "articles": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "designation": {
+                                                    "type": "string",
+                                                    "example": "Bière artisanale"
+                                                },
+                                                "prix": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 5.9
+                                                },
+                                                "quantite": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Facture générée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Facture générée avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Factures",
+            "description": "Factures"
+        }
+    ]
+}

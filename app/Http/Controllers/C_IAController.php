@@ -63,12 +63,14 @@ class C_IAController extends Controller
   public function generatPictureGPT(Request $promptClient)
   {
     $this->prompt = $promptClient->input('prompt');
-    $this->size = $promptClient->input('size', '256x256'); // Default size if not provided
+    $this->size = $promptClient->input('size', '1024x1024'); 
+    $this->model = "dall-e-3";
     $data =[
       "prompt" => $this->prompt,
       "n"=>1,
       "size" => $this->size,
-      "response_format" => "url"  
+      "response_format" => "url" ,
+      "model" => $this->model, 
     ];
     //256x256 → petite image (rapide, peu de détails)
     //512x512 → taille moyenne (bon équilibre rapidité/qualité)
