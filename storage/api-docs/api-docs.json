@@ -10,13 +10,9 @@
     },
     "servers": [
         {
-      "url": "http://localhost",
-      "description": "Serveur local"
-    },
-    {
-      "url": "https://wizia.dimitribeziau.fr",
-      "description": "Serveur de production"
-    }
+            "url": "http://localhost",
+            "description": "Serveur local"
+        }
     ],
     "paths": {
         "/bill/generatebill": {
@@ -1395,6 +1391,23 @@
                     },
                     "500": {
                         "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/post/UploadPictureNetwork": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Upload d'une image pour un post réseau",
+                "operationId": "ab8148553a50648f02cb7b1cfccb39f3",
+                "responses": {
+                    "200": {
+                        "description": "Image uploadée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur lors de l'upload de l'image"
                     }
                 }
             }

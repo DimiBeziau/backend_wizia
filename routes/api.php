@@ -36,6 +36,7 @@ Route::group(['prefix' => "/post"], function () {
     Route::post('/listerCommentairesandLikeLinkeding', 'listerCommentairesandLikeLinkeding')->name('listerCommentairesandLikeLinkeding');// supprimer après juste pour test
     Route::post('/listerCommentairesandLikeFacebook', 'listerCommentairesandLikeFacebook')->name('listerCommentairesandLikeFacebook');// supprimer après juste pour test
     Route::get('/ListePosts/{id}', 'ListerPosts')->name('ListerPosts');   
+    Route::post('/UploadPictureNetwork', 'UploadPictureNetwork')->name('UploadPictureNetwork');
     
   });
 });

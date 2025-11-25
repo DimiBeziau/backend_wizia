@@ -783,14 +783,47 @@ public function ListeCommentaireAndLikeNetwork()
             'results' => $results,
         ], 200);
 
-    } catch (\Exception $e) {
+    } catch (\Exception $e) { 
         return response()->json([
             'success' => false,
             'message' => 'Erreur serveur : ' . $e->getMessage(),
         ], 500);
     }
-}
 
+
+    
+}
+/**
+ * @OA\Post(
+ *     path="/post/UploadPictureNetwork",
+ *     summary="Upload d'une image pour un post réseau",
+ *     tags={"Post"},
+ *     @OA\Response(response=200, description="Image uploadée avec succès"),
+ *     @OA\Response(response=500, description="Erreur lors de l'upload de l'image")
+ * )
+ */
+public function UploadPictureNetwork(Request $request)
+{
+     try {
+      $request->validate([
+        'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+
+      ]);
+      $image = $request->file('file');
+      $imagePath = $image->store('NetworkPicture', 'public');
+
+      return response()->json([
+        'message' => 'Image uploadée et enregistrée avec succès',
+        'path' => env("APP_URL") . '/storage/' . $imagePath
+      ], 200);
+    } catch (\Exception $e) {
+      return response()->json([
+        'message' => 'Erreur lors de l\'ajout de l\'image',
+        'error' => $e->getMessage()
+      ], 500);
+    }
+
+}
 
 
  
