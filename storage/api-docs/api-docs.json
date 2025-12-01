@@ -1078,7 +1078,7 @@
                 "tags": [
                     "Post"
                 ],
-                "summary": "Créer et publier un post sur un réseau social",
+                "summary": "Créer ou publier un post sur un réseau social",
                 "operationId": "64af369735bcab9cf334950e46cf62b1",
                 "requestBody": {
                     "required": true,
@@ -1087,9 +1087,10 @@
                             "schema": {
                                 "required": [
                                     "post",
-                                    "file",
+                                    "url",
                                     "network",
-                                    "idUser"
+                                    "idUser",
+                                    "isValidated"
                                 ],
                                 "properties": {
                                     "post": {
@@ -1100,7 +1101,7 @@
                                         "type": "string",
                                         "example": "Titre optionnel"
                                     },
-                                    "file": {
+                                    "url": {
                                         "type": "string",
                                         "example": "https://images.unsplash.com/photo-12345"
                                     },
@@ -1113,7 +1114,7 @@
                                         "type": "boolean",
                                         "example": true
                                     },
-                                    "date": {
+                                    "datePost": {
                                         "type": "string",
                                         "format": "date",
                                         "example": "2025-08-17"
@@ -1130,6 +1131,14 @@
                                     "idUser": {
                                         "type": "integer",
                                         "example": 1
+                                    },
+                                    "isValidated": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -1139,7 +1148,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Post traité avec succès et envoyé au réseau sélectionné"
+                        "description": "Post traité avec succès"
                     },
                     "400": {
                         "description": "Réseau social non supporté ou validation échouée"
@@ -1155,7 +1164,7 @@
                 "tags": [
                     "Post"
                 ],
-                "summary": "Publier un post image sur Facebook",
+                "summary": "Publier ou planifier un post image sur Facebook",
                 "operationId": "3500790a0470e68f33b23f7740e7550a",
                 "requestBody": {
                     "required": true,
@@ -1164,7 +1173,9 @@
                             "schema": {
                                 "required": [
                                     "post",
-                                    "file"
+                                    "url",
+                                    "idUser",
+                                    "isValidated"
                                 ],
                                 "properties": {
                                     "post": {
@@ -1175,7 +1186,7 @@
                                         "type": "string",
                                         "example": "Titre optionnel"
                                     },
-                                    "file": {
+                                    "url": {
                                         "type": "string",
                                         "example": "https://images.unsplash.com/photo-12345"
                                     },
@@ -1188,13 +1199,21 @@
                                         "type": "boolean",
                                         "example": true
                                     },
-                                    "date": {
+                                    "datePost": {
                                         "type": "string",
                                         "format": "date",
                                         "example": "2025-08-17"
                                     },
                                     "idUser": {
                                         "type": "integer",
+                                        "example": 1
+                                    },
+                                    "isValidated": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
                                         "example": 1
                                     }
                                 },
@@ -1205,19 +1224,16 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Publication envoyée à Facebook via Make.com"
+                        "description": "Publication envoyée à Facebook"
                     },
                     "400": {
-                        "description": "Validation échouée ou données invalides"
+                        "description": "Données invalides"
                     },
                     "401": {
-                        "description": "Non autorisé (clé Make invalide)"
-                    },
-                    "404": {
-                        "description": "Post non trouvé lors de la mise à jour"
+                        "description": "Erreur Make.com (clé invalide)"
                     },
                     "500": {
-                        "description": "Erreur interne serveur"
+                        "description": "Erreur interne"
                     }
                 }
             }
@@ -1227,7 +1243,7 @@
                 "tags": [
                     "Post"
                 ],
-                "summary": "Publier un post image sur Instagram",
+                "summary": "Publier ou planifier un post image sur Instagram",
                 "operationId": "74c9d31c0b21324c3e3726c80bb6ee43",
                 "requestBody": {
                     "required": true,
@@ -1236,20 +1252,48 @@
                             "schema": {
                                 "required": [
                                     "post",
-                                    "file"
+                                    "url",
+                                    "idUser",
+                                    "isValidated"
                                 ],
                                 "properties": {
                                     "post": {
                                         "type": "string",
                                         "example": "Mon post Instagram"
                                     },
-                                    "file": {
+                                    "titrePost": {
+                                        "type": "string",
+                                        "example": "Titre Instagram optionnel"
+                                    },
+                                    "url": {
                                         "type": "string",
                                         "example": "data:image/jpeg;base64,..."
                                     },
                                     "id_post": {
                                         "type": "integer",
-                                        "example": 12
+                                        "example": 12,
+                                        "nullable": true
+                                    },
+                                    "now": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "datePost": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-10"
+                                    },
+                                    "idUser": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "isValidated": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -1259,7 +1303,10 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Post envoyé à Instagram"
+                        "description": "Publication envoyée à Instagram"
+                    },
+                    "400": {
+                        "description": "Données manquantes ou invalides"
                     },
                     "500": {
                         "description": "Erreur interne"
@@ -1272,7 +1319,7 @@
                 "tags": [
                     "Post"
                 ],
-                "summary": "Publier un post image sur LinkedIn",
+                "summary": "Publier ou planifier un post image sur LinkedIn",
                 "operationId": "dd75950e072130fce4b8c5f051d29f06",
                 "requestBody": {
                     "required": true,
@@ -1281,25 +1328,49 @@
                             "schema": {
                                 "required": [
                                     "post",
-                                    "file",
-                                    "titre_post"
+                                    "url",
+                                    "titrePost",
+                                    "idUser",
+                                    "isValidated"
                                 ],
                                 "properties": {
-                                    "titre_post": {
+                                    "titrePost": {
                                         "type": "string",
                                         "example": "Titre LinkedIn"
                                     },
                                     "post": {
                                         "type": "string",
-                                        "example": "Contenu LinkedIn"
+                                        "example": "Contenu du post LinkedIn"
                                     },
-                                    "file": {
+                                    "url": {
                                         "type": "string",
                                         "example": "data:image/jpeg;base64,..."
                                     },
                                     "id_post": {
                                         "type": "integer",
-                                        "example": 34
+                                        "example": 34,
+                                        "nullable": true
+                                    },
+                                    "now": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "datePost": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-10-02"
+                                    },
+                                    "idUser": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "isValidated": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -1309,7 +1380,10 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Post LinkedIn envoyé"
+                        "description": "Publication LinkedIn envoyée"
+                    },
+                    "400": {
+                        "description": "Données invalides"
                     },
                     "500": {
                         "description": "Erreur interne"
@@ -1326,7 +1400,7 @@
                 "operationId": "f7882cf4cc75670fb7fe7f03d98567e3",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "id_User",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -1369,6 +1443,48 @@
                     },
                     "404": {
                         "description": "Post non trouvé"
+                    }
+                }
+            }
+        },
+        "/post/published": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Marquer un post comme publié",
+                "operationId": "573255d40152140e379b07cd982683e8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_post"
+                                ],
+                                "properties": {
+                                    "id_post": {
+                                        "type": "string",
+                                        "example": "45"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post marqué comme publié"
+                    },
+                    "400": {
+                        "description": "ID réseau manquant dans le post"
+                    },
+                    "404": {
+                        "description": "Post non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur server"
                     }
                 }
             }
@@ -1441,6 +1557,91 @@
                     },
                     "400": {
                         "description": "Erreur validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/posts/update/{idUser}": {
+            "put": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Modifier un post existant",
+                "operationId": "2c327d73f06914f20975a3553610d5f8",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "post",
+                                    "url",
+                                    "titre_post",
+                                    "date",
+                                    "network"
+                                ],
+                                "properties": {
+                                    "post": {
+                                        "type": "string",
+                                        "example": "Nouveau contenu du post"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "https://image.com/photo.jpg"
+                                    },
+                                    "titre_post": {
+                                        "type": "string",
+                                        "example": "Titre modifié"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-10-12"
+                                    },
+                                    "network": {
+                                        "type": "string",
+                                        "enum": [
+                                            "facebook",
+                                            "instagram",
+                                            "linkedin"
+                                        ],
+                                        "example": "facebook"
+                                    },
+                                    "idPostNetwork": {
+                                        "type": "string",
+                                        "example": "FB_123456",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post modifié avec succès"
+                    },
+                    "400": {
+                        "description": "Erreur de validation ou ID utilisateur invalide"
+                    },
+                    "404": {
+                        "description": "Post introuvable"
                     },
                     "500": {
                         "description": "Erreur serveur"

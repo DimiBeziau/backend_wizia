@@ -18,31 +18,29 @@ class C_NetwoorkController extends Controller
 /**
  * @OA\Post(
  *     path="/post",
- *     summary="Créer et publier un post sur un réseau social",
+ *     summary="Créer ou publier un post sur un réseau social",
  *     tags={"Post"},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"post","file","network","idUser"},
+ *             required={"post","url","network","idUser","isValidated"},
  *             @OA\Property(property="post", type="string", example="Mon texte de post"),
  *             @OA\Property(property="titrePost", type="string", example="Titre optionnel"),
- *             @OA\Property(property="file", type="string", example="https://images.unsplash.com/photo-12345"),
+ *             @OA\Property(property="url", type="string", example="https://images.unsplash.com/photo-12345"),
  *             @OA\Property(property="id_post", type="integer", nullable=true, example=1),
  *             @OA\Property(property="now", type="boolean", example=true),
- *             @OA\Property(property="date", type="string", format="date", example="2025-08-17"),
+ *             @OA\Property(property="datePost", type="string", format="date", example="2025-08-17"),
  *             @OA\Property(property="network", type="string", enum={"facebook","instagram","linkedin"}, example="facebook"),
- *             @OA\Property(property="idUser", type="integer", example=1)
- *             @OA\Property(property="isValidated", type="integer", example=1)
+ *             @OA\Property(property="idUser", type="integer", example=1),
+ *             @OA\Property(property="isValidated", type="integer", enum={0,1}, example=1)
  *         )
  *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Post traité avec succès et envoyé au réseau sélectionné"
- *     ),
+ *     @OA\Response(response=200, description="Post traité avec succès"),
  *     @OA\Response(response=400, description="Réseau social non supporté ou validation échouée"),
  *     @OA\Response(response=500, description="Erreur interne serveur")
  * )
  */
+
     public function createPublishPost(Request $request)
 {
 
@@ -76,34 +74,32 @@ class C_NetwoorkController extends Controller
     }
 }
 
-        /**
+ /**
  * @OA\Post(
  *     path="/post/Facebook",
- *     summary="Publier un post image sur Facebook",
+ *     summary="Publier ou planifier un post image sur Facebook",
  *     tags={"Post"},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"post","file"},
+ *             required={"post","url","idUser","isValidated"},
  *             @OA\Property(property="post", type="string", example="Mon texte de post Facebook"),
  *             @OA\Property(property="titrePost", type="string", example="Titre optionnel"),
- *             @OA\Property(property="file", type="string", example="https://images.unsplash.com/photo-12345"),
+ *             @OA\Property(property="url", type="string", example="https://images.unsplash.com/photo-12345"),
  *             @OA\Property(property="id_post", type="integer", nullable=true, example=1),
  *             @OA\Property(property="now", type="boolean", example=true),
- *             @OA\Property(property="date", type="string", format="date", example="2025-08-17"),
- *             @OA\Property(property="idUser", type="integer", example=1)
+ *             @OA\Property(property="datePost", type="string", format="date", example="2025-08-17"),
+ *             @OA\Property(property="idUser", type="integer", example=1),
+ *             @OA\Property(property="isValidated", type="integer", enum={0,1}, example=1)
  *         )
  *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Publication envoyée à Facebook via Make.com"
- *     ),
- *     @OA\Response(response=400, description="Validation échouée ou données invalides"),
- *     @OA\Response(response=401, description="Non autorisé (clé Make invalide)"),
- *     @OA\Response(response=404, description="Post non trouvé lors de la mise à jour"),
- *     @OA\Response(response=500, description="Erreur interne serveur")
+ *     @OA\Response(response=200, description="Publication envoyée à Facebook"),
+ *     @OA\Response(response=400, description="Données invalides"),
+ *     @OA\Response(response=401, description="Erreur Make.com (clé invalide)"),
+ *     @OA\Response(response=500, description="Erreur interne")
  * )
  */
+
 public function createAndPublishPostPictureFacebook(Request $request)
 {
     $titrePost = $request->input('titrePost');
@@ -198,21 +194,28 @@ public function createAndPublishPostPictureFacebook(Request $request)
 /**
  * @OA\Post(
  *     path="/post/Instagrame",
- *     summary="Publier un post image sur Instagram",
+ *     summary="Publier ou planifier un post image sur Instagram",
  *     tags={"Post"},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"post", "file"},
+ *             required={"post","url","idUser","isValidated"},
  *             @OA\Property(property="post", type="string", example="Mon post Instagram"),
- *             @OA\Property(property="file", type="string", example="data:image/jpeg;base64,..."),
- *             @OA\Property(property="id_post", type="integer", example=12)
+ *             @OA\Property(property="titrePost", type="string", example="Titre Instagram optionnel"),
+ *             @OA\Property(property="url", type="string", example="data:image/jpeg;base64,..."),
+ *             @OA\Property(property="id_post", type="integer", nullable=true, example=12),
+ *             @OA\Property(property="now", type="boolean", example=true),
+ *             @OA\Property(property="datePost", type="string", format="date", example="2025-09-10"),
+ *             @OA\Property(property="idUser", type="integer", example=1),
+ *             @OA\Property(property="isValidated", type="integer", enum={0,1}, example=1)
  *         )
  *     ),
- *     @OA\Response(response=200, description="Post envoyé à Instagram"),
+ *     @OA\Response(response=200, description="Publication envoyée à Instagram"),
+ *     @OA\Response(response=400, description="Données manquantes ou invalides"),
  *     @OA\Response(response=500, description="Erreur interne")
  * )
  */
+
 
   public function createAndPublishPostInstagramePicture(Request $request){
 
@@ -342,25 +345,31 @@ public function createAndPublishPostPictureFacebook(Request $request)
 //       ]);
     
   }
-  /**
+ /**
  * @OA\Post(
  *     path="/post/Linkeding",
- *     summary="Publier un post image sur LinkedIn",
+ *     summary="Publier ou planifier un post image sur LinkedIn",
  *     tags={"Post"},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"post", "file", "titre_post"},
- *             @OA\Property(property="titre_post", type="string", example="Titre LinkedIn"),
- *             @OA\Property(property="post", type="string", example="Contenu LinkedIn"),
- *             @OA\Property(property="file", type="string", example="data:image/jpeg;base64,..."),
- *             @OA\Property(property="id_post", type="integer", example=34)
+ *             required={"post","url","titrePost","idUser","isValidated"},
+ *             @OA\Property(property="titrePost", type="string", example="Titre LinkedIn"),
+ *             @OA\Property(property="post", type="string", example="Contenu du post LinkedIn"),
+ *             @OA\Property(property="url", type="string", example="data:image/jpeg;base64,..."),
+ *             @OA\Property(property="id_post", type="integer", nullable=true, example=34),
+ *             @OA\Property(property="now", type="boolean", example=true),
+ *             @OA\Property(property="datePost", type="string", format="date", example="2025-10-02"),
+ *             @OA\Property(property="idUser", type="integer", example=1),
+ *             @OA\Property(property="isValidated", type="integer", enum={0,1}, example=1)
  *         )
  *     ),
- *     @OA\Response(response=200, description="Post LinkedIn envoyé"),
+ *     @OA\Response(response=200, description="Publication LinkedIn envoyée"),
+ *     @OA\Response(response=400, description="Données invalides"),
  *     @OA\Response(response=500, description="Erreur interne")
  * )
  */
+
 
 public function createAndPublishPostPictureLinkeding(Request $request)
 {
@@ -500,7 +509,7 @@ public function createAndPublishPostPictureLinkeding(Request $request)
  *     summary="Lister toutes les publications d'un utilisateur",
  *     tags={"Post"},
  *     @OA\Parameter(
- *         name="id",
+ *         name="id_User",
  *         in="path",
  *         required=true,
  *         @OA\Schema(type="integer"),
@@ -1248,7 +1257,49 @@ public function UploadPictureNetwork(Request $request)
     }
 
 }
+public function genererPostsAutomatiquement(Request $request)
+{
+    try {
 
+        $posts = Posts::where('isValidated', true)->where('isPublished', false)->get();
+        if ($posts->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucun post à traiter automatiquement.',
+            ], 200);
+        }
+          foreach ($posts as $post) {
+
+            
+            $req = new Request([
+                "post"        => $post->post,
+                "titrePost"   => $post->titrePost,
+                "url"         => $post->url,
+                "id_post"     => $post->id,
+                "now"         => true,                
+                "datePost"    => $post->datePost,
+                "network"     => $post->network,
+                "idUser"      => $post->idUser,
+                "isValidated" => 1,                    
+            ]);
+
+          
+            $this->createPublishPost($req);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tous les posts validés ont été traités et publiés automatiquement.',
+        ], 200);
+
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Erreur serveur : ' . $e->getMessage(),
+            'status' => 500,
+        ], 500);
+    }
+}
 
  
     // // Vérifie l'abonnement de l'utilisateur
