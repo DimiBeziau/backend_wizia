@@ -38,7 +38,7 @@ Route::group(['prefix' => "/post"], function () {
     Route::post('/listerCommentairesandLikeFacebook', 'listerCommentairesandLikeFacebook')->name('listerCommentairesandLikeFacebook');// supprimer après juste pour test
     Route::get('/ListePosts/{id}', 'ListerPosts')->name('ListerPosts');   
     Route::post('/UploadPictureNetwork', 'UploadPictureNetwork')->name('UploadPictureNetwork');
-    Route::post('/genererPostsAutomatiquement', 'genererPostsAutomatiquement')->name('genererPostsAutomatiquement');
+    Route::post('/AutomatisationPost', 'genererPostsAutomatiquement')->name('genererPostsAutomatiquement');
     
   });
 });

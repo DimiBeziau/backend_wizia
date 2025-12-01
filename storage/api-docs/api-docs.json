@@ -1717,6 +1717,58 @@
                 }
             }
         },
+        "/post/generer-automatiquement": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Générer et publier automatiquement les posts planifiés",
+                "description": "Recherche tous les posts validés, non publiés, dont la date/heure de publication est passée, puis les publie sur le réseau social associé.",
+                "operationId": "f94c789dd5555ac9ef5860a0e145ded0",
+                "responses": {
+                    "200": {
+                        "description": "Traitement effectué : posts publiés automatiquement ou aucun post à traiter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tous les posts validés ont été traités et publiés automatiquement."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur serveur : détails de l’erreur"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/stripe/create-payment-intent": {
             "post": {
                 "tags": [

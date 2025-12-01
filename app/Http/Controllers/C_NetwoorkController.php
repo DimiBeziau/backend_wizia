@@ -1257,11 +1257,35 @@ public function UploadPictureNetwork(Request $request)
     }
 
 }
+/**
+ * @OA\Post(
+ *     path="/post/generer-automatiquement",
+ *     summary="Générer et publier automatiquement les posts planifiés",
+ *     description="Recherche tous les posts validés, non publiés, dont la date/heure de publication est passée, puis les publie sur le réseau social associé.",
+ *     tags={"Post"},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Traitement effectué : posts publiés automatiquement ou aucun post à traiter.",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="success", type="boolean", example=true),
+ *             @OA\Property(property="message", type="string", example="Tous les posts validés ont été traités et publiés automatiquement.")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Erreur interne du serveur",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Erreur serveur : détails de l’erreur"),
+ *             @OA\Property(property="status", type="integer", example=500)
+ *         )
+ *     )
+ * )
+ */
 public function genererPostsAutomatiquement(Request $request)
 {
     try {
 
-        $posts = Posts::where('isValidated', true)->where('isPublished', false)->get();
+        $posts = Posts::where('isValidated', true)->where('isPublished', false) ->where('datePost', '<=', now()) ->get();
         if ($posts->isEmpty()) {
             return response()->json([
                 'success' => false,
