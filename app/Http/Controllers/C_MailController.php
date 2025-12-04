@@ -106,7 +106,7 @@ class C_MailController extends Controller
       'fromEmail' => 'nullable|email',
       'file' => 'nullable|array',
       'file.*' => 'file|max:10240',
-      'idMailing' => 'nullable|integer',
+      
     ]);
     try {
       $to = $request->input('to');
@@ -116,7 +116,7 @@ class C_MailController extends Controller
       $fromName = $request->input('fromName', 'WIZIA');
       $fromEmail = $request->input('fromEmail', 'contact@dimitribeziau.fr');
       $file = $request->file('file');
-      $idMail = $request->file('idMailing');
+     
 
       foreach ($to as $destinataire) {
 
@@ -134,26 +134,190 @@ class C_MailController extends Controller
         if ($file) {
     if (is_array($file)) {
         foreach ($file as $file) {
-            $this->addAttachment($mail, $file->getRealPath(), $file->getClientOriginalName());
+            $this->addAttachment($mail, $file->getRealPath(), $file->getClientOriginalName());  
         }
     } else {
-        $this->addAttachment($mail, $file->getRealPath(), $file->getClientOriginalName());
+        $this->addAttachment($mail, $file->getRealPath(), $file->getClientOriginalName());    
     }
 }
         if (!$mail->send()) {
           throw new \Exception("Échec de l'envoi à $destinataire : " . $mail->ErrorInfo);
         }
       }
-      if($idMail!= null){
-       $request = new \Illuminate\Http\Request();
-        $request->merge(['id_mail' => $idMail]);
-        $this->publishedMail($request); 
-      }  
+       
       return response()->json(['message' => 'Email(s) envoyé(s) avec succès', 'success' => true], 200);
     } catch (\Exception $e) {
       return response()->json(['error' => $e->getMessage(), 'success' => false], 500);
     }
   }
+
+public function createPublishMail(Request $request)
+{
+
+    $request->validate([
+        'to' => 'required|array',
+        'to.*' => 'email',
+        'subject' => 'required|string',
+        'body' => 'required|string',
+        'altBody' => 'nullable|string',
+        'fromName' => 'nullable|string',
+        'fromEmail' => 'nullable|email',
+        'file' => 'nullable|array',
+        'file.*' => 'file|max:10240',
+        'idMailing' => 'nullable|integer',
+        'now' => 'nullable|boolean',
+        'isValidated' => 'nullable|integer|in:0,1',
+        'dateMail' => 'nullable|date',
+        'idUser' => 'nullable|integer',
+    ]);
+
+    try {
+        $to = $request->input('to');
+        $subject = $request->input('subject');
+        $body = $request->input('body');
+        $altBody = $request->input('altBody', '');
+        $fromName = $request->input('fromName', 'WIZIA');
+        $fromEmail = $request->input('fromEmail', 'contact@dimitribeziau.fr');
+        $file = $request->file('file');
+        $idMail = $request->input('idMailing', null);
+        $isValidated = $request->input('isValidated');
+        $dateMail = $request->input('dateMail');
+        $now = $request->input('now');
+        $idUser = $request->input('idUser');
+
+        if ($now == true) {
+
+            // $reqMail = new Request([
+            // 'to' => $to,
+            // 'subject' => $subject,
+            // 'body' => $body,
+            // 'altBody' => $altBody,
+            // 'fromName' => $fromName,
+            // 'fromEmail' => $fromEmail,
+            // 'file' => $file,
+            // ]);
+            $reqMail = clone $request;
+
+              $reqMail->replace([
+                  'to' => $to,
+                  'subject' => $subject,
+                  'body' => $body,
+                  'altBody' => $altBody,
+                  'fromName' => $fromName,
+                  'fromEmail' => $fromEmail,
+              ]);
+
+$response = $this->generateMail($reqMail);
+            if ($response->getStatusCode() != 200) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Erreur lors de l’envoi du mail",
+                    "error" => $response->getData(true)['error'] ?? 'Erreur inconnue',
+                ], 500);
+            }
+
+            if ($idMail !== null) {
+
+                $toListId = $this->getListDestinataire($idUser);
+                
+                $reqUpdate = new Request([
+                    "idMailing" => $idMail,
+                    'to' => $to,
+                    'toListId' => [$toListId],
+                    "subject" => $subject,
+                    "body" => $body,
+                    "altBody" => $altBody,
+                    "fromEmail" => $fromEmail,
+                    "fromName" => $fromName,
+                    "date" => $dateMail,
+                    "file" => $file,
+                    "isValidated" => $isValidated,
+                ]);
+
+                $mailResponse = $this->updateMailing($reqUpdate, $idUser);
+
+            } else {
+
+                $toListIdResponse = $this->getListDestinataire($idUser);
+                $toListIdData = $toListIdResponse->getData(true)['data'][0]; // Le [0] car tu wraps dans un array
+                $toListId = collect($toListIdData)->pluck('id')->toArray();
+                
+                $reqUpdate = clone $request;
+                if($isValidated==0){
+                   $isValidated=false;
+                }else{
+                   $isValidated=true;
+                };
+                $reqAdd = new Request([
+                    'to' => $to,
+                    'toListId' => $toListId,
+                    "idMailing" => $idMail,
+                    "subject" => $subject,
+                    "body" => $body,
+                    "altBody" => $altBody,
+                    "fromEmail" => $fromEmail,
+                    "fromName" => $fromName,
+                    "date" => $dateMail,
+                    "file" => $file,
+                    "isValidated" => $isValidated,
+                    "isPublished" => false,
+                ]);
+                 
+                $mailResponse = $this->AddMail($reqAdd, $idUser);
+            }
+dd($mailResponse);
+            $mailData = $mailResponse->getData(true);
+            $mailId = $mailData['id'] ?? null;
+
+            $req = new Request(["id_mail" => $mailId]);
+            $this->publishedMail($req);
+
+            return response()->json([
+                "success" => $response->successful(),
+                "status" => $response->status(),
+                "message" => $response->successful()
+                    ? "Mail envoyée & post mis à jour"
+                    : "Erreur lors de l’envoi de mail",
+                "idPostNetwork" => $idMail,
+                "makeResponse" => $response->json(),
+            ]);
+        }
+
+        
+        $toListId = $this->getListDestinataire($idUser);
+
+        
+        
+        $reqAddLater = new Request([
+            "idMailing" => $idMail,
+            "subject" => $subject,
+            "body" => $body,
+            "altBody" => $altBody,
+            "fromEmail" => $fromEmail,
+            "fromName" => $fromName,
+            "date" => $dateMail ?? now(),
+            "file" => $file,
+            "isValidated" => $isValidated,
+            "to" => $to,
+            "toListId" => $toListId,
+            "isPublished" => false,
+        ]);
+
+        if ($idMail) {
+            return $this->updateMailing($reqAddLater, $idUser);
+        } else {
+            return $this->AddMail($reqAddLater, $idUser);
+        }
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'success' => false
+        ], 500);
+    }
+}
+
+
    /**
    * @OA\Post(
    *     path="/mail/AddMail/{idUser}",
@@ -221,11 +385,11 @@ class C_MailController extends Controller
         'fromEmail' => 'nullable|email',
         'file' => 'nullable|array',
         'file.*' => 'file|max:10240',
-        'date' => 'nullable|dateteime',
+        'date' => 'nullable|date',
         'isValidated' => 'boolean',
-        'isPublished' => 'boolean',
+        'isPublished' => 'nullable|boolean',
       ]);
-
+dd("test");
       $mail = new Mailings();
       $mail->idUser  = $idUser;
       $mail->subject = $validated['subject'];
@@ -264,6 +428,10 @@ class C_MailController extends Controller
       return response()->json([
         'success' => true,
         'message' => 'Mail ajouté avec succès',
+        'id' => $mail->id,
+        'user' => $idUser,
+        'mail' => $mail,
+
       ]);
     } catch (\Exception $e) {
       return response()->json([
@@ -273,6 +441,100 @@ class C_MailController extends Controller
       ], 500);
     }
   }
+
+  /**
+   * @OA\Put(
+   *     path="/mail/UpdateMailing/{idMailing}",
+   *     summary="Met à jour un mailing",
+   *     tags={"Mailing"},
+   *     @OA\Parameter(
+   *         name="idMailing",
+   *         in="path",
+   *         required=true,
+   *         @OA\Schema(type="integer")
+   *     ),
+   *     @OA\RequestBody(
+   *         required=true,
+   *         @OA\JsonContent(
+   *             type="object",
+   *             required={"subject", "body"},
+   *             @OA\Property(property="subject", type="string"),
+   *             @OA\Property(property="body", type="string"),
+   *             @OA\Property(property="altBody", type="string"),
+   *             @OA\Property(property="fromName", type="string"),
+   *             @OA\Property(property="fromEmail", type="string", format="email"),
+   *             @OA\Property(property="isValidated", type="boolean"),
+   *             @OA\Property(property="isPublished", type="boolean")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=200,
+   *         description="Mailing mis à jour",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="success", type="boolean", example=true),
+   *             @OA\Property(property="message", type="string"),
+   *             @OA\Property(property="data", type="object")
+   *         )
+   *     ),
+   *     @OA\Response(response=404, description="Mailing non trouvé")
+   * )
+   */
+// Mettre à jour un mailing
+public function updateMailing(Request $request, $idMailing)
+{
+    try {
+      $validated = $request->validate([
+          'subject' => 'required|string|max:255',
+          'body' => 'required|string',
+          'altBody' => 'nullable|string',
+          'fromName' => 'nullable|string',
+          'fromEmail' => 'nullable|email',
+          'isValidated' => 'boolean',
+          'isPublished' => 'boolean',
+      ]);
+       
+        if (!ctype_digit((string)$idMailing)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID invalide'
+            ], 400);
+        }
+
+        
+        $mailing = Mailings::find($idMailing);
+        if (!$mailing) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mailing non trouvé'
+            ], 404);
+        }
+
+        // Mise à jour des données
+        $mailing->subject = $validated['subject'];
+        $mailing->body = $validated['body'];
+        $mailing->altBody = $validated['altBody'] ?? $mailing->altBody;
+        $mailing->fromName = $validated['fromName'] ?? $mailing->fromName;
+        $mailing->fromEmail = $validated['fromEmail'] ?? $mailing->fromEmail;
+        $mailing->fromEmail = $validated['isValidated'] ?? $mailing->isValidated;
+        $mailing->fromEmail = $validated['isPublished'] ?? $mailing->isPublished;
+        $mailing->date = date('Y-m-d H:i:s'); 
+        $mailing->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Mailing mis à jour avec succès',
+            'data' => $mailing
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la mise à jour du mailing',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
  /**
    * @OA\Get(
    *     path="/mail/ListDestinataireClient/{idUser}",
@@ -316,7 +578,7 @@ class C_MailController extends Controller
 
       return response()->json([
         'success' => true,
-        'data' => $clients
+        'data' => [$clients]
       ], 200);
     } catch (\Exception $e) {
       return response()->json([
@@ -472,6 +734,32 @@ class C_MailController extends Controller
       return response()->json([
         'success' => false,
         'message' => 'Erreur lors de la mise à jour',
+        'error' => $e->getMessage()
+      ], 500);
+    }
+  }
+
+
+  public function ListDestinatairebyMail($mailDestinataire)
+  {
+    try {
+      $client = clients::where('mail', $mailDestinataire)->first();
+
+      if (!$client) {
+        return response()->json([
+          'success' => false,
+          'message' => 'Destinataire non trouvé'
+        ], 404);
+      }
+
+      return response()->json([
+        'success' => true,
+        'message' => $client
+      ], 200);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => 'Erreur lors de la suppression',
         'error' => $e->getMessage()
       ], 500);
     }
@@ -692,101 +980,6 @@ class C_MailController extends Controller
     }
 }
 
-/**
-   * @OA\Put(
-   *     path="/mail/UpdateMailing/{idMailing}",
-   *     summary="Met à jour un mailing",
-   *     tags={"Mailing"},
-   *     @OA\Parameter(
-   *         name="idMailing",
-   *         in="path",
-   *         required=true,
-   *         @OA\Schema(type="integer")
-   *     ),
-   *     @OA\RequestBody(
-   *         required=true,
-   *         @OA\JsonContent(
-   *             type="object",
-   *             required={"subject", "body"},
-   *             @OA\Property(property="subject", type="string"),
-   *             @OA\Property(property="body", type="string"),
-   *             @OA\Property(property="altBody", type="string"),
-   *             @OA\Property(property="fromName", type="string"),
-   *             @OA\Property(property="fromEmail", type="string", format="email"),
-   *             @OA\Property(property="isValidated", type="boolean"),
-   *             @OA\Property(property="isPublished", type="boolean")
-   *         )
-   *     ),
-   *     @OA\Response(
-   *         response=200,
-   *         description="Mailing mis à jour",
-   *         @OA\JsonContent(
-   *             @OA\Property(property="success", type="boolean", example=true),
-   *             @OA\Property(property="message", type="string"),
-   *             @OA\Property(property="data", type="object")
-   *         )
-   *     ),
-   *     @OA\Response(response=404, description="Mailing non trouvé")
-   * )
-   */
-// Mettre à jour un mailing
-public function updateMailing(Request $request, $idMailing)
-{
-
-    try {
-        // Vérification que l'ID est bien un entier positif
-        if (!ctype_digit((string)$idMailing)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'ID invalide'
-            ], 400);
-        }
-
-        // Récupération du mailing
-        $mailing = Mailings::find($idMailing);
-        if (!$mailing) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mailing non trouvé'
-            ], 404);
-        }
-
-        // Validation des champs reçus
-        $validated = $request->validate([
-            'subject' => 'required|string|max:255',
-            'body' => 'required|string',
-            'altBody' => 'nullable|string',
-            'fromName' => 'nullable|string',
-            'fromEmail' => 'nullable|email',
-            'isValidated' => 'boolean',
-            'isPublished' => 'boolean',
-        ]);
-
-        // Mise à jour des données
-        $mailing->subject = $validated['subject'];
-        $mailing->body = $validated['body'];
-        $mailing->altBody = $validated['altBody'] ?? $mailing->altBody;
-        $mailing->fromName = $validated['fromName'] ?? $mailing->fromName;
-        $mailing->fromEmail = $validated['fromEmail'] ?? $mailing->fromEmail;
-        $mailing->fromEmail = $validated['isValidated'] ?? $mailing->isValidated;
-        $mailing->fromEmail = $validated['isPublished'] ?? $mailing->isPublished;
-        $mailing->date = date('Y-m-d H:i:s'); 
-        $mailing->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Mailing mis à jour avec succès',
-            'data' => $mailing
-        ], 200);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur lors de la mise à jour du mailing',
-            'error' => $e->getMessage()
-        ], 500);
-    }
-}
 
  /**
    * @OA\Delete(

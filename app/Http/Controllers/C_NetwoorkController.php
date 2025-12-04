@@ -49,10 +49,10 @@ class C_NetwoorkController extends Controller
         'titrePost' => 'nullable|string',
         'url' => 'required|string',
         'id_post' => 'nullable|integer', 
-        'now' => 'nullable|boolean',
         'datePost' => 'nullable|date',
         'network' => 'required|string|in:facebook,instagram,linkedin',
         'idUser' => 'required|integer',
+        'now' => 'nullable|boolean',
         'isValidated' => 'required|integer|in:0,1',
     ]);
 
