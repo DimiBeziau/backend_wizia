@@ -154,7 +154,23 @@ class C_IAController extends Controller
     $decodeJson = json_decode($response, true);
 
     if (isset($decodeJson['data'][0]['url'])) {
-        return response()->json(['image_url' => $decodeJson['data'][0]['url']]);
+
+    $imageUrl = $decodeJson['data'][0]['url'];
+    $imageContent = file_get_contents($imageUrl);
+
+    $extension = pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
+    if (!$extension) {
+        $extension = 'jpg';
+    }
+    $imageName = uniqid('img_') . '.' . $extension;
+
+    $savePath = storage_path('app/public/posts/' . $imageName);
+
+    file_put_contents($savePath, $imageContent);
+
+    $url = env('APP_URL') . '/storage/posts/' . $imageName;
+
+    return response()->json(['image_url' => $url]);
     } else {
         return response()->json(['error' => 'Image non générée', 'details' => $decodeJson], 500);
     }

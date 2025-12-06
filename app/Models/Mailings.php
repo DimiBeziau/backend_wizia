@@ -8,8 +8,7 @@ class Mailings extends Model
 {
     protected $fillable = [
    'idUser',
-   'idListeClient',
-    'subject',
+   'subject',
    'body',
    'altBody',
    'fromName',
