@@ -544,118 +544,86 @@ function mime_content_type_from_extension($ext) {
 public function updateMailing(Request $request, $iduser)
 {
     try {
-
-       
-
         $validated = $request->validate([
-            'idMailing' => 'required|string|max:255',
-            'subject' => 'required|string|max:255',
-            'body' => 'required|string',
-            'altBody' => 'nullable|string',
-            'fromName' => 'nullable|string',
-            'fromEmail' => 'nullable|email',
+            'idMailing'   => 'required|integer|exists:mailings,id',
+            'subject'     => 'required|string|max:255',
+            'body'        => 'required|string',
+            'altBody'     => 'nullable|string',
+            'fromName'    => 'nullable|string',
+            'fromEmail'   => 'nullable|email',
             'isValidated' => 'nullable|boolean',
             'isPublished' => 'nullable|boolean',
-            'toListId' => 'nullable|array',
-            'toListId.*' => 'integer',
-            'file' => 'nullable|array',
-            'file.*' => 'string'
+            'toListId'    => 'nullable|array',
+            'toListId.*'  => 'integer',
+            'file'        => 'nullable|array',
+            'file.*'      => 'string' // URL publique
         ]);
-        $idMailing = $validated['idMailing'];
-         if (!ctype_digit((string)$idMailing)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'ID invalide'
-            ], 400);
-        }
-        $mailing = Mailings::find($idMailing);
-        if (!$mailing) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mailing non trouvé'
-            ], 404);
-        }
 
-        // MISE À JOUR BASIQUE
-        $mailing->subject = $validated['subject'];
-        $mailing->body = $validated['body'];
-        $mailing->altBody = $validated['altBody'] ?? $mailing->altBody;
-        $mailing->fromName = $validated['fromName'] ?? $mailing->fromName;
-        $mailing->fromEmail = $validated['fromEmail'] ?? $mailing->fromEmail;
+        $mailing = Mailings::findOrFail($validated['idMailing']);
+
+        // --- Mise à jour du mailing ---
+        $mailing->subject     = $validated['subject'];
+        $mailing->body        = $validated['body'];
+        $mailing->altBody     = $validated['altBody']     ?? $mailing->altBody;
+        $mailing->fromName    = $validated['fromName']    ?? $mailing->fromName;
+        $mailing->fromEmail   = $validated['fromEmail']   ?? $mailing->fromEmail;
         $mailing->isValidated = $validated['isValidated'] ?? $mailing->isValidated;
         $mailing->isPublished = $validated['isPublished'] ?? $mailing->isPublished;
-        $mailing->date = date('Y-m-d H:i:s');
+        $mailing->date        = now();
         $mailing->save();
 
-        
-        if (isset($validated['toListId'])) {
-
+        // --- Listes de destinataires ---
+        if (!empty($validated['toListId'])) {
             foreach ($validated['toListId'] as $destId) {
-
-                // Vérifier si déjà existant
-                $exists = ClientsMailings::where('idMailing', $mailing->id)
-                        ->where('idListeClient', $destId)
-                        ->exists();
-
-                if (!$exists) {
-                    ClientsMailings::create([
-                        'idMailing' => $mailing->id,
-                        'idListeClient' => $destId,
-                    ]);
-                }
+                ClientsMailings::firstOrCreate([
+                    'idMailing'      => $mailing->id,
+                    'idListeClient'  => $destId,
+                ]);
             }
         }
 
+        // --- Pièces jointes (URL publiques) ---
         if (!empty($validated['file'])) {
+            foreach ($validated['file'] as $fileUrl) {
 
-    foreach ($validated['file'] as $file) {
+                $exists = PieceJointeMailings::where('idMailing', $mailing->id)
+                    ->whereHas('pieceJointe', function ($q) use ($fileUrl) {
+                        $q->where('path', $fileUrl);
+                    })
+                    ->exists();
 
-    // Nom propre du fichier
-    $filename = pathinfo($file->getClientOriginalName(), PATHINFO_BASENAME);
+                if ($exists) {
+                    continue;
+                }
 
-    // Vérifier si déjà existant pour ce mailing
-    $existing = PieceJointeMailings::where('idMailing', $mailing->id)
-        ->whereHas('pieceJointe', function ($q) use ($filename) {
-            $q->where('path', $filename);
-        })
-        ->exists();
+                $pieceJointe = PieceJointes::create([
+                    'path'   => $fileUrl,
+                    'type'   => 'url',
+                    'idUser' => $mailing->idUser
+                ]);
 
-    if ($existing) {
-        continue; // Déjà associé → on ignore
-    }
-
-    // Ajouter une nouvelle entrée
-    $pieceJointe = PieceJointes::create([
-        'path' => $filename,
-        'type' => $file->getMimeType(),
-        'idUser' => $mailing->idUser
-    ]);
-
-    PieceJointeMailings::create([
-        'idMailing' => $mailing->id,
-        'idPieceJointe' => $pieceJointe->id
-    ]);
-}
-
-}
+                PieceJointeMailings::create([
+                    'idMailing'     => $mailing->id,
+                    'idPieceJointe' => $pieceJointe->id
+                ]);
+            }
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Mailing mis à jour avec succès',
-            'data' => $mailing
+            'data'    => $mailing
         ], 200);
 
-    }  catch (\Throwable $e) {
-    return response()->json([
-        'success' => false,
-        'message' => 'Erreur lors de la mise à jour du mailing',
-        'error' => $e->getMessage(),
-        'line' => $e->getLine(),
-        'file' => $e->getFile(),
-        'trace' => $e->getTraceAsString()
-    ], 500);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la mise à jour du mailing',
+            'error'   => $e->getMessage(),
+        ], 500);
+    }
 }
-}
+
 
 
 public function crudUpdateMailing()
