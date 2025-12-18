@@ -1033,13 +1033,13 @@ public function getListDestinataireEmail(Request $request)
 
         // Récupérer les IDs des mailings
         $mailingIds = $mailings->pluck('id');
-
+        
         // Jointure : pièces jointes liées aux mailings
-        $pieceJointeIds = PieceJointes::whereIn('idMailing', $mailingIds)
-            ->pluck('idPieceJointe');
-
+        $pieceJointeIds = PieceJointeMailings::whereIn('idMailing', $mailingIds)
+        ->pluck('idPieceJointe');
+        
+        $paths = PieceJointes::whereIn('id', $pieceJointeIds)
         // Récupérer uniquement les paths
-        $paths = PieceJointeMailings::whereIn('id', $pieceJointeIds)
             ->pluck('path');
 
         return response()->json([
