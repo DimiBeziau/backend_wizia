@@ -7,6 +7,7 @@ use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use App\Models\User;
 use App\Models\Abonnements;
+use App\Models\PaymentUser;
 
 
 class C_StripeController extends Controller
@@ -36,52 +37,78 @@ class C_StripeController extends Controller
     public function createPaymentIntent(Request $request)
     {
         $validated = $request->validate([
-            'amount' => 'required|numeric',
             'IdUser' => 'required|numeric',
-            'email' => 'required|email',
             'nom' => 'required|string|max:255',
         ]);
 
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         try {
-            $intent = PaymentIntent::create([
-                'amount' => $validated['amount'],
-                'currency' => 'eur',
-                'receipt_email' => $validated['email'],
-                'metadata' => [
-                    'integration_check' => 'accept_a_payment',
-                ],
-            ]);
+            $UserId = $validated['IdUser'];
             // Récupérer l'utilisateur
-        $user = User::find($validated['IdUser']);
+        $user = User::find($UserId);
         if (!$user) {
             return response()->json(['error' => 'Utilisateur introuvable.'], 404);
         }
-        $abonnement = Abonnements::find($user->idAbonnement);
-        if (!$abonnement) {
-            return response()->json(['error' => 'Abonnement introuvable.'], 404);
-        }
-        // Créer un abonnement avec les bons flags
-        $abonnement->isFree = 0;
-        $abonnement->isPremium = 0;
-        $abonnement->isProfessionnel = 0;
-
+        $id = 0;
         switch ($validated['nom']) {
             case 'Free':
-                $abonnement->isFree = true;
+                $id = 1;
+               if ($user->idAbonnement != $id) {
+                 $user->idAbonnement = $id;
+                  $user->save();
+               }
                 break;
             case 'Premium':
-                $abonnement->isPremium = true;
+                $id = 2;
+                 if ($user->idAbonnement != $id) {
+                 $user->idAbonnement = $id;
+                  $user->save();
+               }
                 break;
             case 'Professionnel':
-                $abonnement->isProfessionnel = true;
+                $id = 3;
+                 if ($user->idAbonnement != $id) {
+                 $user->idAbonnement = $id;
+                  $user->save();
+               }
                 break;
             default:
                 return response()->json(['error' => 'Abonnement non valide'], 400);
         }
+        $typePayement = 'stripe';
+        $typemonnaie = 'eur';
+            
+$abonnement = Abonnements::find($user->idAbonnement);
+if (!$abonnement) {
+    return response()->json(['error' => 'Abonnement introuvable.'], 404);
+}
+            // Créer le PaymentIntent
+        $intent = PaymentIntent::create([
+                'amount' => $abonnement->prix * 100,
+                'currency' => 'eur',
+                'receipt_email' => $user->email,
+                'metadata' => [
+                    'integration_check' => 'accept_a_payment',
+                ],
+            ]);
 
-        $abonnement->save();
+           
+            $paymentUser = new PaymentUser();
+            $paymentUser->idUser =  $UserId;
+            $paymentUser->idAbonnements      = $user->idAbonnement;
+            $paymentUser->datePayement = date('Y-m-d H:i:s');
+            $paymentUser->dateStart= now();
+            $paymentUser->dateEnd= now()->addMonth();
+            $paymentUser->dateCancel= null;
+            $paymentUser->cancelAbonnement= false;
+            $paymentUser->paymentMethod= $typePayement;
+            $paymentUser->idTransaction= $intent->id;
+            $paymentUser->currency= $typemonnaie;
+            $paymentUser->isRecurring= true;
+            $paymentUser->notes="";
+            $paymentUser->save();
+          
 
             return response()->json(['clientSecret' => $intent->client_secret]);
         } catch (\Exception $e) {

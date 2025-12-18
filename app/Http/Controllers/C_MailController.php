@@ -1011,29 +1011,52 @@ public function getListDestinataireEmail(Request $request)
    * )
    */
   public function getListMailingUser($idUser)
-  {
+{
     try {
-      if (!is_numeric($idUser)) {
+        if (!is_numeric($idUser)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID utilisateur invalide'
+            ], 400);
+        }
+
+        // Récupération des mailings de l'utilisateur
+        $mailings = Mailings::where('idUser', $idUser)->get();
+
+        if ($mailings->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'paths' => []
+            ], 200);
+        }
+
+        // Récupérer les IDs des mailings
+        $mailingIds = $mailings->pluck('id');
+
+        // Jointure : pièces jointes liées aux mailings
+        $pieceJointeIds = PieceJointes::whereIn('idMailing', $mailingIds)
+            ->pluck('idPieceJointe');
+
+        // Récupérer uniquement les paths
+        $paths = PieceJointeMailings::whereIn('id', $pieceJointeIds)
+            ->pluck('path');
+
         return response()->json([
-          'success' => false,
-          'message' => 'ID utilisateur invalide'
-        ], 400);
-      }
+            'success' => true,
+            'data' => $mailings,
+            'paths' => $paths
+        ], 200);
 
-      $mailings = Mailings::where('idUser', $idUser)->get();
-
-      return response()->json([
-        'success' => true,
-        'data' => $mailings
-      ], 200);
     } catch (\Exception $e) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Erreur lors de la récupération des mailings',
-        'error' => $e->getMessage()
-      ], 500);
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la récupération des mailings',
+            'error' => $e->getMessage()
+        ], 500);
     }
-  }
+}
+
 /**
    * @OA\Get(
    *     path="/mail/ListMailingsendClient/{idMail}",
