@@ -23,7 +23,6 @@ jobs:
             cd /home/${{ secrets.DEPLOY_USER }}/DockerApps/Lean_Start_UP_WIZIA
             docker compose down
             GIT_SSH_COMMAND="ssh -i ~/.ssh/github_auth" git pull origin main
-            cd /home/${{ secrets.DEPLOY_USER }}/DockerApps/Lean_Start_UP_WIZIA
             echo "APP_NAME=Wizia" > .env
             echo "APP_ENV=local" >> .env
             echo "APP_KEY=base64:99YIxVdtX4sTr4l+QfAUURCzsAxoiWtKaOXj9/+Fj10=" >> .env
