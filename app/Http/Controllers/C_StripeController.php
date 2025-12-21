@@ -42,7 +42,7 @@ class C_StripeController extends Controller
         ]);
 
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-
+          
         try {
             $UserId = $validated['IdUser'];
             // Récupérer l'utilisateur
@@ -83,10 +83,11 @@ $abonnement = Abonnements::find($user->idAbonnement);
 if (!$abonnement) {
     return response()->json(['error' => 'Abonnement introuvable.'], 404);
 }
+
             // Créer le PaymentIntent
         $intent = PaymentIntent::create([
-                'amount' => $abonnement->prix * 100,
-                'currency' => 'eur',
+                'amount' => $abonnement->prix *100 ,//* 100,
+                'currency' => $typemonnaie,
                 'receipt_email' => $user->email,
                 'metadata' => [
                     'integration_check' => 'accept_a_payment',
