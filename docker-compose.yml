@@ -1,47 +1,91 @@
 services:
-  mysql_db:
-    image: mysql:latest
-    container_name: mysql_db
-    networks:
-      - my_network
-    ports:
-      - 3308:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: Root
-      MYSQL_DATABASE: wizia
-      MYSQL_USER: Root
-      MYSQL_PASSWORD: Root
+  app:
+    build:
+      context: .
+      args:
+        user: sammy
+        uid: 1000
+    container_name: wizia-app
+    restart: unless-stopped
+    working_dir: /var/www
     volumes:
+      - ./:/var/www
+    networks:
+      - wizia-network
+    environment:
+      # Database
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # App
+      APP_URL: ${APP_URL}
+
+      # Mail
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+
+      # Others
+      KEY_API_GEMINI: ${KEY_API_GEMINI}
+    depends_on:
+      - db
+
+  web:
+    image: nginx:alpine
+    container_name: wizia-web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d/
+    networks:
+      - wizia-network
+      - public
+    depends_on:
+      - app
+
+  db:
+    image: mysql:latest
+    container_name: wizia-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
       - ./mysql_data:/var/lib/mysql
-    restart: always
-    deploy:
-      resources:
-       limits:
-        cpus: "1.0"       
-        memory: "512M" 
-
-
+    networks:
+      - wizia-network
+    ports:
+      - "3308:3306"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin
+    container_name: wizia-pma
     networks:
-      - my_network
+      - wizia-network
+      - public
     ports:
       - "8081:80"
     environment:
-      PMA_HOST: mysql_db
+      PMA_HOST: db
       PMA_PORT: 3306
-    restart: always
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"       
-          memory: "256M"    
+    depends_on:
+      - db
 
 networks:
-  my_network:
+  wizia-network:
     driver: bridge
-
-volumes:
-  mysql_data:
-    
+  public:
+    external: true

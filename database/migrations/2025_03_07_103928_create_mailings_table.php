@@ -25,9 +25,12 @@ return new class extends Migration
             $table->integer('idUser');
             $table->string('subject');
             $table->text('body');
+            $table->boolean('isValidated')->default(false);
+            $table->boolean('isPublished')->default(false);
             $table->text('altBody')->nullable();
             $table->string('fromName')->nullable();
             $table->string('fromEmail')->nullable();
+            $table->datetime('date')->nullable();
             $table->timestamps();
         });
     }

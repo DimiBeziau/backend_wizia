@@ -13,7 +13,7 @@ return new class extends Migration
     {
          Schema::create('clients_mailings', function (Blueprint $table) {
             $table->id();
-            $table->integer('idClient');
+            $table->integer('idListeClient');
             $table->integer('idMailing'); 
             $table->timestamps();
         });

@@ -13,10 +13,17 @@ return new class extends Migration
   {
     Schema::create('posts', function (Blueprint $table) {
       $table->id();
-      $table->date('datePost');
+      $table->datetime('datePost');
       $table->integer('idUser');
-      $table->integer('idPieceJointe');
-      $table->string('post', 5000);
+      $table->boolean('isValidated')->default(false);
+      $table->boolean('isPublished')->default(false);
+      $table->enum('network', ['facebook', 'linkedin', 'instagram']);
+      $table->string('url',500)->nullable();
+      $table->string('titrePost',1000)->nullable();
+      $table->string('post', 1000);
+      $table->string('IdpostNetwork');
+      $table->string('postLikeNetwork')->nullable();
+      $table->string('postCommentaireNetwork')->nullable();
       $table->timestamps();
     });
   }

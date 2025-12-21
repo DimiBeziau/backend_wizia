@@ -1,0 +1,8 @@
+.git
+.vscode
+node_modules
+vendor
+mysql_data
+dist
+react/node_modules
+react/dist

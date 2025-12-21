@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('piece_jointe_mailings', function (Blueprint $table) {
             $table->id();
-            $table->integer('idPieceJointe')->unique();
-            $table->integer('idMailing')->unique();
+            $table->integer('idPieceJointe');
+            $table->integer('idMailing');
             $table->timestamps();
         });
     }

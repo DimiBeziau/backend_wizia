@@ -35,7 +35,7 @@ function MentionsLegales() {
 
             <h2>6. Contact</h2>
             <p>Pour toute question ou réclamation, vous pouvez nous contacter à l’adresse suivante :<br/>
-            Email : <a href="mailto:[wiz.ia@dimitribeziau.fr]">[wiz.ia@dimitribeziau.fr]</a><br/>
+            Email : <a href="mailto:[dimitri@beziau.dev]">[dimitri@beziau.dev]</a><br/>
             Téléphone : 0602393948</p>
 
             <p>Dernière mise à jour : 11/02/2025</p>  

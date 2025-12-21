@@ -25,8 +25,8 @@ const Newsletters = () => {
   });
 
   const [Mail, setMail] = useState({
-    fromEmail: "wiz.ia@dimitribeziau.fr",
-    fromName: "WIZIA@gmail.com",
+    fromEmail: "dimitri@beziau.dev",
+    fromName: "Wizia",
     to: [],
     toListId: [],
     body: '',
@@ -35,6 +35,7 @@ const Newsletters = () => {
     image: '',
     Date: '',
     Batch: false,
+    attachment: "C:\Users\Matthieu\Pictures\Screenshots\Capture d'écran 2025-02-03 180734.png"
   });
 
   const AbonnementUser = async () => {
@@ -71,7 +72,8 @@ const Newsletters = () => {
             body: generatedPrompt,
             altBody: Mail.altBody,
             fromName: Mail.fromName,
-            fromEmail: Mail.fromEmail,
+            fromEmail: Mail.fromEmail
+           
           });
 
         if (response.data.success) {

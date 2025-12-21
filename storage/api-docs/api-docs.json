@@ -1,0 +1,2330 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "WIZIA API Documentation",
+        "description": "Documentation de l'API WIZIA",
+        "contact": {
+            "email": "contact@wizia.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost",
+            "description": "Serveur local"
+        }
+    ],
+    "paths": {
+        "/bill/generatebill": {
+            "post": {
+                "tags": [
+                    "Factures"
+                ],
+                "summary": "Génère une facture",
+                "operationId": "fd5b0ba46d3ba747bcbc9ff7c7080229",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Jean Dupont"
+                                    },
+                                    "adresse": {
+                                        "type": "string",
+                                        "example": "12 Rue de Paris"
+                                    },
+                                    "articles": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "designation": {
+                                                    "type": "string",
+                                                    "example": "Bière artisanale"
+                                                },
+                                                "prix": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 5.9
+                                                },
+                                                "quantite": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Facture générée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Facture générée avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ia/generateIALocal": {
+            "post": {
+                "tags": [
+                    "Intelligence artificielle"
+                ],
+                "summary": "Génère une réponse texte avec Llama3.2",
+                "operationId": "cee9ced13d67eabfd48c10d106f9401f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "prompt"
+                                ],
+                                "properties": {
+                                    "prompt": {
+                                        "type": "string",
+                                        "example": "Explique-moi Laravel en quelques mots"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Réponse générée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "text": {
+                                            "type": "string",
+                                            "example": "Laravel est un framework PHP..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur lors de la génération",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Erreur de la génération du prompt"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ia/generateIApicture": {
+            "post": {
+                "tags": [
+                    "Intelligence artificielle"
+                ],
+                "summary": "Génère une image avec DALL-E 3",
+                "operationId": "48b32bb083d72893714cea1e2a5dcb37",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "prompt"
+                                ],
+                                "properties": {
+                                    "prompt": {
+                                        "type": "string",
+                                        "example": "Un chat astronaute dans l'espace"
+                                    },
+                                    "size": {
+                                        "description": "Tailles disponibles: 256x256, 512x512, 1024x1024, 1024x1792",
+                                        "type": "string",
+                                        "example": "1024x1024"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Image générée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "image_url": {
+                                            "type": "string",
+                                            "example": "https://oaidalleapiprodscus.blob.core.windows.net/..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur lors de la génération de l'image",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Image non générée"
+                                        },
+                                        "details": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ia/generateIA": {
+            "post": {
+                "tags": [
+                    "Intelligence artificielle"
+                ],
+                "summary": "Génère un post structuré pour les réseaux sociaux avec Gemini",
+                "operationId": "e7556624ec966a71dede40674bda3324",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "prompt"
+                                ],
+                                "properties": {
+                                    "prompt": {
+                                        "type": "string",
+                                        "example": "Crée un post Instagram sur le café artisanal"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post généré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Le café artisanal : un art à découvrir"
+                                        },
+                                        "content": {
+                                            "type": "string",
+                                            "example": "Découvrez les secrets du café de spécialité..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The prompt field is required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur lors de la génération",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Erreur de la génération du prompt Gemini"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mail/generateMail": {
+            "post": {
+                "tags": [
+                    "Mailing"
+                ],
+                "summary": "Envoie un email avec PHPMailer",
+                "operationId": "d4ebfd5a9b0db7ca15c01530486697b3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "to",
+                                    "subject",
+                                    "body"
+                                ],
+                                "properties": {
+                                    "to": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "email"
+                                        },
+                                        "example": [
+                                            "john@example.com",
+                                            "jane@example.com"
+                                        ]
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "example": "Votre commande"
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "example": "<h1>Bonjour</h1><p>Merci pour votre commande</p>"
+                                    },
+                                    "altBody": {
+                                        "type": "string",
+                                        "example": "Version texte de l'email"
+                                    },
+                                    "fromName": {
+                                        "type": "string",
+                                        "example": "WIZIA"
+                                    },
+                                    "fromEmail": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "contact@wizia.com"
+                                    },
+                                    "file": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "idMailing": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email envoyé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email(s) envoyé(s) avec succès"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur lors de l'envoi",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mail/AddMail/{idUser}": {
+            "post": {
+                "tags": [
+                    "Mailing"
+                ],
+                "summary": "Ajoute un mailing en base de données",
+                "operationId": "4d2fe47055e038345cc377de256ae0cc",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "to",
+                                    "toListId",
+                                    "subject",
+                                    "body"
+                                ],
+                                "properties": {
+                                    "to": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "email"
+                                        }
+                                    },
+                                    "toListId": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "example": "Newsletter Janvier"
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "example": "<p>Contenu du mail</p>"
+                                    },
+                                    "altBody": {
+                                        "type": "string"
+                                    },
+                                    "fromName": {
+                                        "type": "string"
+                                    },
+                                    "fromEmail": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "file": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "isValidated": {
+                                        "type": "boolean"
+                                    },
+                                    "isPublished": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mail ajouté avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "ID invalide"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/mail/ListDestinataireClient/{idUser}": {
+            "get": {
+                "tags": [
+                    "Destinataires"
+                ],
+                "summary": "Récupère la liste des destinataires d'un utilisateur",
+                "operationId": "c1aca753d830a0365d679fa260a37ac2",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des destinataires",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "mail": {
+                                                        "type": "string"
+                                                    },
+                                                    "nom": {
+                                                        "type": "string"
+                                                    },
+                                                    "prenom": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "ID invalide"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/mail/AddDestinataireClient/{idUser}": {
+            "post": {
+                "tags": [
+                    "Destinataires"
+                ],
+                "summary": "Ajoute un destinataire",
+                "operationId": "2ceba0d9162cb21f854e7b770deb5384",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail",
+                                    "nom",
+                                    "prenom"
+                                ],
+                                "properties": {
+                                    "mail": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "prenom": {
+                                        "type": "string",
+                                        "example": "John"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Destinataire ajouté",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "ID invalide"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/mail/UpdateDestinataireClient/{idUser}": {
+            "put": {
+                "tags": [
+                    "Destinataires"
+                ],
+                "summary": "Met à jour un destinataire",
+                "operationId": "6ef3c0ffc75f3668adbbce9da6d0cbe4",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "mail": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "nom": {
+                                        "type": "string"
+                                    },
+                                    "prenom": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Destinataire mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Destinataire non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/mail/DeleteListDestinataire/{idDestinataire}": {
+            "delete": {
+                "tags": [
+                    "Destinataires"
+                ],
+                "summary": "Supprime un destinataire",
+                "operationId": "e1e8a2dce211359a8d7011284a543cd0",
+                "parameters": [
+                    {
+                        "name": "idDestinataire",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Destinataire supprimé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Destinataire non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/mail/ListMailingUser/{idUser}": {
+            "get": {
+                "tags": [
+                    "Mailing"
+                ],
+                "summary": "Récupère tous les mailings d'un utilisateur",
+                "operationId": "7e06ee6e4cff23910e57e389cc4006dc",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste des mailings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mail/ListMailingsendClient/{idMail}": {
+            "get": {
+                "tags": [
+                    "Mailing"
+                ],
+                "summary": "Récupère un mailing avec ses destinataires",
+                "operationId": "80ba3eea77ab3f32c0145fc0e73fab9a",
+                "parameters": [
+                    {
+                        "name": "idMail",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mailing avec destinataires",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "mailing": {
+                                                    "type": "object"
+                                                },
+                                                "clients": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mailing non trouvé"
+                    }
+                }
+            }
+        },
+        "/mail/SearchMailing/{idMailing}": {
+            "get": {
+                "tags": [
+                    "Mailing"
+                ],
+                "summary": "Récupère un mailing par son ID",
+                "operationId": "18cb8dd9bfa85d7b9d1c3119c3b506eb",
+                "parameters": [
+                    {
+                        "name": "idMailing",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Détails du mailing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mailing non trouvé"
+                    }
+                }
+            }
+        },
+        "/mail/UpdateMailing/{idMailing}": {
+            "put": {
+                "tags": [
+                    "Mailing"
+                ],
+                "summary": "Met à jour un mailing",
+                "operationId": "e89cd19d4d3d7cf0c9ce535d0058c7ee",
+                "parameters": [
+                    {
+                        "name": "idMailing",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "subject",
+                                    "body"
+                                ],
+                                "properties": {
+                                    "subject": {
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    },
+                                    "altBody": {
+                                        "type": "string"
+                                    },
+                                    "fromName": {
+                                        "type": "string"
+                                    },
+                                    "fromEmail": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "isValidated": {
+                                        "type": "boolean"
+                                    },
+                                    "isPublished": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mailing mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mailing non trouvé"
+                    }
+                }
+            }
+        },
+        "/mail/DeleteMailing/{idMailing}": {
+            "delete": {
+                "tags": [
+                    "Mailing"
+                ],
+                "summary": "Supprime un mailing",
+                "operationId": "9bfa0292f18cf477e73ea3c257673e3f",
+                "parameters": [
+                    {
+                        "name": "idMailing",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mailing supprimé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Mailing supprimé avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mailing non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/post": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Créer ou publier un post sur un réseau social",
+                "operationId": "64af369735bcab9cf334950e46cf62b1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "post",
+                                    "url",
+                                    "network",
+                                    "idUser",
+                                    "isValidated"
+                                ],
+                                "properties": {
+                                    "post": {
+                                        "type": "string",
+                                        "example": "Mon texte de post"
+                                    },
+                                    "titrePost": {
+                                        "type": "string",
+                                        "example": "Titre optionnel"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://images.unsplash.com/photo-12345"
+                                    },
+                                    "id_post": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "now": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "datePost": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-08-17"
+                                    },
+                                    "network": {
+                                        "type": "string",
+                                        "enum": [
+                                            "facebook",
+                                            "instagram",
+                                            "linkedin"
+                                        ],
+                                        "example": "facebook"
+                                    },
+                                    "idUser": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "isValidated": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post traité avec succès"
+                    },
+                    "400": {
+                        "description": "Réseau social non supporté ou validation échouée"
+                    },
+                    "500": {
+                        "description": "Erreur interne serveur"
+                    }
+                }
+            }
+        },
+        "/post/Facebook": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Publier ou planifier un post image sur Facebook",
+                "operationId": "3500790a0470e68f33b23f7740e7550a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "post",
+                                    "url",
+                                    "idUser",
+                                    "isValidated"
+                                ],
+                                "properties": {
+                                    "post": {
+                                        "type": "string",
+                                        "example": "Mon texte de post Facebook"
+                                    },
+                                    "titrePost": {
+                                        "type": "string",
+                                        "example": "Titre optionnel"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://images.unsplash.com/photo-12345"
+                                    },
+                                    "id_post": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "now": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "datePost": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-08-17"
+                                    },
+                                    "idUser": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "isValidated": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Publication envoyée à Facebook"
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "401": {
+                        "description": "Erreur Make.com (clé invalide)"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/post/Instagrame": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Publier ou planifier un post image sur Instagram",
+                "operationId": "74c9d31c0b21324c3e3726c80bb6ee43",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "post",
+                                    "url",
+                                    "idUser",
+                                    "isValidated"
+                                ],
+                                "properties": {
+                                    "post": {
+                                        "type": "string",
+                                        "example": "Mon post Instagram"
+                                    },
+                                    "titrePost": {
+                                        "type": "string",
+                                        "example": "Titre Instagram optionnel"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "data:image/jpeg;base64,..."
+                                    },
+                                    "id_post": {
+                                        "type": "integer",
+                                        "example": 12,
+                                        "nullable": true
+                                    },
+                                    "now": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "datePost": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-09-10"
+                                    },
+                                    "idUser": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "isValidated": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Publication envoyée à Instagram"
+                    },
+                    "400": {
+                        "description": "Données manquantes ou invalides"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/post/Linkeding": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Publier ou planifier un post image sur LinkedIn",
+                "operationId": "dd75950e072130fce4b8c5f051d29f06",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "post",
+                                    "url",
+                                    "titrePost",
+                                    "idUser",
+                                    "isValidated"
+                                ],
+                                "properties": {
+                                    "titrePost": {
+                                        "type": "string",
+                                        "example": "Titre LinkedIn"
+                                    },
+                                    "post": {
+                                        "type": "string",
+                                        "example": "Contenu du post LinkedIn"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "data:image/jpeg;base64,..."
+                                    },
+                                    "id_post": {
+                                        "type": "integer",
+                                        "example": 34,
+                                        "nullable": true
+                                    },
+                                    "now": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "datePost": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-10-02"
+                                    },
+                                    "idUser": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "isValidated": {
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Publication LinkedIn envoyée"
+                    },
+                    "400": {
+                        "description": "Données invalides"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/post/ListePosts/{id}": {
+            "get": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Lister toutes les publications d'un utilisateur",
+                "operationId": "f7882cf4cc75670fb7fe7f03d98567e3",
+                "parameters": [
+                    {
+                        "name": "id_User",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 3
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liste trouvée"
+                    },
+                    "404": {
+                        "description": "Aucun post trouvé"
+                    }
+                }
+            }
+        },
+        "/post/SearchPost/{idPost}": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Récupérer un post par ID",
+                "operationId": "dcac85c56c09771b107ab2438e867ce2",
+                "parameters": [
+                    {
+                        "name": "idPost",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 10
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post trouvé"
+                    },
+                    "404": {
+                        "description": "Post non trouvé"
+                    }
+                }
+            }
+        },
+        "/post/published": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Marquer un post comme publié",
+                "operationId": "573255d40152140e379b07cd982683e8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_post"
+                                ],
+                                "properties": {
+                                    "id_post": {
+                                        "type": "string",
+                                        "example": "45"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post marqué comme publié"
+                    },
+                    "400": {
+                        "description": "ID réseau manquant dans le post"
+                    },
+                    "404": {
+                        "description": "Post non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur server"
+                    }
+                }
+            }
+        },
+        "/post/addPosts/{idUser}": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Ajouter un post à la base",
+                "operationId": "baaa28a9ce6be04b3a9a01a6aedb4db7",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 5
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "post",
+                                    "url",
+                                    "titre_post",
+                                    "date",
+                                    "network",
+                                    "idPostNetwork"
+                                ],
+                                "properties": {
+                                    "post": {
+                                        "type": "string",
+                                        "example": "Super post Facebook"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "https://facebook.com/post/123"
+                                    },
+                                    "titre_post": {
+                                        "type": "string",
+                                        "example": "Mon titre"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "example": "2025-03-10 14:00:00"
+                                    },
+                                    "network": {
+                                        "type": "string",
+                                        "example": "facebook"
+                                    },
+                                    "idPostNetwork": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post ajouté"
+                    },
+                    "400": {
+                        "description": "Erreur validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/posts/update/{idUser}": {
+            "put": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Modifier un post existant",
+                "operationId": "2c327d73f06914f20975a3553610d5f8",
+                "parameters": [
+                    {
+                        "name": "idUser",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "post",
+                                    "url",
+                                    "titre_post",
+                                    "date",
+                                    "network"
+                                ],
+                                "properties": {
+                                    "post": {
+                                        "type": "string",
+                                        "example": "Nouveau contenu du post"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "https://image.com/photo.jpg"
+                                    },
+                                    "titre_post": {
+                                        "type": "string",
+                                        "example": "Titre modifié"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-10-12"
+                                    },
+                                    "network": {
+                                        "type": "string",
+                                        "enum": [
+                                            "facebook",
+                                            "instagram",
+                                            "linkedin"
+                                        ],
+                                        "example": "facebook"
+                                    },
+                                    "idPostNetwork": {
+                                        "type": "string",
+                                        "example": "FB_123456",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post modifié avec succès"
+                    },
+                    "400": {
+                        "description": "Erreur de validation ou ID utilisateur invalide"
+                    },
+                    "404": {
+                        "description": "Post introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/post/listerCommentairesandLikeInstagram": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Lister likes & commentaires Instagram",
+                "operationId": "50ed628cf1967b7f3081a101fe4784e2",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/post/listerCommentairesandLikeLinkeding": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Lister likes & commentaires LinkedIn",
+                "operationId": "ceb6eaca2b3ee99e637b2e334b1e0a21",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/post/listerCommentairesandLike": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Mettre à jour likes et commentaires sur tous les réseaux",
+                "operationId": "8a85ee48a9e6fbdc892ba0828bf25693",
+                "responses": {
+                    "200": {
+                        "description": "Données mises à jour"
+                    },
+                    "500": {
+                        "description": "Erreur interne"
+                    }
+                }
+            }
+        },
+        "/post/UploadPictureNetwork": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Upload d'une image pour un post réseau",
+                "operationId": "ab8148553a50648f02cb7b1cfccb39f3",
+                "responses": {
+                    "200": {
+                        "description": "Image uploadée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur lors de l'upload de l'image"
+                    }
+                }
+            }
+        },
+        "/post/generer-automatiquement": {
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Générer et publier automatiquement les posts planifiés",
+                "description": "Recherche tous les posts validés, non publiés, dont la date/heure de publication est passée, puis les publie sur le réseau social associé.",
+                "operationId": "f94c789dd5555ac9ef5860a0e145ded0",
+                "responses": {
+                    "200": {
+                        "description": "Traitement effectué : posts publiés automatiquement ou aucun post à traiter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tous les posts validés ont été traités et publiés automatiquement."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur interne du serveur",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erreur serveur : détails de l’erreur"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/stripe/create-payment-intent": {
+            "post": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Créer un PaymentIntent Stripe et mettre à jour l'abonnement utilisateur",
+                "operationId": "3062d21bd25db7d4fb068c2fede2d81b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "IdUser",
+                                    "email",
+                                    "nom"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "description": "Montant en centimes",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 2000
+                                    },
+                                    "IdUser": {
+                                        "description": "ID de l'utilisateur",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "email": {
+                                        "description": "Email pour le reçu",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "nom": {
+                                        "description": "Nom de l'abonnement (Free, Premium, Professionnel)",
+                                        "type": "string",
+                                        "example": "Premium"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "PaymentIntent créé avec succès et abonnement mis à jour"
+                    },
+                    "400": {
+                        "description": "Erreur de validation ou abonnement non valide"
+                    },
+                    "404": {
+                        "description": "Utilisateur ou abonnement introuvable"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/stripe/abonnement/{id}": {
+            "get": {
+                "tags": [
+                    "Payment"
+                ],
+                "summary": "Récupérer le type d'abonnement d'un utilisateur",
+                "operationId": "3c5ee1fd6529e751eca744f6a61f308f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Type d'abonnement retourné (isFree, isPremium, isProfessionnel)"
+                    },
+                    "400": {
+                        "description": "Aucun type d’abonnement valide"
+                    },
+                    "404": {
+                        "description": "Utilisateur ou abonnement non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Récupérer un utilisateur par ID",
+                "operationId": "a5b1c36dde931f51716ec1e224d446b7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur trouvé"
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Mettre à jour un utilisateur",
+                "operationId": "797ddc9b6cbdfa76d0078b06e2d0b7c0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johnexample.com"
+                                    },
+                                    "number": {
+                                        "type": "string",
+                                        "example": "0601020304"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newpassword123"
+                                    },
+                                    "activity": {
+                                        "type": "string",
+                                        "example": "coiffeur"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "description"
+                                    },
+                                    "companyName": {
+                                        "type": "string",
+                                        "example": "WIZIA"
+                                    },
+                                    "tone": {
+                                        "type": "string",
+                                        "example": "Familier"
+                                    },
+                                    "goal": {
+                                        "type": "string",
+                                        "example": "Vendre mes produits"
+                                    },
+                                    "logo": {
+                                        "type": "string",
+                                        "example": "https://example.com/logo.png"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur mis à jour avec succès"
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Supprimer un utilisateur",
+                "operationId": "4a096d5472738a3fd2489d43dadb76ab",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de l'utilisateur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur supprimé avec succès"
+                    },
+                    "404": {
+                        "description": "Utilisateur non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/users/sertchUser": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Rechercher un utilisateur via email et mot de passe",
+                "operationId": "a84269cc2b71053f5eed937e5f8f8d64",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "userexample.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur trouvé et authentifié"
+                    },
+                    "401": {
+                        "description": "Email ou mot de passe invalide"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Ajouter un utilisateur",
+                "operationId": "f1937fb83c59be9492411ceb08dc859b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "activity",
+                                    "password",
+                                    "password_confirmation",
+                                    "color",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johnexample.com"
+                                    },
+                                    "activity": {
+                                        "type": "string",
+                                        "example": "Coiffure"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0601020304"
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#FF5733"
+                                    },
+                                    "logo": {
+                                        "type": "string",
+                                        "example": "https://example.com/logo.png"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Description du profil"
+                                    },
+                                    "tone": {
+                                        "type": "string",
+                                        "example": "Familier"
+                                    },
+                                    "goal": {
+                                        "type": "string",
+                                        "example": "Vendre mes produits"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur créé avec succès"
+                    },
+                    "400": {
+                        "description": "Erreur de validation"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/auth/AuthenticatedUser": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Récupérer l'utilisateur actuellement authentifié",
+                "operationId": "88880e2b69fabf5f37a21175fef11e36",
+                "responses": {
+                    "200": {
+                        "description": "Utilisateur authentifié retourné"
+                    },
+                    "401": {
+                        "description": "Utilisateur non authentifié"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Authentifier un utilisateur",
+                "operationId": "0a12ad9483755caabdc23f730286aa9a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johnexample.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Authentification réussie, retourne token et user"
+                    },
+                    "401": {
+                        "description": "Email ou mot de passe invalide"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/users/uploadlogo": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Uploader l'image du logo de l'utilisateur",
+                "operationId": "a6313fb76434cb176f5be4e23a10501e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "file": {
+                                        "description": "Image à uploader (jpeg,png,jpg,gif)",
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Image uploadée avec succès"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        },
+        "/users/abonnementUser": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Récupérer les informations d'abonnement et limites d'un utilisateur",
+                "operationId": "e84934423b773036029bd0f5a187c4eb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Infos d'abonnement récupérées"
+                    },
+                    "404": {
+                        "description": "Utilisateur ou abonnement non trouvé"
+                    },
+                    "500": {
+                        "description": "Erreur serveur"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "200": {
+                "description": "OK"
+            },
+            "500": {
+                "description": "Erreur interne"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Factures",
+            "description": "Factures"
+        },
+        {
+            "name": "Intelligence artificielle",
+            "description": "Intelligence artificielle"
+        },
+        {
+            "name": "Mailing",
+            "description": "Mailing"
+        },
+        {
+            "name": "Destinataires",
+            "description": "Destinataires"
+        },
+        {
+            "name": "Post",
+            "description": "Post"
+        },
+        {
+            "name": "Payment",
+            "description": "Payment"
+        },
+        {
+            "name": "users",
+            "description": "users"
+        },
+        {
+            "name": "auth",
+            "description": "auth"
+        }
+    ]
+}

@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('piece_jointes', function (Blueprint $table) {
             $table->id();
-            $table->string('path', 70);
+            $table->string('path', 10000);
             $table->text('type');
+            $table->integer('idUser');
             $table->timestamps();
         });
     }
