@@ -70,7 +70,6 @@ services:
       - wizia-network
     ports:
       - "3308:3306"
-
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: wizia-pma
