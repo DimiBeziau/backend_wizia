@@ -1,10 +1,10 @@
 name: Build and Deploy 🚀
 
 on:
-  push:
+#sur les pull request
+  pull_request:
     branches:
       - main
-      - Dev
   workflow_dispatch:
 
 jobs:
