@@ -85,6 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
       Route::get('/ListDestinataireClient/{id}', 'getListDestinataire')->name('getListDestinataire');
       Route::post('/AddDestinataireClient/{id}', 'AddListDestinataire')->name('AddListDestinataire');
       Route::put('/UpdateDestinataireClient/{id}', 'UpdateListDestinataire')->name('UpdateListDestinataire');
+
       Route::delete('/DeleteListDestinataire/{id}', 'deleteListDestinataire')->name('deleteListDestinataire');
     });
   });

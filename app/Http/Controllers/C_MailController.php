@@ -43,7 +43,7 @@ class C_MailController extends Controller
     $this->mail->Port = env('MAIL_PORT');
     $this->mail->Username = env('MAIL_USERNAME');
     $this->mail->Password = env('MAIL_PASSWORD');
-    $this->mail->Password = env('MAIL_PASSWORD');
+
 
     $encryption = env('MAIL_ENCRYPTION', 'tls');
     if ($encryption === 'ssl') {
@@ -55,6 +55,70 @@ class C_MailController extends Controller
   public function addAttachment($mail, $content, $fileName)
   {
     $mail->addStringAttachment($content, $fileName);
+  }
+
+  public function testSmtp()
+  {
+    $outputBuffer = "";
+
+    try {
+      $mail = new PHPMailer(true);
+      $mail->SMTPDebug = SMTP::DEBUG_CONNECTION;
+      $mail->Debugoutput = function ($str, $level) use (&$outputBuffer) {
+        $outputBuffer .= "$str\n";
+      };
+
+      $mail->isSMTP();
+      $mail->Host = env('MAIL_HOST');
+      $mail->Port = env('MAIL_PORT');
+      $mail->SMTPAuth = true;
+      $mail->Username = env('MAIL_USERNAME');
+      $mail->Password = env('MAIL_PASSWORD');
+
+      $encryption = env('MAIL_ENCRYPTION', 'tls');
+      if ($encryption === 'ssl') {
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+      } else {
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+      }
+
+      // OPTIONAL: Disable certificate verification for diagnosing self-signed cert issues
+      /*
+      $mail->SMTPOptions = array(
+          'ssl' => array(
+              'verify_peer' => false,
+              'verify_peer_name' => false,
+              'allow_self_signed' => true
+          )
+      );
+      */
+
+      $mail->setFrom(env('MAIL_FROM_ADDRESS', 'test@example.com'), 'Test');
+      $mail->addAddress(env('MAIL_FROM_ADDRESS', 'test@example.com')); // Send to self
+      $mail->Subject = 'SMTP Test';
+      $mail->Body    = 'This is a test email';
+
+      if ($mail->smtpConnect()) {
+        $mail->smtpClose();
+        return response()->json([
+          'success' => true,
+          'message' => "SMTP Connect Successful!",
+          'log' => $outputBuffer
+        ]);
+      } else {
+        return response()->json([
+          'success' => false,
+          'message' => "SMTP Connect Failed",
+          'log' => $outputBuffer
+        ], 500);
+      }
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => "Exception: " . $e->getMessage(),
+        'log' => $outputBuffer
+      ], 500);
+    }
   }
 
   /**
