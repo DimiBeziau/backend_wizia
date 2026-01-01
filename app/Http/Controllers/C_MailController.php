@@ -189,7 +189,22 @@ class C_MailController extends Controller
 
       foreach ($to as $destinataire) {
 
-        $mail = clone $this->mail;
+        // Use a fresh instance instead of cloning to ensure clean state
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = env('MAIL_HOST');
+        $mail->Port = env('MAIL_PORT');
+        $mail->SMTPAuth = true;
+        $mail->Username = env('MAIL_USERNAME');
+        $mail->Password = env('MAIL_PASSWORD');
+
+        $encryption = env('MAIL_ENCRYPTION', 'tls');
+        if ($encryption === 'ssl') {
+          $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        } else {
+          $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        }
+
         $mail->setFrom($fromEmail, $fromName);
         $mail->addAddress($destinataire);
         $mail->CharSet = 'UTF-8';
@@ -198,23 +213,24 @@ class C_MailController extends Controller
         $mail->Subject = $subject;
         $mail->Body = $body;
         $mail->AltBody = $altBody;
-        // $mail->addCC('cc1@exemple.com', 'Elena'); // CC et BCC
-        // $mail->addBCC('bcc1@exemple.com', 'Alex');// CC et BCC
 
         if ($file) {
-
           if (is_array($file)) {
             foreach ($file as $url) {
-              $content = file_get_contents($url);
-              $this->addAttachment($mail, $content, basename($url));
+              $content = @file_get_contents($url);
+              if ($content !== false) {
+                $this->addAttachment($mail, $content, basename($url));
+              }
             }
           } else {
-            $content = file_get_contents($file);
-            $this->addAttachment($mail, $content, basename($file));
+            $content = @file_get_contents($file);
+            if ($content !== false) {
+              $this->addAttachment($mail, $content, basename($file));
+            }
           }
-        }        // juste poue les test ne pas envoyé de mail
+        }
+
         if (!$mail->send()) {
-          // $debugInfo = "Debug Trace:\n" . $this->debugBuffer; // Assuming we add buffer capture
           throw new \Exception("Échec de l'envoi à $destinataire : " . $mail->ErrorInfo);
         }
       }
