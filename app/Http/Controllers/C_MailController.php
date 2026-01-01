@@ -34,8 +34,8 @@ class C_MailController extends Controller
 
   private function configureSMTP()
   {
-    $dotenv = Dotenv::createImmutable(base_path());
-    $dotenv->load();
+    // $dotenv = Dotenv::createImmutable(base_path());
+    // $dotenv->load();
 
     $this->mail->isSMTP();
     $this->mail->SMTPAuth = true;
@@ -214,6 +214,7 @@ class C_MailController extends Controller
           }
         }        // juste poue les test ne pas envoyé de mail
         if (!$mail->send()) {
+          // $debugInfo = "Debug Trace:\n" . $this->debugBuffer; // Assuming we add buffer capture
           throw new \Exception("Échec de l'envoi à $destinataire : " . $mail->ErrorInfo);
         }
       }
