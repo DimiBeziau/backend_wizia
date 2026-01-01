@@ -43,7 +43,14 @@ class C_MailController extends Controller
     $this->mail->Port = env('MAIL_PORT');
     $this->mail->Username = env('MAIL_USERNAME');
     $this->mail->Password = env('MAIL_PASSWORD');
-    $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $this->mail->Password = env('MAIL_PASSWORD');
+
+    $encryption = env('MAIL_ENCRYPTION', 'tls');
+    if ($encryption === 'ssl') {
+      $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    } else {
+      $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    }
   }
   public function addAttachment($mail, $content, $fileName)
   {
