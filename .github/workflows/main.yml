@@ -27,7 +27,7 @@ jobs:
             echo "APP_ENV=local" >> .env
             echo "APP_KEY=base64:99YIxVdtX4sTr4l+QfAUURCzsAxoiWtKaOXj9/+Fj10=" >> .env
             echo "APP_DEBUG=true" >> .env
-            echo "APP_URL=https://wizia.beziu.dev" >> .env
+            echo "APP_URL=https://wizia.beziau.dev" >> .env
             echo "APP_LOCALE=en" >> .env
             echo "APP_FALLBACK_LOCALE=en" >> .env
             echo "APP_FAKER_LOCALE=en_US" >> .env
