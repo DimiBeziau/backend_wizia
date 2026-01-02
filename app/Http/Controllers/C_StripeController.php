@@ -39,7 +39,7 @@ class C_StripeController extends Controller
         $validated = $request->validate([
             'IdUser' => 'required|numeric',
             'nom' => 'required|string|max:255',
-        ]);
+        ]);   
 
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
           
@@ -57,7 +57,7 @@ class C_StripeController extends Controller
                if ($user->idAbonnement != $id) {
                  $user->idAbonnement = $id;
                   $user->save();
-               }
+               } 
                 break;
             case 'Premium':
                 $id = 2;
