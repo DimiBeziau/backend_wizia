@@ -39,7 +39,7 @@ class C_StripeController extends Controller
         $validated = $request->validate([
             'IdUser' => 'required|numeric',
             'nom' => 'required|string|max:255',
-        ]);
+        ]);   
 
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
           
