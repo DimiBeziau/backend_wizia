@@ -91,4 +91,5 @@ Route::middleware('auth:sanctum')->group(function () {
   });
 });
 
+
 Route::get('/test-smtp', [C_MailController::class, 'testSmtp'])->name('testSmtp');
