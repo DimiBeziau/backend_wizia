@@ -313,7 +313,7 @@ return [
         /*
          * Constants which can be used in annotations
          */
-        'constants' => [
+        'constants' => [ 
             'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'https://wizia.beziau.dev'),
         ],
     ],
