@@ -256,7 +256,7 @@ class C_UserController extends Controller
       }
 
       $user->email = $request->email;
-      $user->number = $request->number;
+      $user->phone = $request->phone;
       $user->name = $request->name;
       $user->activity = $request->activity;
       $user->color = $request->color;
@@ -264,7 +264,7 @@ class C_UserController extends Controller
       $user->description = $request->description;
       $user->companyName = $request->companyName;
       $user->tone = $request->tone;
-      $user->goal = $request->goal;
+      $user->call = $request->call;
       $user->logo = $request->logo;
       //
       if ($user->password !== null && $request->has('password')) {
