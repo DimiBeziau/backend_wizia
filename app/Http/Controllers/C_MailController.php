@@ -39,13 +39,13 @@ class C_MailController extends Controller
 
     $this->mail->isSMTP();
     $this->mail->SMTPAuth = true;
-    $this->mail->Host = env('MAIL_HOST');
-    $this->mail->Port = env('MAIL_PORT');
-    $this->mail->Username = env('MAIL_USERNAME');
-    $this->mail->Password = env('MAIL_PASSWORD');
+    $this->mail->Host = config('mail.mailers.smtp.host', '127.0.0.1');
+    $this->mail->Port = config('mail.mailers.smtp.port', 2525);
+    $this->mail->Username = config('mail.mailers.smtp.username');
+    $this->mail->Password = config('mail.mailers.smtp.password');
 
 
-    $encryption = env('MAIL_ENCRYPTION', 'tls');
+    $encryption = config('mail.mailers.smtp.encryption', 'tls');
     if ($encryption === 'ssl') {
       $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     } else {
@@ -69,13 +69,13 @@ class C_MailController extends Controller
       };
 
       $mail->isSMTP();
-      $mail->Host = env('MAIL_HOST');
-      $mail->Port = env('MAIL_PORT');
+      $mail->Host = config('mail.mailers.smtp.host', '127.0.0.1');
+      $mail->Port = config('mail.mailers.smtp.port', 2525);
       $mail->SMTPAuth = true;
-      $mail->Username = env('MAIL_USERNAME');
-      $mail->Password = env('MAIL_PASSWORD');
+      $mail->Username = config('mail.mailers.smtp.username');
+      $mail->Password = config('mail.mailers.smtp.password');
 
-      $encryption = env('MAIL_ENCRYPTION', 'tls');
+      $encryption = config('mail.mailers.smtp.encryption', 'tls');
       if ($encryption === 'ssl') {
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
       } else {
@@ -93,8 +93,8 @@ class C_MailController extends Controller
       );
       */
 
-      $mail->setFrom(env('MAIL_FROM_ADDRESS', 'test@example.com'), 'Test');
-      $mail->addAddress(env('MAIL_FROM_ADDRESS', 'test@example.com')); // Send to self
+      $mail->setFrom(config('mail.from.address', 'test@example.com'), 'Test');
+      $mail->addAddress(config('mail.from.address', 'test@example.com')); // Send to self
       $mail->Subject = 'SMTP Test';
       $mail->Body    = 'This is a test email';
 
@@ -103,12 +103,30 @@ class C_MailController extends Controller
         return response()->json([
           'success' => true,
           'message' => "SMTP Connect Successful!",
+          'config_check' => [
+            'host' => $mail->Host,
+            'port' => $mail->Port,
+            'encryption' => $encryption,
+            'username_set' => !empty($mail->Username),
+            'username_len' => strlen($mail->Username),
+            'password_set' => !empty($mail->Password),
+            'password_len' => strlen($mail->Password),
+          ],
           'log' => $outputBuffer
         ]);
       } else {
         return response()->json([
           'success' => false,
           'message' => "SMTP Connect Failed",
+          'config_check' => [
+            'host' => $mail->Host,
+            'port' => $mail->Port,
+            'encryption' => $encryption,
+            'username_set' => !empty($mail->Username),
+            'username_len' => strlen($mail->Username),
+            'password_set' => !empty($mail->Password),
+            'password_len' => strlen($mail->Password),
+          ],
           'log' => $outputBuffer
         ], 500);
       }
@@ -192,13 +210,13 @@ class C_MailController extends Controller
         // Use a fresh instance instead of cloning to ensure clean state
         $mail = new PHPMailer(true);
         $mail->isSMTP();
-        $mail->Host = env('MAIL_HOST');
-        $mail->Port = env('MAIL_PORT');
+        $mail->Host = config('mail.mailers.smtp.host', '127.0.0.1');
+        $mail->Port = config('mail.mailers.smtp.port', 2525);
         $mail->SMTPAuth = true;
-        $mail->Username = env('MAIL_USERNAME');
-        $mail->Password = env('MAIL_PASSWORD');
+        $mail->Username = config('mail.mailers.smtp.username');
+        $mail->Password = config('mail.mailers.smtp.password');
 
-        $encryption = env('MAIL_ENCRYPTION', 'tls');
+        $encryption = config('mail.mailers.smtp.encryption', 'tls');
         if ($encryption === 'ssl') {
           $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         } else {
