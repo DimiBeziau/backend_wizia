@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class C_BillController extends Controller
+class C_BillController extends Controller 
 {
 
     /**

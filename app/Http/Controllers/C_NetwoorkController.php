@@ -8,8 +8,10 @@ use App\Models\Posts;
 use App\Models\Abonnements;
 use DateTime;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -125,7 +127,7 @@ public function createAndPublishPostPictureFacebook(Request $request)
             'Accept' => 'application/json',
             'x-make-apikey' => env("KeyMake")
         ])->post($urlMake, $data);
-
+/** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
         $idPostNetwork = $response->body();
 
         if ($idPostBDD !== null) {
@@ -242,7 +244,7 @@ public function createAndPublishPostPictureFacebook(Request $request)
             'Accept' => 'application/json',
             'x-make-apikey' => env("KeyMake")
         ])->post($urlMake, $data);
-
+/** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
         $idPostNetwork = $response->body();
 
         if ($idPostBDD !== null) {
@@ -336,7 +338,7 @@ public function createAndPublishPostPictureFacebook(Request $request)
 //       if($id_post!= null){
 //       $request = new \Illuminate\Http\Request();
 //         $request->merge(['id_post' => $id_post]);
-//         $this->publishedPosts($request);  
+//         $this->publishedPosts($request);
 //       }
 //       return response()->json([
        
@@ -397,7 +399,7 @@ public function createAndPublishPostPictureLinkeding(Request $request)
             'Accept' => 'application/json',
             'x-make-apikey' => env("KeyMake")
         ])->post($urlMake, $data);
-
+/** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
         $idPostNetwork = $response->body();
 
         if ($idPostBDD !== null) {
@@ -979,7 +981,7 @@ public function listerCommentairesandLikeIstagram(){
         'Accept' => 'application/json',
         'x-make-apikey' => env("KeyMake")
     ])->post($url);
-
+/** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
     if($response->successful()) {
    $data = $response->json();
 
@@ -1074,7 +1076,7 @@ public function listerCommentairesandLikeLinkeding(Request $request)
         ])->post($url, [
             'id_post' => $idLinkedin,
         ]);
-
+/** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
         if ($response->successful()) {
             $data = $response->json();
             logger()->info('Réponse Make LinkedIn', $data);

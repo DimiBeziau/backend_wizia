@@ -1182,7 +1182,7 @@ class C_MailController extends Controller
 
       // Récupération optimisée des clients liés
       $clients = Clients::whereIn('id', function ($query) use ($idMail) {
-        $query->select('idClient')
+        $query->select('idListeClient')
           ->from('clients_mailings')
           ->where('idMailing', $idMail);
       })->get(['id', 'mail', 'nom', 'prenom']);
