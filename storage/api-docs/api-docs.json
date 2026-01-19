@@ -520,6 +520,90 @@
                 }
             }
         },
+        "/mail/UpdateMailing/{idMailing}": {
+            "put": {
+                "tags": [
+                    "Mailing"
+                ],
+                "summary": "Met à jour un mailing",
+                "operationId": "e89cd19d4d3d7cf0c9ce535d0058c7ee",
+                "parameters": [
+                    {
+                        "name": "idMailing",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "subject",
+                                    "body"
+                                ],
+                                "properties": {
+                                    "subject": {
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    },
+                                    "altBody": {
+                                        "type": "string"
+                                    },
+                                    "fromName": {
+                                        "type": "string"
+                                    },
+                                    "fromEmail": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "isValidated": {
+                                        "type": "boolean"
+                                    },
+                                    "isPublished": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mailing mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Mailing non trouvé"
+                    }
+                }
+            }
+        },
         "/mail/ListDestinataireClient/{idUser}": {
             "get": {
                 "tags": [
@@ -910,90 +994,6 @@
                                         "success": {
                                             "type": "boolean",
                                             "example": true
-                                        },
-                                        "data": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Mailing non trouvé"
-                    }
-                }
-            }
-        },
-        "/mail/UpdateMailing/{idMailing}": {
-            "put": {
-                "tags": [
-                    "Mailing"
-                ],
-                "summary": "Met à jour un mailing",
-                "operationId": "e89cd19d4d3d7cf0c9ce535d0058c7ee",
-                "parameters": [
-                    {
-                        "name": "idMailing",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "subject",
-                                    "body"
-                                ],
-                                "properties": {
-                                    "subject": {
-                                        "type": "string"
-                                    },
-                                    "body": {
-                                        "type": "string"
-                                    },
-                                    "altBody": {
-                                        "type": "string"
-                                    },
-                                    "fromName": {
-                                        "type": "string"
-                                    },
-                                    "fromEmail": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "isValidated": {
-                                        "type": "boolean"
-                                    },
-                                    "isPublished": {
-                                        "type": "boolean"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Mailing mis à jour",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "message": {
-                                            "type": "string"
                                         },
                                         "data": {
                                             "type": "object"
