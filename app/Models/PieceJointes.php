@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class PieceJointes extends Model
 {
     protected $fillable = [
-            'path',
-            'type',
-            'idUser'
-        ];
-    public function mailings()
-{
-    return $this->hasMany(PieceJointeMailings::class, 'idPieceJointe');
-}
+        'path',
+        'type',
+        'idUser',
+    ];
 
+    public function mailings()
+    {
+        return $this->hasMany(PieceJointeMailings::class, 'idPieceJointe');
+    }
 }

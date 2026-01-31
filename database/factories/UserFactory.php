@@ -32,11 +32,11 @@ class UserFactory extends Factory
 
             'description' => fake()->sentence(),
             'companyName' => fake()->company(),
-            'activity'    => 'Coiffure',
-            'call'        => 'Professionnel',
-            'color'       => '#000000',
-            'phone'       => fake()->phoneNumber(),
-            'tone'        => 'Professionnel',
+            'activity' => 'Coiffure',
+            'call' => 'Professionnel',
+            'color' => '#000000',
+            'phone' => fake()->phoneNumber(),
+            'tone' => 'Professionnel',
             'idAbonnement' => 1,
         ];
     }

@@ -9,12 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-     public function up(): void
+    public function up(): void
     {
-         Schema::create('clients_mailings', function (Blueprint $table) {
+        Schema::create('clients_mailings', function (Blueprint $table) {
             $table->id();
             $table->integer('idListeClient');
-            $table->integer('idMailing'); 
+            $table->integer('idMailing');
             $table->timestamps();
         });
     }

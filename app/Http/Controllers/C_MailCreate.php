@@ -1,7 +1,9 @@
 <?php
 
 // namespace App\Http\Controllers;
+
 namespace App\Services;
+
 // use PHPMailer\PHPMailer\PHPMailer;
 // use PHPMailer\PHPMailer\SMTP;
 // require('../../../vendor/autoload.php');
@@ -9,8 +11,7 @@ namespace App\Services;
 // use Dotenv\Dotenv;
 // use Illuminate\Support\Facades\DB;
 
- 
-// class MailService 
+// class MailService
 // {
 //     private $mail;
 
@@ -60,11 +61,7 @@ namespace App\Services;
 //         $this->mail->addAttachment($filePath, $fileName);
 //     }
 
-   
 // }
-
-
-
 
 // public function getDestinatairesend($ID)
 // {

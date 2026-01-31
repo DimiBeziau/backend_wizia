@@ -7,7 +7,9 @@ use FPDF;
 class C_BillCreate extends FPDF
 {
     private $client;
+
     private $articles;
+
     private $total;
 
     public function __construct()
@@ -28,7 +30,7 @@ class C_BillCreate extends FPDF
         $this->addArticles();
         $this->addFooter();
 
-        if (!file_exists($fileName)) {
+        if (! file_exists($fileName)) {
             $this->Output('F', $fileName, true);
         } else {
             unlink($fileName);
@@ -79,20 +81,19 @@ class C_BillCreate extends FPDF
 
             $this->Cell(80, 10, $article['nom'], 1, 0);
             $this->Cell(30, 10, $article['quantite'], 1, 0, 'C');
-            $this->Cell(40, 10, number_format($article['prix'], 2) . ' €', 1, 0, 'R');
-            $this->Cell(40, 10, number_format($totalArticle, 2) . ' €', 1, 1, 'R');
+            $this->Cell(40, 10, number_format($article['prix'], 2).' €', 1, 0, 'R');
+            $this->Cell(40, 10, number_format($totalArticle, 2).' €', 1, 1, 'R');
         }
 
         $this->SetFont('Arial', 'B', 12);
         $this->Cell(150, 10, 'TOTAL', 1, 0, 'R');
-        $this->Cell(40, 10, number_format($this->total, 2) . ' €', 1, 1, 'R');
+        $this->Cell(40, 10, number_format($this->total, 2).' €', 1, 1, 'R');
     }
 
     public function addFooter()
     {
         $this->SetY(200);
         $this->SetFont('Arial', 'I', 10);
-        $this->Cell(0, 10, 'Page ' . $this->PageNo(), 0, 0, 'C');
+        $this->Cell(0, 10, 'Page '.$this->PageNo(), 0, 0, 'C');
     }
 }
-
