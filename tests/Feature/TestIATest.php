@@ -1,12 +1,10 @@
 <?php
 
 namespace Tests\Feature;
-
 use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TestIATest extends TestCase
@@ -22,69 +20,52 @@ class TestIATest extends TestCase
     }
 
     /**
-     * Test de la génération Gemini (Post structuré)
+     * Test réel avec l'API Gemini
      */
-    public function test_generate_ia_gemini()
+    public function test_generate_ia_gemini_real_call()
     {
         Sanctum::actingAs($this->user);
 
-        // Simulation de la réponse Gemini pour éviter le blocage CURL
-        Http::fake([
-            'generativelanguage.googleapis.com/*' => Http::response([
-                'candidates' => [
-                    [
-                        'content' => [
-                            'parts' => [
-                                ['text' => json_encode(['title' => 'Titre Café', 'content' => 'Contenu Café'])]
-                            ]
-                        ]
-                    ]
-                ]
-            ], 200)
-        ]);
-
         $payload = [
-            'prompt' => 'Crée un post sur le café',
+            'prompt' => 'Dis-moi bonjour en un mot',
             'type' => 'post'
         ];
 
+      
         $response = $this->postJson(route('api.generatpromptgemini'), $payload);
 
-        $response->assertStatus(200)
-                 ->assertJsonStructure(['title', 'content']);
+        // On vérifie que l'API nous répond bien un succès
+        $response->assertStatus(200);
+        
+        // On vérifie que la structure JSON retournée par ton contrôleur contient bien les données de l'IA
+        $response->assertJsonStructure(['title', 'content']);
     }
 
     /**
-     * Test de la génération d'image DALL-E
+     * Test réel avec l'API DALL-E
      */
-    public function test_generate_ia_picture()
+    public function test_generate_ia_picture_real_call()
     {
         Sanctum::actingAs($this->user);
-        Storage::fake('public');
-
-        // Simulation de la réponse OpenAI
-        Http::fake([
-            'api.openai.com/*' => Http::response([
-                'data' => [
-                    ['url' => 'https://fake-url.com/image.png']
-                ]
-            ], 200)
-        ]);
-
+        
         $payload = [
-            'prompt' => 'Un chat astronaute',
-            'size' => '1024x1024'
+            'prompt' => 'Une petite icône bleue',
+            'size' => '1024x1024' // DALL-E 3 nécessite au minimum 1024x1024
         ];
 
-        // Note: Si ton contrôleur utilise file_get_contents sur l'URL, 
-        // ce test peut encore bloquer si l'URL simulée n'est pas accessible.
         $response = $this->postJson(route('api.generatPictureGPT'), $payload);
 
-        if ($response->status() === 500) {
-            $response->assertJsonStructure(['error']);
-        } else {
-            $response->assertStatus(200)
-                     ->assertJsonStructure(['image_url']);
-        }
+        // Si l'appel réussit
+        $response->assertStatus(200)
+                 ->assertJsonStructure(['image_url']);
+        
+        // Vérifier que l'image a bien été enregistrée localement
+        $responseData = $response->json();
+        $urlPath = parse_url($responseData['image_url'], PHP_URL_PATH);
+        // Supprime '/storage/' du début s'il est présent pour avoir le chemin relatif au disque public
+        $path = preg_replace('#^/storage/#', '', $urlPath);
+        
+        // Correction: Utilisation de assertTrue + assets sur le disque réel car assertExists n'existe pas sans fake
+        $this->assertTrue(Storage::disk('public')->exists($path), "L'image n'a pas été trouvée sur le disque public : " . $path);
     }
 }

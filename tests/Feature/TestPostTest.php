@@ -28,16 +28,12 @@ class TestPostTest extends TestCase
 {
     Sanctum::actingAs($this->user);
 
-    // On simule la réponse de Make.com
-    Http::fake([
-        'hook.eu2.make.com/*' => Http::response('ID_NETWORK_123', 200)
-    ]);
-
     // On prépare TOUS les paramètres que ton $request->validate exige
+    // Utilisation d'une URL d'image existante et publique pour que Make.com puisse la télécharger
     $payload = [
         'post'         => 'Mon super contenu de post',      // required
         'titrePost'    => 'Mon Titre de Post',              // nullable
-        'url'          => 'https://monimage.com/test.jpg',  // required
+        'url'          => 'https://placehold.co/600x400/png', // required - Image valide et légère
         'id_post'      => null,                             // nullable
         'datePost'     => now()->toDateTimeString(),        // nullable
         'network'      => 'facebook',                       // required
@@ -67,7 +63,6 @@ class TestPostTest extends TestCase
    public function test_social_post_routes()
 {
     Sanctum::actingAs($this->user);
-    Http::fake(['hook.eu2.make.com/*' => Http::response('ID_NETWORK_123', 200)]);
 
     // Utilisation des noms définis dans tes Route::post(...)->name('...')
     // Le groupe a le nom 'post.', donc on concatène
@@ -81,7 +76,7 @@ class TestPostTest extends TestCase
         $response = $this->postJson(route($routeName), [
             'post' => 'Contenu du post',
             'titrePost' => 'Titre du post',
-            'url' => 'https://test.com/photo.jpg',
+            'url' => 'https://placehold.co/600x400/png', // Image valide
             'id_post' => null,
             'datePost' => now()->toDateTimeString(),
             'idUser' => $this->user->id,
