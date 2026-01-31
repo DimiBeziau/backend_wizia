@@ -190,6 +190,10 @@ class C_IAController extends Controller
 
             $savePath = storage_path('app/public/NetworkPicture/'.$imageName);
 
+            if (! is_dir(dirname($savePath))) {
+                mkdir(dirname($savePath), 0755, true);
+            }
+
             file_put_contents($savePath, $imageContent);
 
             $url = env('APP_URL').'/storage/NetworkPicture/'.$imageName;

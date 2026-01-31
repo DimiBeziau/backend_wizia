@@ -50,7 +50,7 @@ class TestIATest extends TestCase
 
         $payload = [
             'prompt' => 'Une petite icône bleue',
-            'size' => '1024x1024', // DALL-E 3 nécessite au minimum 1024x1024
+            'size' => '1024x1024',
         ];
 
         $response = $this->postJson(route('api.generatPictureGPT'), $payload);
