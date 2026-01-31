@@ -1,0 +1,92 @@
+services:
+  app:
+    image: ghcr.io/${GITHUB_REPOSITORY}/app:latest
+    container_name: wizia-app
+    restart: unless-stopped
+    volumes:
+      - wizia-data:/var/www
+    networks:
+      - wizia-network
+    environment:
+      # Database
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # App
+      APP_URL: ${APP_URL}
+      APP_ENV: ${APP_ENV}
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: ${APP_DEBUG}
+
+      # Mail
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_ENCRYPTION: ${MAIL_ENCRYPTION}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
+
+      # Others
+      KEY_API_GEMINI: ${KEY_API_GEMINI}
+    depends_on:
+      - db
+
+  web:
+    image: ghcr.io/${GITHUB_REPOSITORY}/nginx:latest
+    container_name: wizia-web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - wizia-data:/var/www
+    networks:
+      - wizia-network
+      - public
+    depends_on:
+      - app
+
+  db:
+    image: mysql:latest
+    container_name: wizia-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - wizia-network
+    ports:
+      - "3308:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: wizia-pma
+    networks:
+      - wizia-network
+      - public
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    depends_on:
+      - db
+
+networks:
+  wizia-network:
+    driver: bridge
+  public:
+    external: true
+
+volumes:
+  wizia-data:

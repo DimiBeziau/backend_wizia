@@ -1,0 +1,45 @@
+# Stage 1: Build frontend assets
+FROM node:20 AS frontend
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Stage 2: Build backend dependencies
+FROM composer:latest AS vendor
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --ignore-platform-req=ext-gd --ignore-platform-req=ext-dom \
+  --ignore-platform-req=ext-xml --no-interaction --prefer-dist
+
+# Stage 3: Final application image
+FROM php:8.3-fpm
+
+# Install system dependencies and PHP extensions
+RUN apt-get update && apt-get install -y \
+  libpng-dev \
+  libonig-dev \
+  libxml2-dev \
+  zip \
+  unzip \
+  && apt-get clean && rm -rf /var/lib/apt/lists/* \
+  && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+
+WORKDIR /var/www
+
+# Copy vendor files
+COPY --from=vendor /app/vendor ./vendor
+
+# Copy frontend assets
+COPY --from=frontend /app/public/build ./public/build
+
+# Copy application code
+COPY . .
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www \
+  && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
+EXPOSE 9000
+CMD ["php-fpm"]
