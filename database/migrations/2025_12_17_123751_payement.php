@@ -11,24 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('payment_users')) {
-        Schema::create('payment_users', function (Blueprint $table) {
-            $table->id();
-            $table->integer('idUser');
-            $table->integer('idAbonnements');
-            $table->datetime('datePayement');
-            $table->datetime('dateStart');
-            $table->datetime('dateEnd');
-            $table->datetime('dateCancel')->nullable();
-            $table->boolean('cancelAbonnement')->default(false);
-            $table->string('paymentMethod')->default('stripe');
-            $table->string('idTransaction');
-            $table->string('currency', 3)->default('EUR');
-            $table->boolean('isRecurring')->default(true);
-            $table->text('notes')->nullable();
-            $table->timestamps();
-        });
-    }
+        if (! Schema::hasTable('payment_users')) {
+            Schema::create('payment_users', function (Blueprint $table) {
+                $table->id();
+                $table->integer('idUser');
+                $table->integer('idAbonnements');
+                $table->datetime('datePayement');
+                $table->datetime('dateStart');
+                $table->datetime('dateEnd');
+                $table->datetime('dateCancel')->nullable();
+                $table->boolean('cancelAbonnement')->default(false);
+                $table->string('paymentMethod')->default('stripe');
+                $table->string('idTransaction');
+                $table->string('currency', 3)->default('EUR');
+                $table->boolean('isRecurring')->default(true);
+                $table->text('notes')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -36,7 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::dropIfExists('payment_users');
+        Schema::dropIfExists('payment_users');
 
     }
 };

@@ -7,7 +7,7 @@ return [
             'api' => [
                 'title' => 'L5 Swagger UI',
             ],
-            
+
             'routes' => [
                 /*
                  * Route for accessing api documentation interface
@@ -19,7 +19,7 @@ return [
                  * Edit to include full URL in ui for assets
                  */
                 'use_absolute_path' => env('L5_SWAGGER_USE_ABSOLUTE_PATH', true),
-                
+
                 /*
                 * Edit to set path where swagger ui assets should be stored
                 */
@@ -45,7 +45,7 @@ return [
                  */
                 'annotations' => [
                     base_path('app'),
-                   // base_path('app/Http/Controllers'),
+                    // base_path('app/Http/Controllers'),
                 ],
             ],
         ],
@@ -79,7 +79,7 @@ return [
         ],
 
         'paths' => [
-            
+
             /*
              * Absolute path to location where parsed annotations will be stored
              */

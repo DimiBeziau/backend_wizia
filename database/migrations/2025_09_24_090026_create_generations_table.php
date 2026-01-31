@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('generations', function (Blueprint $table) {
             $table->id();
             $table->string('IdUser');
-            $table->integer('generation_Prompte');// plus coter post
-            $table->integer('generation_Picture');// plus coter post
-            $table->integer('generation_Newsletter');// plus coter mail 
-            $table->integer('nombre_Contact_Newsletter');// plus coter mail 
+            $table->integer('generation_Prompte'); // plus coter post
+            $table->integer('generation_Picture'); // plus coter post
+            $table->integer('generation_Newsletter'); // plus coter mail
+            $table->integer('nombre_Contact_Newsletter'); // plus coter mail
             $table->string('dateDebut');
             $table->string('dateFin');
 

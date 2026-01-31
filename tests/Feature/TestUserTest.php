@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class TestUserTest extends TestCase
 {
@@ -18,9 +18,9 @@ class TestUserTest extends TestCase
     private function defaultUserData(): array
     {
         return [
-            'activity'    => 'Coiffure',
-            'call'        => 'Professionnel',
-            'color'       => '#000000',
+            'activity' => 'Coiffure',
+            'call' => 'Professionnel',
+            'color' => '#000000',
             'description' => 'Ma description de test', // Correction du NOT NULL description
         ];
     }
@@ -55,7 +55,7 @@ class TestUserTest extends TestCase
         $response
             ->assertStatus(404)
             ->assertJson([
-                'message' => 'Utilisateur non trouvé'
+                'message' => 'Utilisateur non trouvé',
             ]);
     }
 
@@ -63,8 +63,8 @@ class TestUserTest extends TestCase
      * searchUser()
      * ============================ */
     public function test_search_user_success()
-{
-  $user = User::factory()->create(array_merge($this->defaultUserData(), [
+    {
+        $user = User::factory()->create(array_merge($this->defaultUserData(), [
             'password' => Hash::make('secret123'),
         ]));
 
@@ -73,16 +73,16 @@ class TestUserTest extends TestCase
 
         $response = $this->postJson('/users/sertchUser', [
             'email' => $user->email,
-            'password' => 'secret123'
+            'password' => 'secret123',
         ]);
 
         $response->assertStatus(200)
-                 ->assertJson(['email' => $user->email]);
-}
+            ->assertJson(['email' => $user->email]);
+    }
 
     public function test_search_user_wrong_password()
     {
-       $user = User::factory()->create(array_merge($this->defaultUserData(), [
+        $user = User::factory()->create(array_merge($this->defaultUserData(), [
             'password' => Hash::make('secret123'),
         ]));
 
@@ -91,11 +91,11 @@ class TestUserTest extends TestCase
 
         $response = $this->postJson('/users/sertchUser', [
             'email' => $user->email,
-            'password' => 'wrong'
+            'password' => 'wrong',
         ]);
 
         $response->assertStatus(401)
-                 ->assertJson(['message' => 'Email ou mot de passe invalide']);
+            ->assertJson(['message' => 'Email ou mot de passe invalide']);
     }
 
     /** ============================
@@ -103,31 +103,31 @@ class TestUserTest extends TestCase
      * ============================ */
     public function test_register_user()
     {
-       $response = $this->postJson('/auth/register', [
-        'name' => 'Laura',
-        'email' => 'laura@test.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
-        'phone' => '0600000000',
-        'activity' => 'Coiffure',
-        'logo' => 'https://example.com/logo.png',
-        'color' => '#000000',
-        'description' => 'Test',
-        'companyName' => 'Wizia',
-        'tone' => 'Professionnel',
-        'call' => 'Professionnel',
-        'idAbonnement' => 1,
-    ]);
+        $response = $this->postJson('/auth/register', [
+            'name' => 'Laura',
+            'email' => 'laura@test.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'phone' => '0600000000',
+            'activity' => 'Coiffure',
+            'logo' => 'https://example.com/logo.png',
+            'color' => '#000000',
+            'description' => 'Test',
+            'companyName' => 'Wizia',
+            'tone' => 'Professionnel',
+            'call' => 'Professionnel',
+            'idAbonnement' => 1,
+        ]);
 
         $response
             ->assertStatus(200)
             ->assertJsonStructure([
                 'user' => ['id', 'email'],
-                'token'
+                'token',
             ]);
 
         $this->assertDatabaseHas('users', [
-            'email' => 'laura@test.com'
+            'email' => 'laura@test.com',
         ]);
     }
 
@@ -142,7 +142,7 @@ class TestUserTest extends TestCase
 
         $response = $this->postJson('/auth/login', [
             'email' => $user->email,
-            'password' => 'password123'
+            'password' => 'password123',
         ]);
 
         $response
@@ -165,8 +165,8 @@ class TestUserTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'User' => [
-                    'id' => $user->id
-                ]
+                    'id' => $user->id,
+                ],
             ]);
     }
 
@@ -174,30 +174,31 @@ class TestUserTest extends TestCase
      * updateUser()
      * ============================ */
     public function test_update_user()
-{
-    $user = User::factory()->create($this->defaultUserData());
-    Sanctum::actingAs($user);
+    {
+        $user = User::factory()->create($this->defaultUserData());
+        Sanctum::actingAs($user);
 
-    $response = $this->putJson("/users/{$user->id}", [
-        'name' => 'Updated Name',
-        'email' => $user->email,
-        'phone' => '0600000000', // Correspond à la migration
-        'activity' => 'Coiffure',
-        'color' => '#FF0000',
-        'description' => 'Ma nouvelle description',
-        'companyName' => 'Wizia',
-        'tone' => 'Professionnel', // Valeur ENUM valide
-        'call' => 'Professionnel', // Valeur ENUM valide
-    ]);
+        $response = $this->putJson("/users/{$user->id}", [
+            'name' => 'Updated Name',
+            'email' => $user->email,
+            'phone' => '0600000000', // Correspond à la migration
+            'activity' => 'Coiffure',
+            'color' => '#FF0000',
+            'description' => 'Ma nouvelle description',
+            'companyName' => 'Wizia',
+            'tone' => 'Professionnel', // Valeur ENUM valide
+            'call' => 'Professionnel', // Valeur ENUM valide
+        ]);
 
-    $response->assertStatus(200)
-             ->assertJson(['message' => 'Utilisateur mis à jour avec succès']);
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'Utilisateur mis à jour avec succès']);
 
-    $this->assertDatabaseHas('users', [
-        'id' => $user->id,
-        'name' => 'Updated Name'
-    ]);
-}
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'Updated Name',
+        ]);
+    }
+
     /** ============================
      * deleteUser()
      * ============================ */
@@ -212,7 +213,7 @@ class TestUserTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertJson([
-                'message' => 'Utilisateur supprimé avec succès'
+                'message' => 'Utilisateur supprimé avec succès',
             ]);
     }
 }
