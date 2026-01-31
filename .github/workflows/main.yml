@@ -144,14 +144,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Calculate Short SHA
+      - name: Calculate vars
         id: vars
-        run: echo "sha_short=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+        run: |
+          echo "sha_short=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+          echo "image_name_lower=$(echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/app | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: Run Trivy vulnerability scanner (SARIF)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/app:sha-${{ steps.vars.outputs.sha_short }}'
+          image-ref: '${{ steps.vars.outputs.image_name_lower }}:sha-${{ steps.vars.outputs.sha_short }}'
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
@@ -165,7 +167,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (Console Block)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/app:sha-${{ steps.vars.outputs.sha_short }}'
+          image-ref: '${{ steps.vars.outputs.image_name_lower }}:sha-${{ steps.vars.outputs.sha_short }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
