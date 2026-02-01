@@ -275,6 +275,7 @@ jobs:
             REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
             echo "GITHUB_REPOSITORY=\$REPO_LOWER" >> .env
             
+            
             # Other env vars
             echo "APP_LOCALE=en" >> .env
             echo "APP_FALLBACK_LOCALE=en" >> .env
