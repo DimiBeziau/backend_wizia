@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/${GITHUB_REPOSITORY}/app:latest
+    image: ghcr.io/dimibeziau/backend_wizia/app:latest
     container_name: wizia-app
     restart: unless-stopped
     volumes:
@@ -36,7 +36,7 @@ services:
       - db
 
   web:
-    image: ghcr.io/${GITHUB_REPOSITORY}/nginx:latest
+    image: ghcr.io/dimibeziau/backend_wizia/nginx:latest
     container_name: wizia-web
     restart: unless-stopped
     ports:

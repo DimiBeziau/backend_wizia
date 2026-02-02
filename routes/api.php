@@ -16,6 +16,7 @@ Route::group(['prefix' => '/auth'], function () {
     });
 });
 
+
 // Routes protégées par bearer token
 Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => '/users'], function () {
