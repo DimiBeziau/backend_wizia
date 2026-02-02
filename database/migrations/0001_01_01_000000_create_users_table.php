@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('activity');
             $table->string('logo', 500)->nullable();
             $table->string('color');
-            $table->text('description', 5000);
+            $table->text('description');
             $table->string('companyName');
             $table->enum('tone', ['Professionnel', 'Familier', 'Inspirant', 'Pédagogique']);
             $table->enum('call', ['Professionnel', 'Fidéliser le client', 'Vendre mes produits']);

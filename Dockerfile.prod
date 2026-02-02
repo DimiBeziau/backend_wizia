@@ -37,9 +37,15 @@ COPY --from=frontend /app/public/build ./public/build
 # Copy application code
 COPY . .
 
+# Copy entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
   && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 9000
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]
