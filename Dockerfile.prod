@@ -17,7 +17,7 @@ RUN composer install --no-dev --ignore-platform-req=ext-gd --ignore-platform-req
 FROM php:8.3-fpm
 
 # Install system dependencies and PHP extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   libpng-dev \
   libonig-dev \
   libxml2-dev \
