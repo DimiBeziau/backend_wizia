@@ -4,7 +4,9 @@ services:
     container_name: wizia-app
     restart: unless-stopped
     volumes:
-      - wizia-data:/var/www
+      - wizia-storage:/var/www/storage
+      - wizia-public:/var/www/public_mounted
+      - ./docker/entrypoint.sh:/usr/local/bin/entrypoint.sh
     networks:
       - wizia-network
     environment:
@@ -42,7 +44,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - wizia-data:/var/www
+      - wizia-public:/var/www/public
     networks:
       - wizia-network
       - public
@@ -54,10 +56,10 @@ services:
     container_name: wizia-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_DATABASE: wizia_db_prod
+      MYSQL_ROOT_PASSWORD: wizia_password_prod
+      MYSQL_PASSWORD: wizia_password_prod
+      MYSQL_USER: wizia_user_prod
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
@@ -89,4 +91,5 @@ networks:
     external: true
 
 volumes:
-  wizia-data:
+  wizia-storage:
+  wizia-public:

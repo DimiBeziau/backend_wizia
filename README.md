@@ -14,13 +14,10 @@ Il est containerisé avec Docker.
 
 ```
 git clone https://github.com/DimiBeziau/backend_wizia.git
-mkdir docker_build
 cd ./backend_wizia
-cp ./.env.example ../docker_build/.env
-cp ./docker-compose.prod.yml ../docker_build/docker-compose.yml
-cd ../docker_build
+cp ./.env.example ./.env
 docker network create public
-docker compose up -d
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 L'accès au backend de l'application se fait sur [http://localhost:8000](http://localhost:8000)

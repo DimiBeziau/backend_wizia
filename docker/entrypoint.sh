@@ -10,6 +10,10 @@ done
 
 echo "Database is ready!"
 
+# Sync public assets
+echo "Syncing public assets..."
+cp -R /var/www/public/. /var/www/public_mounted/
+
 # Run migrations
 echo "Running migrations..."
 php artisan migrate --force
