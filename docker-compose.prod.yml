@@ -7,8 +7,6 @@ services:
       - wizia-storage:/var/www/storage
       - wizia-public:/var/www/public_mounted
       - ./docker/entrypoint.sh:/usr/local/bin/entrypoint.sh
-    networks:
-      - wizia-network
     environment:
       # Database
       DB_CONNECTION: ${DB_CONNECTION}
@@ -45,9 +43,6 @@ services:
       - "8000:80"
     volumes:
       - wizia-public:/var/www/public
-    networks:
-      - wizia-network
-      - public
     depends_on:
       - app
 
@@ -65,17 +60,12 @@ services:
     volumes:
       - ./docker-compose/mysql:/docker-entrypoint-initdb.d
       - ./mysql_data:/var/lib/mysql
-    networks:
-      - wizia-network
     ports:
       - "3308:3306"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: wizia-pma
-    networks:
-      - wizia-network
-      - public
     ports:
       - "8081:80"
     environment:
@@ -83,12 +73,6 @@ services:
       PMA_PORT: 3306
     depends_on:
       - db
-
-networks:
-  wizia-network:
-    driver: bridge
-  public:
-    external: true
 
 volumes:
   wizia-storage:

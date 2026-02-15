@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Sync public assets
+echo "Syncing public assets..."
+cp -R /var/www/public/. /var/www/public_mounted/
+
 # Wait for database to be ready
 echo "Waiting for database connection..."
 while ! php artisan db:monitor --databases=mysql 2>/dev/null; do
@@ -9,10 +13,6 @@ while ! php artisan db:monitor --databases=mysql 2>/dev/null; do
 done
 
 echo "Database is ready!"
-
-# Sync public assets
-echo "Syncing public assets..."
-cp -R /var/www/public/. /var/www/public_mounted/
 
 # Run migrations
 echo "Running migrations..."
