@@ -5,6 +5,10 @@ use App\Http\Controllers\FacebookController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+Route::get('/', function () {
+    return response()->json(['status' => 'ok', 'message' => 'Wizia Backend API is running']);
+});
+
 Route::group(['prefix' => '/auth'], function () {
     Route::name('auth.')->group(function () {
         Route::group(['prefix' => '/facebook'], function () {
