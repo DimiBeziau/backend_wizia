@@ -31,4 +31,13 @@ RUN mkdir -p /home/$user/.composer && \
 # Set working directory
 WORKDIR /var/www
 
+# Copy existing application directory contents
+COPY . /var/www
+
+# Install composer dependencies
+RUN composer install --no-interaction --no-dev --optimize-autoloader || true
+
+# Set permissions
+RUN chown -R $user:$user /var/www
+
 USER $user
