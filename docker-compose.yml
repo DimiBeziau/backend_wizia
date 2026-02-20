@@ -12,6 +12,7 @@ services:
       - ./:/var/www
     networks:
       - wizia-network
+    command: sh -c "composer install --no-interaction && php artisan optimize:clear && php artisan migrate --force && php-fpm"
     environment:
       # Database
       DB_CONNECTION: ${DB_CONNECTION}
