@@ -10,9 +10,11 @@ services:
     working_dir: /var/www
     volumes:
       - ./:/var/www
+      - /var/www/vendor
     networks:
       - wizia-network
-    command: sh -c "php artisan migrate --force && php artisan optimize:clear && php-fpm"
+    entrypoint: /var/www/docker/entrypoint.sh
+    command: php-fpm
     environment:
       # Database
       DB_CONNECTION: ${DB_CONNECTION}
@@ -37,7 +39,8 @@ services:
       # Others
       KEY_API_GEMINI: ${KEY_API_GEMINI}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   web:
     image: nginx:alpine
@@ -73,6 +76,12 @@ services:
       - wizia-network
     ports:
       - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: wizia-pma

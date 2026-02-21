@@ -35,9 +35,10 @@ WORKDIR /var/www
 COPY . /var/www
 
 # Install composer dependencies
-RUN composer install --no-interaction --no-dev --optimize-autoloader || true
+RUN composer install --no-interaction --no-dev --optimize-autoloader
 
 # Set permissions
-RUN chown -R $user:$user /var/www
+RUN chown -R $user:$user /var/www && \
+    chmod +x /var/www/docker/entrypoint.sh
 
 USER $user
