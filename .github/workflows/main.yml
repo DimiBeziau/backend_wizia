@@ -126,6 +126,8 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     needs: lint
+    env:
+      SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
     permissions:
       contents: read
       packages: write
@@ -136,7 +138,7 @@ jobs:
 
         
       - uses: sonarsource/sonarqube-scan-action@master
-        if: secrets.SONARQUBE_TOKEN != ''
+        if: ${{ env.SONARQUBE_TOKEN != '' }}
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONARQUBE_URL || 'https://sq.dimitri.beziau.mds-nantes.fr/' }}
