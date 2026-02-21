@@ -2,8 +2,7 @@
 
 ## Introduction
 
-Ceci est le backend de l'application WIzia.
-Il est containerisé avec Docker.
+Ceci est le backend de l'application Wizia, conteneurisé avec Docker.
 
 ## Prérequis
 
@@ -11,6 +10,8 @@ Il est containerisé avec Docker.
 - Docker Compose
 
 ## Lancer le projet en local
+
+Pour lancer le projet, suivez ces étapes :
 
 ```bash
 git clone https://github.com/DimiBeziau/backend_wizia.git
@@ -20,7 +21,16 @@ docker network create public || true
 docker compose up -d --build
 ```
 
-L'accès au backend de l'application se fait sur [http://localhost:8000](http://localhost:8000)
-Le visuel sur la base de données (phpMyAdmin) est accessible depuis [http://localhost:8081](http://localhost:8081), avec les identifiants enregistrés dans le fichier `.env` (utilisateur: `wizia_user_prod`, mot de passe: `wizia_password_prod`).
+### Accès à l'application
+
+- **Backend API** : [http://localhost:8000](http://localhost:8000)
+- **Base de données (phpMyAdmin)** : [http://localhost:8081](http://localhost:8081)
+    - **Utilisateur** : `wizia_user_prod`
+    - **Mot de passe** : `wizia_password_prod` (voir `.env` pour confirmation)
+
+> [!NOTE]
+> Le déploiement Docker inclus un healthcheck pour la base de données afin de s'assurer que l'application Laravel ne démarre les migrations que lorsque la base est prête. Le dossier `vendor` est préservé via un volume anonyme.
+
+## Architecture
 
 En savoir plus sur l'[architecture de ce projet](./docs/architecture.md)
