@@ -10,6 +10,31 @@ use Illuminate\Support\Facades\Storage;
 
 class C_NetwoorkController extends Controller
 {
+    private const CONTENT_TYPE_JSON = 'application/json';
+    private const X_MAKE_APIKEY = 'x-make-apikey';
+    private const ERR_SERVER = 'Erreur serveur : ';
+    private const IS_VALIDATED_RULE = 'required|integer|in:0,1';
+
+    private function savePostToDB($idPostBDD, $postContent, $url, $titrePost, $datePost, $network, $idPostNetwork, $isValidated, $userId)
+    {
+        $reqData = new Request([
+            'id' => $idPostBDD,
+            'post' => $postContent,
+            'url' => $url,
+            'titre_post' => $titrePost ?: 'Sans titre',
+            'date' => $datePost,
+            'network' => $network,
+            'idPostNetwork' => $idPostNetwork,
+            'isValidated' => $isValidated,
+        ]);
+
+        if ($idPostBDD !== null) {
+            return $this->updatePosts($reqData, $userId);
+        }
+
+        return $this->addPosts($reqData, $userId);
+    }
+
     /**
      * @OA\Post(
      *     path="/post",
@@ -51,7 +76,7 @@ class C_NetwoorkController extends Controller
             'network' => 'required|string|in:facebook,instagram,linkedin',
             'idUser' => 'required|integer',
             'now' => 'nullable|boolean',
-            'isValidated' => 'required|integer|in:0,1',
+            'isValidated' => self::IS_VALIDATED_RULE,
         ]);
 
         switch ($request->input('network')) {
@@ -103,91 +128,7 @@ class C_NetwoorkController extends Controller
      */
     public function createAndPublishPostPictureFacebook(Request $request)
     {
-        $titrePost = $request->input('titrePost');
-        $postContent = $request->input('post');
-        $url = $request->input('url');
-        $idPostBDD = $request->input('id_post');
-        $datePost = $request->input('datePost');
-        $sendNow = $request->boolean('now');
-        $userId = $request->input('idUser');
-        $isValidated = $request->input('isValidated');
-
-        $fullPost = trim(($titrePost ? $titrePost."\n" : '').$postContent);
-
-        if ($sendNow) {
-            $data = [
-                'Post' => $fullPost,
-                'File' => $url,
-            ];
-
-            $urlMake = 'https://hook.eu2.make.com/umhsf8kaax437qklfxrf7oechd4hp3qk';
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'x-make-apikey' => env('KeyMake'),
-            ])->post($urlMake, $data);
-            /** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
-            $idPostNetwork = $response->body();
-
-            if ($idPostBDD !== null) {
-                $reqUpdate = new Request([
-                    'id' => $idPostBDD,
-                    'post' => $postContent,
-                    'url' => $url,
-                    'titre_post' => $titrePost ?: 'Sans titre',
-                    'date' => $datePost,
-                    'network' => 'facebook',
-                    'idPostNetwork' => $idPostNetwork,
-                    'isValidated' => $isValidated,
-                ]);
-
-                $postResponse = $this->updatePosts($reqUpdate, $userId);
-            } else {
-                $reqAdd = new Request([
-                    'post' => $postContent,
-                    'url' => $url,
-                    'titre_post' => $titrePost ?: 'Sans titre',
-                    'date' => $datePost,
-                    'network' => 'facebook',
-                    'idPostNetwork' => $idPostNetwork,
-                    'isValidated' => $isValidated,
-                ]);
-
-                $postResponse = $this->addPosts($reqAdd, $userId);
-            }
-
-            // Récupérer l'ID depuis la réponse JsonResponse
-            $postData = $postResponse->getData(true);
-            $postId = $postData['id'] ?? null;
-
-            $this->publishedPosts($postId);
-
-            return response()->json([
-                'success' => $response->successful(),
-                'status' => $response->status(),
-                'message' => $response->successful()
-                    ? 'Publication Facebook envoyée & post mis à jour'
-                    : 'Erreur lors de l’envoi à Facebook',
-                'idPostNetwork' => $idPostNetwork,
-                'makeResponse' => $response->json(),
-            ]);
-        }
-
-        $reqAddLater = new Request([
-            'post' => $postContent,
-            'url' => $url,
-            'titre_post' => $titrePost ?: 'Sans titre',
-            'date' => $datePost ?? now(),
-            'network' => 'facebook',
-            'idPostNetwork' => '',
-            'isValidated' => $isValidated,
-        ]);
-
-        if ($idPostBDD) {
-            return $this->updatePosts($reqAddLater, $userId);
-        } else {
-            return $this->addPosts($reqAddLater, $userId);
-        }
+        return $this->publishPost($request, 'facebook', 'https://hook.eu2.make.com/umhsf8kaax437qklfxrf7oechd4hp3qk');
     }
 
     /**
@@ -240,39 +181,14 @@ class C_NetwoorkController extends Controller
 
             $urlMake = 'https://hook.eu2.make.com/yf7x5kaq33anvdw12qrtykvxye4xvos9';
             $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'x-make-apikey' => env('KeyMake'),
+                'Content-Type' => self::CONTENT_TYPE_JSON,
+                'Accept' => self::CONTENT_TYPE_JSON,
+                self::X_MAKE_APIKEY => env('KeyMake'),
             ])->post($urlMake, $data);
             /** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
             $idPostNetwork = $response->body();
 
-            if ($idPostBDD !== null) {
-                $reqUpdate = new Request([
-                    'id' => $idPostBDD,
-                    'post' => $postContent,
-                    'url' => $url,
-                    'titre_post' => $titrePost ?: 'Sans titre',
-                    'date' => $datePost,
-                    'network' => 'instagram',
-                    'idPostNetwork' => $idPostNetwork,
-                    'isValidated' => $isValidated,
-                ]);
-
-                $postResponse = $this->updatePosts($reqUpdate, $userId);
-            } else {
-                $reqAdd = new Request([
-                    'post' => $postContent,
-                    'url' => $url,
-                    'titre_post' => $titrePost ?: 'Sans titre',
-                    'date' => $datePost,
-                    'network' => 'instagram',
-                    'idPostNetwork' => $idPostNetwork,
-                    'isValidated' => $isValidated,
-                ]);
-
-                $postResponse = $this->addPosts($reqAdd, $userId);
-            }
+            $postResponse = $this->savePostToDB($idPostBDD, $postContent, $url, $titrePost, $datePost, 'instagram', $idPostNetwork, $isValidated, $userId);
 
             // Récupérer l'ID depuis la réponse JsonResponse
             $postData = $postResponse->getData(true);
@@ -291,23 +207,8 @@ class C_NetwoorkController extends Controller
             ]);
         }
 
-        $reqAddLater = new Request([
-            'post' => $postContent,
-            'url' => $url,
-            'titre_post' => $titrePost ?: 'Sans titre',
-            'date' => $datePost ?? now(),
-            'network' => 'instagram',
-            'idPostNetwork' => '',
-            'isValidated' => $isValidated,
-        ]);
-
-        if ($idPostBDD) {
-            return $this->updatePosts($reqAddLater, $userId);
-        } else {
-            return $this->addPosts($reqAddLater, $userId);
-        }
-
-        //     $request->validate([
+        return $this->savePostToDB($idPostBDD, $postContent, $url, $titrePost, $datePost ?? now(), 'instagram', '', $isValidated, $userId);
+    //     $request->validate([
         //       'post' => 'required',
         //       'file' => 'required',
         //       'titrePost' => 'nullable|string',
@@ -376,6 +277,11 @@ class C_NetwoorkController extends Controller
      */
     public function createAndPublishPostPictureLinkeding(Request $request)
     {
+        return $this->publishPost($request, 'linkedin', 'https://hook.eu2.make.com/hifthnguoljpbwu3hfbripma447f2f8k');
+    }
+
+    private function publishPost(Request $request, string $network, string $urlMake)
+    {
         $titrePost = $request->input('titrePost');
         $postContent = $request->input('post');
         $url = $request->input('url');
@@ -385,50 +291,24 @@ class C_NetwoorkController extends Controller
         $userId = $request->input('idUser');
         $isValidated = $request->input('isValidated');
 
+        $fullPost = $network === 'facebook' ? trim(($titrePost ? $titrePost."\n" : '').$postContent) : $postContent;
+
         if ($sendNow) {
-            $data = [
-                'Titre_Post' => $titrePost,
-                'Post' => $postContent,
-                'File' => $url,
-            ];
-
-            $urlMake = 'https://hook.eu2.make.com/hifthnguoljpbwu3hfbripma447f2f8k';
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'x-make-apikey' => env('KeyMake'),
-            ])->post($urlMake, $data);
-            /** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
-            $idPostNetwork = $response->body();
-
-            if ($idPostBDD !== null) {
-                $reqUpdate = new Request([
-                    'id' => $idPostBDD,
-                    'post' => $postContent,
-                    'url' => $url,
-                    'titre_post' => $titrePost ?: 'Sans titre',
-                    'date' => $datePost,
-                    'network' => 'linkedin',
-                    'idPostNetwork' => $idPostNetwork,
-                    'isValidated' => $isValidated,
-                ]);
-
-                $postResponse = $this->updatePosts($reqUpdate, $userId);
-            } else {
-                $reqAdd = new Request([
-                    'post' => $postContent,
-                    'url' => $url,
-                    'titre_post' => $titrePost ?: 'Sans titre',
-                    'date' => $datePost,
-                    'network' => 'linkedin',
-                    'idPostNetwork' => $idPostNetwork,
-                    'isValidated' => $isValidated,
-                ]);
-
-                $postResponse = $this->addPosts($reqAdd, $userId);
+            $data = ['Post' => $fullPost, 'File' => $url];
+            if ($network === 'linkedin') {
+                $data['Titre_Post'] = $titrePost;
             }
 
-            // Récupérer l'ID depuis la réponse JsonResponse
+            $response = Http::withHeaders([
+                'Content-Type' => self::CONTENT_TYPE_JSON,
+                'Accept' => self::CONTENT_TYPE_JSON,
+                self::X_MAKE_APIKEY => env('KeyMake'),
+            ])->post($urlMake, $data);
+
+            $idPostNetwork = $response->body();
+
+            $postResponse = $this->savePostToDB($idPostBDD, $postContent, $url, $titrePost, $datePost, $network, $idPostNetwork, $isValidated, $userId);
+
             $postData = $postResponse->getData(true);
             $postId = $postData['id'] ?? null;
 
@@ -437,69 +317,13 @@ class C_NetwoorkController extends Controller
             return response()->json([
                 'success' => $response->successful(),
                 'status' => $response->status(),
-                'message' => $response->successful()
-                    ? 'Publication linkedin envoyée & post mis à jour'
-                    : 'Erreur lors de l’envoi à linkedin',
+                'message' => $response->successful() ? "Publication {$network} envoyée & post mis à jour" : "Erreur lors de l’envoi à {$network}",
                 'idPostNetwork' => $idPostNetwork,
                 'makeResponse' => $response->json(),
             ]);
         }
 
-        $reqAddLater = new Request([
-            'post' => $postContent,
-            'url' => $url,
-            'titre_post' => $titrePost ?: 'Sans titre',
-            'date' => $datePost ?? now(),
-            'network' => 'linkedin',
-            'idPostNetwork' => '',
-            'isValidated' => $isValidated,
-        ]);
-
-        if ($idPostBDD) {
-            return $this->updatePosts($reqAddLater, $userId);
-        } else {
-            return $this->addPosts($reqAddLater, $userId);
-        }
-
-        //   $request->validate([
-        //       'post' => 'required',
-        //       'file' => 'required',
-        //       'titrePost' => 'required',
-        //       'id_post' => 'nullable|integer',
-        //     ]);
-
-        //     $FileData = $request->input('file');
-        //     $Titre_PostData = $request->input('titrePost');
-        //     $postData = $request->input('post');
-        //     $id_post = $request->input('id_post');
-        //        $data = [
-
-        //             "Titre_Post" => $Titre_PostData,
-        //             "File" => $FileData,
-        //             "Post" => $postData,
-        //         ];
-        //         $url = 'https://hook.eu2.make.com/hifthnguoljpbwu3hfbripma447f2f8k';
-        //         $response = Http::withHeaders([
-        //             'Content-Type' => 'application/json',
-        //             'Accept' => 'application/json',
-        //             'x-make-apikey' => env("KeyMake")
-        //         ])->post($url, $data);
-        // if($id_post!= null){
-        //           $request = new \Illuminate\Http\Request();
-        //         $request->merge(['id_post' => $id_post]);
-        //         $this->publishedPosts($request);
-        // }
-        //         return response()->json([
-        //             'status' => $response->status(),
-        //             'idPoste' => $response->body(),
-        //             'data' => $data
-
-        //         ]);
-
-        //     return response()->json([
-        //         'status' => 200,
-        //         'message' => 'Post correctement plannifié ',
-        //     ]);
+        return $this->savePostToDB($idPostBDD, $postContent, $url, $titrePost, $datePost ?? now(), $network, '', $isValidated, $userId);
     }
 
     /**
@@ -706,7 +530,7 @@ class C_NetwoorkController extends Controller
                 'date' => 'required|date',
                 'network' => 'required|in:facebook,linkedin,instagram',
                 'idPostNetwork' => 'nullable|string',
-                'isValidated' => 'required|integer|in:0,1',
+                'isValidated' => self::IS_VALIDATED_RULE,
             ]);
 
             $url = $validated['url'];
@@ -744,7 +568,7 @@ class C_NetwoorkController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur serveur : '.$e->getMessage(),
+                'message' => self::ERR_SERVER.$e->getMessage(),
             ], 500);
         }
     }
@@ -804,7 +628,7 @@ class C_NetwoorkController extends Controller
                 'date' => 'required|date',
                 'network' => 'required|in:facebook,linkedin,instagram',
                 'idPostNetwork' => 'nullable|string',
-                'isValidated' => 'required|integer|in:0,1',
+                'isValidated' => self::IS_VALIDATED_RULE,
             ]);
 
             $postId = $validated['id'];
@@ -844,7 +668,7 @@ class C_NetwoorkController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur serveur : '.$e->getMessage(),
+                'message' => self::ERR_SERVER.$e->getMessage(),
             ], 500);
         }
     }
@@ -875,15 +699,15 @@ class C_NetwoorkController extends Controller
 
             $responses = Http::pool(fn ($pool) => [
                 $pool->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'x-make-apikey' => env('KeyMake'),
+                    'Content-Type' => self::CONTENT_TYPE_JSON,
+                    'Accept' => self::CONTENT_TYPE_JSON,
+                    self::X_MAKE_APIKEY => env('KeyMake'),
                 ])->asJson()->post($urlLikes, $data),
 
                 $pool->withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                    'x-make-apikey' => env('KeyMake'),
+                    'Content-Type' => self::CONTENT_TYPE_JSON,
+                    'Accept' => self::CONTENT_TYPE_JSON,
+                    self::X_MAKE_APIKEY => env('KeyMake'),
                 ])->asJson()->post($urlComments, $data),
             ]);
 
@@ -969,7 +793,7 @@ class C_NetwoorkController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur serveur : '.$e->getMessage(),
+                'message' => self::ERR_SERVER.$e->getMessage(),
             ], 500);
         }
     }
@@ -990,9 +814,9 @@ class C_NetwoorkController extends Controller
         try {
             $url = 'https://hook.eu2.make.com/w9m5strj3ba5jn6mxsfj3clpgwtoekcc';
             $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'x-make-apikey' => env('KeyMake'),
+                'Content-Type' => self::CONTENT_TYPE_JSON,
+                'Accept' => self::CONTENT_TYPE_JSON,
+                self::X_MAKE_APIKEY => env('KeyMake'),
             ])->post($url);
             /** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
             if ($response->successful()) {
@@ -1045,17 +869,17 @@ class C_NetwoorkController extends Controller
                     'message' => 'Données Instagram mises à jour avec succès',
                     'status' => 200,
                 ], 200);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Erreur lors de la récupération des données',
-                    'status' => $response->status(),
-                ], $response->status());
             }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des données',
+                'status' => $response->status(),
+            ], $response->status());
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur serveur : '.$e->getMessage(),
+                'message' => self::ERR_SERVER.$e->getMessage(),
             ], 500);
         }
     }
@@ -1085,9 +909,9 @@ class C_NetwoorkController extends Controller
             $url = 'https://hook.eu2.make.com/3imdcn8neofzgaeqnbrcstxd3ogayxew';
 
             $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'x-make-apikey' => env('KeyMake'),
+                'Content-Type' => self::CONTENT_TYPE_JSON,
+                'Accept' => self::CONTENT_TYPE_JSON,
+                self::X_MAKE_APIKEY => env('KeyMake'),
             ])->post($url, [
                 'id_post' => $idLinkedin,
             ]);
@@ -1156,7 +980,7 @@ class C_NetwoorkController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur serveur : '.$e->getMessage(),
+                'message' => self::ERR_SERVER.$e->getMessage(),
             ], 500);
         }
     }
@@ -1225,16 +1049,12 @@ class C_NetwoorkController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Mise à jour des commentaires et likes effectuée pour tous les réseaux',
-                'results' => $results,
-            ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur serveur : '.$e->getMessage(),
+                'message' => self::ERR_SERVER.$e->getMessage(),
             ], 500);
         }
-
     }
 
     /**
@@ -1335,121 +1155,10 @@ class C_NetwoorkController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Erreur serveur : '.$e->getMessage(),
+                'message' => self::ERR_SERVER.$e->getMessage(),
                 'status' => 500,
             ], 500);
         }
     }
-
-    // // Vérifie l'abonnement de l'utilisateur
-    // $abonnement = \App\Http\Controllers\C_UserController::abonnementUser($userId);
-    // if ($abonnement['error']) {
-    //     return response()->json([
-    //         'message' => $abonnement['message'],
-    //         'status' => 404,
-    //     ], 404);
-    // }
-
-    // // Définit les limites selon le type d'abonnement
-    // switch ($abonnement['AbonementType']) {
-    //     case "isFree":
-    //         $limiteText = 10;
-    //         $limitevisuel = 2;
-    //         break;
-    //     case "isPremium":
-    //         $limiteText = 15;
-    //         $limitevisuel = 5;
-    //         break;
-    //     case "isProfessionnel":
-    //         $limiteText = 20;
-    //         $limitevisuel = 10;
-    //         break;
-    //     default:
-    //         return response()->json([
-    //             'message' => 'Type d\'abonnement inconnu',
-    //             'status' => 400,
-    //         ], 400);
-    // }
-
-    // $listePosts = [];
-    // $iaController = new \App\Http\Controllers\C_IAController();
-
-    // $datesNetworks = [];
-    // $path = storage_path('app/private/fille/data_date.txt');
-
-    // if (!file_exists($path)) {
-    //     return response()->json([
-    //         'message' => "Fichier de dates introuvable: $path",
-    //         'status' => 500,
-    //     ], 500);
-    // }
-    // $lines = explode("\n", file_get_contents($path));
-    // foreach ($lines as $line) {
-    //     $line = trim($line);
-    //     if (empty($line)) continue;
-    //     $parts = explode(',', $line);
-    //     if (count($parts) == 2) {
-    //         $datesNetworks[] = [
-    //             'date' => trim($parts[0]),
-    //             'network' => strtolower(trim($parts[1]))
-    //         ];
-    //     }
-    // }
-    // if (count($datesNetworks) === 0) {
-    //     return response()->json([
-    //         'message' => "Pas de dates ou réseaux valides dans le fichier.",
-    //         'status' => 500,
-    //     ], 500);
-    // }
-
-    // $nbPostsAGenerer = $limiteText;
-
-    // for ($i = 0; $i < $nbPostsAGenerer; $i++) {
-    //     $index = $i % count($datesNetworks);
-    //     $dayFromData = str_pad($datesNetworks[$index]['date'], 2, '0', STR_PAD_LEFT);
-    //     $network = $datesNetworks[$index]['network'];
-
-    //     // Date du post
-    //     $targetDateString = date('Y-m') . '-' . $dayFromData;
-    //     $targetDateTime = \Carbon\Carbon::parse($targetDateString);
-    //     if ($targetDateTime->isPast() && $targetDateTime->format('Y-m-d') <= date('Y-m-d')) {
-    //         $targetDateTime->addMonthNoOverflow();
-    //     }
-    //     $datePost = $targetDateTime->format('Y-m-d') . ' 00:00:01';
-
-    //     $urlpicture = null;
-    //     if ($i < $limitevisuel) {
-    //         $prompt = "Créer une image professionnelle pour un post $network sur le thème de l'intelligence artificielle dans le domaine de la finance, avec des couleurs vertes et blanches, style moderne et épuré, format carré";
-    //         $request->merge(['prompt' => $prompt]);
-    //         $imageResponse = $iaController->generatPictureGPT($request)->getData(true);
-    //         $urlpicture = $imageResponse['image_url'] ?? null;
-    //     }
-
-    //     $prompt = "Rédige un texte professionnel pour un post $network sur l'IA et la finance (style moderne, accrocheur).";
-    //     $request->merge(['prompt' => $prompt]);
-    //     $textResponse = $iaController->generatpromptgemini($request)->getData(true);
-    //     $postData = $textResponse['text'] ?? "Texte non généré";
-
-    //     // Création du post
-    //     $post = Posts::create([
-    //         "datePost" => $datePost,
-    //         "idUser" => $userId,
-    //         "isValidated" => false,
-    //         "network" => $network,
-    //         "url" => $urlpicture,
-    //         "titrePost" => "Post " . ($i + 1) . " - " . ucfirst($network),
-    //         "post" => $postData
-    //     ]);
-
-    //     $listePosts[] = $post;
-
-    // }
-
-    // return response()->json([
-    //     'message' => 'Posts générés automatiquement',
-    //     'user' => $userId,
-    //     'tabListe' => $listePosts,
-    //     'status' => 200,
-    // ], 200);
 
 }

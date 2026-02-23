@@ -6,7 +6,10 @@ use App\Http\Controllers\C_MailController;
 use App\Http\Controllers\C_NetwoorkController;
 use App\Http\Controllers\C_StripeController;
 use App\Http\Controllers\C_UserController;
+use App\Http\Controllers\C_MailSettingsController;
 use Illuminate\Support\Facades\Route;
+
+$idRoute = '/{id}';
 
 Route::group(['prefix' => '/auth'], function () {
     Route::name('auth.')->group(function () {
@@ -18,21 +21,21 @@ Route::group(['prefix' => '/auth'], function () {
 
 
 // Routes protégées par bearer token
-Route::middleware('auth:sanctum')->group(function () {
-    Route::group(['prefix' => '/users'], function () {
-        Route::name('api.')->controller(C_UserController::class)->group(function () {
-            Route::get('/{id}', 'getUser')->name('getUser');
+Route::middleware('auth:sanctum')->group(function () use ($idRoute) {
+    Route::group(['prefix' => '/users'], function () use ($idRoute) {
+        Route::name('api.')->controller(C_UserController::class)->group(function () use ($idRoute) {
+            Route::get($idRoute, 'getUser')->name('getUser');
             // Route::get('/users/{id}', [C_UserController::class, 'getUser']);
             Route::post('/sertchUser', 'sertchgetUser')->name('sertchgetUser'); // a voir
             //  Route::post('/', 'addUser')->name('addUser');
-            Route::put('/{id}', 'updateUser')->name('updateUser');
-            Route::delete('/{id}', 'deleteUser')->name('deleteUser');
+            Route::put($idRoute, 'updateUser')->name('updateUser');
+            Route::delete($idRoute, 'deleteUser')->name('deleteUser');
             Route::post('/uploadlogo', 'uploadImage')->name('uploadImage');
             Route::post('/abonnementUser', 'abonnementUser')->name('abonnementUser');
         });
     });
-    Route::group(['prefix' => '/post'], function () {
-        Route::name('post.')->controller(C_NetwoorkController::class)->group(function () {
+    Route::group(['prefix' => '/post'], function () use ($idRoute) {
+        Route::name('post.')->controller(C_NetwoorkController::class)->group(function () use ($idRoute) {
             Route::post('/', 'createPublishPost')->name('createPublishPost'); // envoie post sur network
             Route::post('/Facebook', 'createAndPublishPostPictureFacebook')->name('createAndPublishPostPictureFacebook');
             Route::post('/Instagrame', 'createAndPublishPostInstagramePicture')->name('createAndPublishPostInstagramePicture');
@@ -43,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/listerCommentairesandLikeInstagram', 'listerCommentairesandLikeIstagram')->name('listerCommentairesandLikeIstagram'); // supprimer après juste pour test
             Route::post('/listerCommentairesandLikeLinkeding', 'listerCommentairesandLikeLinkeding')->name('listerCommentairesandLikeLinkeding'); // supprimer après juste pour test
             Route::post('/listerCommentairesandLikeFacebook', 'listerCommentairesandLikeFacebook')->name('listerCommentairesandLikeFacebook'); // supprimer après juste pour test
-            Route::get('/ListePosts/{id}', 'ListerPosts')->name('ListerPosts');
+            Route::get('/ListePosts'.$idRoute, 'ListerPosts')->name('ListerPosts');
             Route::post('/UploadPictureNetwork', 'UploadPictureNetwork')->name('UploadPictureNetwork');
             Route::post('/AutomatisationPost', 'genererPostsAutomatiquement')->name('genererPostsAutomatiquement');
         });
@@ -60,31 +63,39 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/generateIApicture', [C_IAController::class, 'generatPictureGPT'])->name('generatPictureGPT');
         });
     });
-    Route::group(['prefix' => '/stripe'], function () {
-        Route::name('stripe.')->controller(C_IAController::class)->group(function () {
+    Route::group(['prefix' => '/stripe'], function () use ($idRoute) {
+        Route::name('stripe.')->controller(C_IAController::class)->group(function () use ($idRoute) {
             Route::post('/createPaymentIntent', [C_StripeController::class, 'createPaymentIntent']);
-            Route::get('/abonnement/{id}', [C_StripeController::class, 'getAbonnement']);
+            Route::get('/abonnement'.$idRoute, [C_StripeController::class, 'getAbonnement']);
         });
     });
 
-    Route::group(['prefix' => '/mail'], function () {
-        route::name('api.')->controller(C_MailController::class)->group(function () {
+    Route::group(['prefix' => '/mail'], function () use ($idRoute) {
+        Route::name('api.')->controller(C_MailController::class)->group(function () use ($idRoute) {
             Route::post('/', 'createPublishMail')->name('createPublishMail');
             Route::post('/generateMail', 'generateMail')->name('generateMail');
-            Route::post('/AddMail/{id}', 'AddMail')->name('AddMail');
+            Route::post('/AddMail'.$idRoute, 'AddMail')->name('AddMail');
 
-            Route::get('/ListMailingUser/{id}', 'getListMailingUser')->name('getListMailingUser'); // lister mail d un utilisateur
+            Route::get('/ListMailingUser'.$idRoute, 'getListMailingUser')->name('getListMailingUser'); // lister mail d un utilisateur
 
-            Route::get('/ListMailingsendClient/{id}', 'getListMailingWhithSendClients')->name('getListMailingWhithSendClients'); // liste des mail  avec liste clients
-            Route::get('/SearchMailing/{id}', 'SearchMailingById')->name('SearchMailingById');
-            Route::put('/UpdateMailing/{id}', 'updateMailing')->name('updateMailing');
-            Route::delete('/DeleteMailing/{id}', 'deleteMailing')->name('deleteMailing');
+            Route::get('/ListMailingsendClient'.$idRoute, 'getListMailingWhithSendClients')->name('getListMailingWhithSendClients'); // liste des mail  avec liste clients
+            Route::get('/SearchMailing'.$idRoute, 'SearchMailingById')->name('SearchMailingById');
+            Route::put('/UpdateMailing'.$idRoute, 'updateMailing')->name('updateMailing');
+            Route::delete('/DeleteMailing'.$idRoute, 'deleteMailing')->name('deleteMailing');
 
-            Route::get('/ListDestinataireClient/{id}', 'getListDestinataire')->name('getListDestinataire');
-            Route::post('/AddDestinataireClient/{id}', 'AddListDestinataire')->name('AddListDestinataire');
-            Route::put('/UpdateDestinataireClient/{id}', 'UpdateListDestinataire')->name('UpdateListDestinataire');
+            Route::get('/ListDestinataireClient'.$idRoute, 'getListDestinataire')->name('getListDestinataire');
+            Route::post('/AddDestinataireClient'.$idRoute, 'AddListDestinataire')->name('AddListDestinataire');
+            Route::put('/UpdateDestinataireClient'.$idRoute, 'UpdateListDestinataire')->name('UpdateListDestinataire');
+            Route::delete('/DeleteListDestinataire'.$idRoute, 'deleteListDestinataire')->name('deleteListDestinataire');
+        });
 
-            Route::delete('/DeleteListDestinataire/{id}', 'deleteListDestinataire')->name('deleteListDestinataire');
+        Route::controller(C_MailSettingsController::class)->group(function () use ($idRoute) {
+            Route::get('/ListDestinataireClient'.$idRoute, 'getListDestinataire')->name('getListDestinataire');
+            Route::post('/ListDestinataireEmail/', 'getListDestinataireEmail')->name('getListDestinataireEmail');
+            Route::post('/AddDestinataireClient'.$idRoute, 'AddListDestinataire')->name('AddListDestinataire');
+            Route::put('/UpdateDestinataireClient'.$idRoute, 'UpdateListDestinataire')->name('UpdateListDestinataire');
+            Route::get('/ListDestinatairebyMail/{mailDestinataire}', 'ListDestinatairebyMail')->name('ListDestinatairebyMail');
+            Route::delete('/DeleteListDestinataire'.$idRoute, 'deleteListDestinataire')->name('deleteListDestinataire');
         });
     });
 });

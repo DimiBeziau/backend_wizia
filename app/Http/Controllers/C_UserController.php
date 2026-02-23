@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 
 class C_UserController extends Controller
 {
+    private const USER_NOT_FOUND = 'Utilisateur non trouvé';
+
     /**
      * @OA\Get(
      *     path="/users/{id}",
@@ -39,7 +41,7 @@ class C_UserController extends Controller
         try {
             $user = User::find($id);
             if (! $user) {
-                return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+                return response()->json(['message' => self::USER_NOT_FOUND], 404);
             }
 
             return response()->json($user);
@@ -272,7 +274,7 @@ class C_UserController extends Controller
         try {
             $user = User::find($id);
             if (! $user) {
-                return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+                return response()->json(['message' => self::USER_NOT_FOUND], 404);
             }
 
             $user->email = $request->email;
@@ -325,7 +327,7 @@ class C_UserController extends Controller
         try {
             $user = User::find($id);
             if (! $user) {
-                return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+                return response()->json(['message' => self::USER_NOT_FOUND], 404);
             }
 
             $user->delete();

@@ -16,6 +16,8 @@ class TestMailTest extends TestCase
 
     protected $user;
 
+    private const TEST_EMAIL = 'test@example.com';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -27,7 +29,7 @@ class TestMailTest extends TestCase
     {
         Sanctum::actingAs($this->user);
         $response = $this->postJson('/mail/generateMail', [
-            'to' => ['test@example.com'],
+            'to' => [self::TEST_EMAIL],
             'subject' => 'Test Subject',
             'body' => '<h1>Hello</h1>',
             'fromName' => 'Wizia',
@@ -45,14 +47,14 @@ class TestMailTest extends TestCase
         // Sinon getListDestinataireEmail() ne trouvera rien et fera planter le contrôleur
         \App\Models\Clients::create([
             'idUser' => $this->user->id,
-            'mail' => 'test@example.com',
+            'mail' => self::TEST_EMAIL,
             'nom' => 'Test',
             'prenom' => 'User',
         ]);
 
         // 2. Appel de la route
         $response = $this->postJson('/mail', [
-            'to' => ['test@example.com'], // Doit correspondre au mail créé au dessus
+            'to' => [self::TEST_EMAIL], // Doit correspondre au mail créé au dessus
             'subject' => 'Sujet de test',
             'body' => 'Contenu du message',
             'idUser' => $this->user->id,

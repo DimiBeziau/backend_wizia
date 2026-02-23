@@ -43,5 +43,5 @@ expect()->extend('toBeOne', function () {
 
 function something()
 {
-    // ..
+    // Placeholder for a global test helper function. Add custom logic here.
 }

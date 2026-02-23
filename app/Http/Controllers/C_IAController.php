@@ -24,6 +24,8 @@ class C_IAController extends Controller
 
     private $keyApigpt;
 
+    private const CONTENT_TYPE_JSON = 'Content-Type: application/json';
+
     public function __construct()
     {
         $this->apiUrl = 'http://localhost:11434/api/generate';
@@ -31,7 +33,8 @@ class C_IAController extends Controller
         $this->stream = false;
         $this->keyApigemini = env('KEY_API_GEMINI');
         $this->keyApigpt = env('key_API_GPT');
-        $this->geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='.$this->keyApigemini;
+        $this->geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/' .
+            'models/gemini-2.0-flash:generateContent?key='.$this->keyApigemini;
         $this->gptApiUrl = 'https://api.openai.com/v1/images/generations';
     }
 
@@ -85,7 +88,7 @@ class C_IAController extends Controller
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
+            self::CONTENT_TYPE_JSON,
         ]);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -93,17 +96,9 @@ class C_IAController extends Controller
         $response = curl_exec($ch);
         curl_close($ch);
 
-        // $decodeJson = json_decode($response, true);
         $decoded = json_decode($response, true);
 
-        // if (!isset($decoded['candidates'])) {
-        //   return response()->json(['error' => 'Erreur de la génération du prompt'], 500);
-        // }
-
-        // $text = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? 'Réponse vide';
-
         return response()->json(['text' => $decoded['response'] ?? 'Réponse vide']);
-        // return $decodeJson['response'] ?? "Erreur : reponse introuvable";
     }
 
     /**
@@ -119,8 +114,10 @@ class C_IAController extends Controller
      *             type="object",
      *             required={"prompt"},
      *
-     *             @OA\Property(property="prompt", type="string", example="Un chat astronaute dans l'espace"),
-     *             @OA\Property(property="size", type="string", example="1024x1024", description="Tailles disponibles: 256x256, 512x512, 1024x1024, 1024x1792")
+     *             @OA\Property(
+     *                 property="size", type="string", example="1024x1024",
+     *                 description="Tailles disponibles: 256x256, 512x512, 1024x1024, 1024x1792"
+     *             )
      *         )
      *     ),
      *
@@ -130,7 +127,10 @@ class C_IAController extends Controller
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="image_url", type="string", example="https://oaidalleapiprodscus.blob.core.windows.net/...")
+     *             @OA\Property(
+     *                 property="image_url", type="string",
+     *                 example="https://oaidalleapiprodscus.blob.core.windows.net/..."
+     *             )
      *         )
      *     ),
      *
@@ -166,7 +166,7 @@ class C_IAController extends Controller
         $ch = curl_init($this->gptApiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
+            self::CONTENT_TYPE_JSON,
             'Authorization: Bearer '.$this->keyApigpt,
         ]);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -228,8 +228,12 @@ class C_IAController extends Controller
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="title", type="string", example="Le café artisanal : un art à découvrir"),
-     *             @OA\Property(property="content", type="string", example="Découvrez les secrets du café de spécialité...")
+     *             @OA\Property(
+     *                 property="title", type="string", example="Le café artisanal : un art à découvrir"
+     *             ),
+     *             @OA\Property(
+     *                 property="content", type="string", example="Découvrez les secrets du café..."
+     *             )
      *         )
      *     ),
      *
@@ -324,13 +328,14 @@ class C_IAController extends Controller
         }
 
         // Reconstruct URL to ensure key is present
-        $this->geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='.$this->keyApigemini;
+        $this->geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/' .
+            'models/gemini-2.0-flash:generateContent?key='.$this->keyApigemini;
 
         $ch = curl_init($this->geminiApiUrl);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
+            self::CONTENT_TYPE_JSON,
             'Accept: application/json',
         ]);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -360,18 +365,20 @@ class C_IAController extends Controller
         // Décoder la réponse JSON structurée
         $structuredResponse = json_decode($text, true);
 
-        if ($type === 'newsletter') {
-            return response()->json([
-                'subject' => $structuredResponse['subject'] ?? '',
-                'body' => $structuredResponse['body'] ?? '',
-                'altBody' => $structuredResponse['altBody'] ?? '',
-            ]);
-        } else {
-            return response()->json([
+        $responseBody = [
+            'subject' => $structuredResponse['subject'] ?? '',
+            'body' => $structuredResponse['body'] ?? '',
+            'altBody' => $structuredResponse['altBody'] ?? '',
+        ];
+
+        if ($type !== 'newsletter') {
+            $responseBody = [
                 'title' => $structuredResponse['title'] ?? '',
                 'content' => $structuredResponse['content'] ?? '',
-            ]);
+            ];
         }
+
+        return response()->json($responseBody);
     }
     // public  function generatpromptgemini(Request $request)
     // {

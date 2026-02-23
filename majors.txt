@@ -1,0 +1,63 @@
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:34 - Split this 146 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:96 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:99 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:103 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:106 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:123 - Split this 159 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:133 - Split this 133 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:221 - Split this 121 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:232 - Split this 124 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:257 - This method has 5 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:323 - Split this 130 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:327 - Split this 146 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:379 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:383 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:385 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:395 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:397 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:405 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:407 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:413 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:415 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:417 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:421 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_IAController.php:423 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:16 - Class "C_MailController" has 22 methods, which is greater than 20 authorized. Split it into smaller classes.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:31 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:61 - Remove the unused function parameter "$level".
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:80 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:153 - Split this 157 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:155 - Split this 128 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:256 - Define and throw a dedicated exception instead of using a generic one.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:266 - This method has 6 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:266 - This function "createPublishMail" has 158 lines, which is greater than the 150 lines authorized. Split it into smaller functions.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:561 - Split this 171 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:561 - Extract this nested ternary operation into an independent statement.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:666 - Remove the unused function parameter "$iduser".
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:753 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:1011 - This method has 4 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:1163 - This method has 4 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:1233 - This method has 4 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:1304 - This method has 4 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailController.php:1375 - This method has 4 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:3 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:18 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:32 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:41 - Split this 129 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:41 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:59 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:64 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:75 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:88 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:92 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:96 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_MailCreate.php:109 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:31 - Split this 129 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:42 - This method has 4 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:310 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:320 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:464 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:499 - Remove this commented out code.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:777 - Split this 129 characters long line (which is greater than 120 authorized).
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:788 - This method has 4 returns, which is more than the 3 allowed.
+DimiBeziau_backend_wizia_AZwUMTkrxqF4AfLxUWLx:app/Http/Controllers/C_NetwoorkController.php:862 - This method has 5 returns, which is more than the 3 allowed.
