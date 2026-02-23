@@ -161,90 +161,7 @@ class C_NetwoorkController extends Controller
      */
     public function createAndPublishPostInstagramePicture(Request $request)
     {
-
-        $titrePost = $request->input('titrePost');
-        $postContent = $request->input('post');
-        $url = $request->input('url');
-        $idPostBDD = $request->input('id_post');
-        $datePost = $request->input('datePost');
-        $sendNow = $request->boolean('now');
-        $userId = $request->input('idUser');
-        $isValidated = $request->input('isValidated');
-
-        $fullPost = trim(($titrePost ? $titrePost."\n" : '').$postContent);
-
-        if ($sendNow) {
-            $data = [
-                'Post' => $fullPost,
-                'File' => $url,
-            ];
-
-            $urlMake = 'https://hook.eu2.make.com/yf7x5kaq33anvdw12qrtykvxye4xvos9';
-            $response = Http::withHeaders([
-                'Content-Type' => self::CONTENT_TYPE_JSON,
-                'Accept' => self::CONTENT_TYPE_JSON,
-                self::X_MAKE_APIKEY => env('KeyMake'),
-            ])->post($urlMake, $data);
-            /** @var \Illuminate\Http\Client\Response $response */ // Aide l'IDE à reconnaître les méthodes
-            $idPostNetwork = $response->body();
-
-            $postResponse = $this->savePostToDB($idPostBDD, $postContent, $url, $titrePost, $datePost, 'instagram', $idPostNetwork, $isValidated, $userId);
-
-            // Récupérer l'ID depuis la réponse JsonResponse
-            $postData = $postResponse->getData(true);
-            $postId = $postData['id'] ?? null;
-
-            $this->publishedPosts($postId);
-
-            return response()->json([
-                'success' => $response->successful(),
-                'status' => $response->status(),
-                'message' => $response->successful()
-                    ? 'Publication instagram envoyée & post mis à jour'
-                    : 'Erreur lors de l’envoi à instagram',
-                'idPostNetwork' => $idPostNetwork,
-                'makeResponse' => $response->json(),
-            ]);
-        }
-
-        return $this->savePostToDB($idPostBDD, $postContent, $url, $titrePost, $datePost ?? now(), 'instagram', '', $isValidated, $userId);
-    //     $request->validate([
-        //       'post' => 'required',
-        //       'file' => 'required',
-        //       'titrePost' => 'nullable|string',
-        //       'id_post' => 'nullable|integer',
-        //       'sendNow' => 'nullable|boolean',
-        //     'datePost' => 'nullable|date',
-        //       'network' => 'required|string|in:facebook,instagram,linkedin',
-        //     ]);
-
-        //     $postData = $request->input('post');
-        //     $filsData = $request->input('file');
-        // $id_post = $request->input('id_post');
-        //       $data = [
-        //         "Post" => $postData,
-        //         "File" => $filsData
-        //       ];
-
-        //       // Envoyer ces données directement à Make.com
-        //       $url = 'https://hook.eu2.make.com/yf7x5kaq33anvdw12qrtykvxye4xvos9';
-        //       $response = Http::withHeaders([
-        //         'Content-Type' => 'application/json',
-        //         'Accept' => 'application/json',
-        //         'x-make-apikey' => env("KeyMake")
-        //       ])->post($url, $data);
-
-        //       if($id_post!= null){
-        //       $request = new \Illuminate\Http\Request();
-        //         $request->merge(['id_post' => $id_post]);
-        //         $this->publishedPosts($request);
-        //       }
-        //       return response()->json([
-
-        //         'status' => $response->status(),
-        //         'idPoste' => $response->body(),
-        //       ]);
-
+        return $this->publishPost($request, 'instagram', 'https://hook.eu2.make.com/yf7x5kaq33anvdw12qrtykvxye4xvos9');
     }
 
     /**
@@ -317,7 +234,7 @@ class C_NetwoorkController extends Controller
             return response()->json([
                 'success' => $response->successful(),
                 'status' => $response->status(),
-                'message' => $response->successful() ? "Publication {$network} envoyée & post mis à jour" : "Erreur lors de l’envoi à {$network}",
+                'message' => $response->successful() ? 'Publication '.ucfirst($network).' envoyée & post mis à jour' : 'Erreur lors de l’envoi à '.ucfirst($network),
                 'idPostNetwork' => $idPostNetwork,
                 'makeResponse' => $response->json(),
             ]);
