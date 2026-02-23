@@ -22,6 +22,7 @@ class TestMailTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        
     }
 
     // 1. generateMail
