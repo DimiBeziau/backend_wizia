@@ -1049,6 +1049,9 @@ class C_NetwoorkController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Mise à jour des commentaires et likes effectuée pour tous les réseaux',
+                'results' => $results,
+            ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
