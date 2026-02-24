@@ -1,12 +1,20 @@
-# Stage 1: Build frontend assets
+# Stage 1: Build main frontend assets (Laravel + Inertia)
 FROM node:22-slim AS frontend
 WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --legacy-peer-deps
+COPY . .
+RUN npm run build
+
+# Stage 2: Build separate front app (if needed)
+FROM node:22-slim AS frontend-front
+WORKDIR /app
 COPY front/package.json front/package-lock.json ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 COPY front/ .
 RUN npm run build
 
-# Stage 2: Build backend dependencies
+# Stage 3: Build backend dependencies
 FROM composer:latest AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
@@ -28,14 +36,17 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 
 WORKDIR /var/www
 
-# Copy vendor files
+# Copy application code first
+COPY . .
+
+# Copy vendor files (overwrites vendor folder if exists)
 COPY --from=vendor /app/vendor ./vendor
 
-# Copy frontend assets
+# Copy main frontend assets (overwrites public/build)
 COPY --from=frontend /app/public/build ./public/build
 
-# Copy application code
-COPY . .
+# Copy separate front app assets (to public/front)
+COPY --from=frontend-front /app/dist ./public/front
 
 # Copy entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
