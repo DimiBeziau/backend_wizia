@@ -59,6 +59,57 @@ class C_MailController extends Controller
         $mail->addStringAttachment($content, $fileName);
     }
 
+    /**
+     * Get file contents safely, preventing Path Traversal and SSRF.
+     */
+    private function safeGetFileContent($source)
+    {
+        if (filter_var($source, FILTER_VALIDATE_URL)) {
+            $parsedUrl = parse_url($source);
+            if (! in_array($parsedUrl['scheme'] ?? '', ['http', 'https'])) {
+                return false;
+            }
+
+            $host = $parsedUrl['host'] ?? '';
+            if (filter_var($host, FILTER_VALIDATE_IP) && $this->isInternalIp($host)) {
+                return false;
+            }
+
+            // Prevent access to common internal hostnames
+            if (in_array(strtolower($host), ['localhost', '127.0.0.1', '::1', 'db', 'redis', 'app'])) {
+                return false;
+            }
+
+            return @file_get_contents($source);
+        }
+
+        // For local files, restrict to specific allowed directories
+        // Here we allow storage/app/public and public/
+        $allowedPaths = [
+            storage_path('app/public'),
+            public_path(),
+        ];
+
+        $realPath = realpath($source);
+        if ($realPath === false) {
+            return false;
+        }
+
+        foreach ($allowedPaths as $allowedPath) {
+            $allowedPath = realpath($allowedPath);
+            if ($allowedPath && strpos($realPath, $allowedPath) === 0) {
+                return @file_get_contents($realPath);
+            }
+        }
+
+        return false;
+    }
+
+    private function isInternalIp($ip)
+    {
+        return ! filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE);
+    }
+
     public function testSmtp()
     {
         $outputBuffer = '';
@@ -239,13 +290,13 @@ class C_MailController extends Controller
                 if ($file) {
                     if (is_array($file)) {
                         foreach ($file as $url) {
-                            $content = @file_get_contents($url);
+                            $content = $this->safeGetFileContent($url);
                             if ($content !== false) {
                                 $this->addAttachment($mail, $content, basename($url));
                             }
                         }
                     } else {
-                        $content = @file_get_contents($file);
+                        $content = $this->safeGetFileContent($file);
                         if ($content !== false) {
                             $this->addAttachment($mail, $content, basename($file));
                         }
@@ -556,7 +607,13 @@ class C_MailController extends Controller
 
                     // Si $file est une URL, on tente de récupérer le type MIME via HTTP headers
                     if (filter_var($file, FILTER_VALIDATE_URL)) {
-                        $headers = get_headers($file, 1);
+                        $parsedUrl = parse_url($file);
+                        $host = $parsedUrl['host'] ?? '';
+                        if (filter_var($host, FILTER_VALIDATE_IP) && $this->isInternalIp($host)) {
+                            continue; // Block internal IPs
+                        }
+
+                        $headers = @get_headers($file, 1);
                         if (isset($headers['Content-Type'])) {
                             $mimeType = is_array($headers['Content-Type'])
                                 ? $headers['Content-Type'][0]
@@ -570,10 +627,16 @@ class C_MailController extends Controller
                             $mimeType = $ext ? $this->mime_content_type_from_extension($ext) : null;
                         }
                     } else {
-                        // Sinon, on tente localement
-                        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                        $mimeType = finfo_file($finfo, $file);
-                        finfo_close($finfo);
+                        // Sinon, on tente localement avec validation
+                        $realPath = realpath($file);
+                        $allowedBase = realpath(storage_path('app/public'));
+                        if ($realPath && $allowedBase && strpos($realPath, $allowedBase) === 0) {
+                            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                            $mimeType = finfo_file($finfo, $realPath);
+                            finfo_close($finfo);
+                        } else {
+                            $mimeType = 'application/octet-stream';
+                        }
                     }
 
                     $pieceJointe->type = $mimeType;
