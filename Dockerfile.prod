@@ -1,9 +1,9 @@
 # Stage 1: Build frontend assets
-FROM node:20 AS frontend
+FROM node:22-slim AS frontend
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY front/package.json front/package-lock.json ./
 RUN npm ci
-COPY . .
+COPY front/ .
 RUN npm run build
 
 # Stage 2: Build backend dependencies
@@ -14,7 +14,7 @@ RUN composer install --no-dev --ignore-platform-req=ext-gd --ignore-platform-req
   --ignore-platform-req=ext-xml --no-interaction --prefer-dist --no-scripts
 
 # Stage 3: Final application image
-FROM php:8.3-fpm
+FROM php:8.3-fpm-bookworm
 
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
